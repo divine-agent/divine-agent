@@ -1,6 +1,6 @@
 # divine-agent
 
-Observability - Evaluation - Playground
+Agent Platform for Observability • Evaluation • Playground
 
 ## Structure
 

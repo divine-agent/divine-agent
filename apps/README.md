@@ -1,3 +1,3 @@
 # Apps
 
-> A list of web applications.
+> A series of web applications.

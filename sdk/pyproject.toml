@@ -4,8 +4,16 @@ dynamic = ["version"]
 description = "The Agent Platform for Observability & Evaluation"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "grpcio>=1.69.0",
+    "protobuf>=5.29.3",
+]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "grpcio-tools>=1.69.0",
+]

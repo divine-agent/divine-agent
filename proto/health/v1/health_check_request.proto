@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package health.v1;
+
+option go_package = "github.com/KaikaikaiFang/divine-agent/core/health";
+
+message HealthCheckResponse {
+  bool status = 1;
+  string message = 2;
+}

@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package core.v1;
+
+option go_package = "github.com/KaikaikaiFang/divine-agent/core/proto";
+
+message HealthCheckRequest { string version = 1; }

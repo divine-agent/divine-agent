@@ -17,3 +17,7 @@ build-backend = "hatchling.build"
 dev = [
     "grpcio-tools>=1.69.0",
 ]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"

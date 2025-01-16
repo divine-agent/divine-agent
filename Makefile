@@ -1,12 +1,18 @@
-all: protobuf
+all: build
 
 protobuf:
-	protoc --go_out=$(shell pwd)/core --go_opt=paths=source_relative \
-	--go-grpc_out=$(shell pwd)/core --go-grpc_opt=paths=source_relative \
-	proto/health/v1/health.proto
+	protoc --go_out=. --go_opt=paths=source_relative \
+	--go-grpc_out=. --go-grpc_opt=paths=source_relative \
+	divi/proto/core/v1/health_check_response.proto
 
-	python3 -m grpc_tools.protoc -Iproto=proto \
-	--python_out=$(shell pwd)/sdk/divi \
-	--pyi_out=$(shell pwd)/sdk/divi \
-	--grpc_python_out=$(shell pwd)/sdk/divi \
-	proto/health/v1/health.proto
+	mv divi/proto/core/v1/*.go divi/proto/core/v1/go/
+	cp divi/proto/core/v1/go/* core/proto/
+
+	python3 -m grpc_tools.protoc -Idivi/proto=divi/proto \
+	--python_out=. \
+	--pyi_out=. \
+	--grpc_python_out=. \
+	divi/proto/core/v1/health_check_response.proto
+
+build:
+	cd core && go build -o ../sdk/bin/core main.go

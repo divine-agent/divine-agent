@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package core.v1;
+
+import "divi/proto/core/v1/health_check_request.proto";
+import "divi/proto/core/v1/health_check_response.proto";
+
+option go_package = "github.com/KaikaikaiFang/divine-agent/core/proto";
+
+// Health is a service that implements health check.
+service Core {
+  rpc Check(HealthCheckRequest) returns (HealthCheckResponse) {}
+}

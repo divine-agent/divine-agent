@@ -21,7 +21,7 @@ type server struct {
 	pb.UnimplementedCoreServer
 }
 
-func (s *server) Add(ctx context.Context, in *pb.HealthCheckRequest) (*pb.HealthCheckResponse, error) {
+func (s *server) Check(ctx context.Context, in *pb.HealthCheckRequest) (*pb.HealthCheckResponse, error) {
 	log.Printf("SDK Version: %s", in.Version)
 	return &pb.HealthCheckResponse{
 		Status:  true,

@@ -15,4 +15,4 @@ protobuf:
 	divi/proto/core/v1/health_check_response.proto
 
 build:
-	cd core && go build -o ../sdk/bin/core main.go
+	cd core && go build -o ../divi/bin/core main.go

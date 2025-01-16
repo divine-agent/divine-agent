@@ -1,2 +1,6 @@
 [version]
 path = "divi/__init__.py"
+
+[build.targets.wheel]
+exclude = ["divi/proto/core/v1/go"]
+artifacts = ["divi/bin"]

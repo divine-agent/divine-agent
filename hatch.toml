@@ -4,3 +4,6 @@ path = "divi/__init__.py"
 [build.targets.wheel]
 exclude = ["divi/proto/core/v1/go"]
 artifacts = ["divi/bin"]
+
+[build.targets.wheel.hooks.custom]
+path = "hatch_build.py"

@@ -5,5 +5,5 @@ from . import proto
 name: str = "divi"
 run: Optional[Run] = None
 
-__version__ = "0.0.1.dev8"
+__version__ = "0.0.1.dev9"
 __all__ = ["init", "finish", "proto"]

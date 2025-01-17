@@ -9,3 +9,11 @@ class HealthCheckRequest(_message.Message):
     VERSION_FIELD_NUMBER: _ClassVar[int]
     version: str
     def __init__(self, version: _Optional[str] = ...) -> None: ...
+
+class HealthCheckResponse(_message.Message):
+    __slots__ = ("status", "message")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...

@@ -5,9 +5,8 @@ from typing import List, Optional, Callable
 
 import divi
 
-from divi.proto.core.v1.core_pb2_grpc import CoreStub
-from divi.proto.core.v1.health_check_request_pb2 import HealthCheckRequest
-from divi.proto.core.v1.health_check_response_pb2 import HealthCheckResponse
+from divi.proto.core_pb2_grpc import CoreStub
+from divi.proto.health_pb2 import HealthCheckRequest, HealthCheckResponse
 
 
 class Run:

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package core;
+
+import "divi/proto/health.proto";
+
+option go_package = "core/proto";
+
+// Health is a service that implements health check.
+service Core {
+  rpc Check(HealthCheckRequest) returns (HealthCheckResponse) {}
+}

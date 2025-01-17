@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package core;
+
+option go_package = "core/proto";
+
+message HealthCheckRequest { string version = 1; }
+
+message HealthCheckResponse {
+  bool status = 1;
+  string message = 2;
+}

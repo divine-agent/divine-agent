@@ -1,11 +1,17 @@
 import re
+import shutil
+import pathlib
 import sysconfig
+import subprocess
 
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 
 
 class CustomBuildHook(BuildHookInterface):
     def initialize(self, version, build_data):
+        target_path = pathlib.Path("core", "main.go")
+        output_path = pathlib.Path("divi", "bin", "core")
+        self._go_build(target_path, output_path)
         build_data["tag"] = f"py3-none-{self._get_platform_tag()}"
         build_data["pure_python"] = False
 
@@ -45,3 +51,31 @@ class CustomBuildHook(BuildHookInterface):
         if os == "linux":
             parts[0] = "manylinux1"
         return "_".join(parts)
+
+    def _go_build(
+        self,
+        target_path: pathlib.PurePath,
+        output_path: pathlib.PurePath,
+    ):
+        """go build -o output_path target_path"""
+        output_flags = ["-o", str(output_path)]
+        subprocess.check_call(
+            [
+                str(self._get_and_require_go_binary()),
+                "build",
+                *output_flags,
+                str(target_path),
+            ],
+        )
+
+    def _get_and_require_go_binary(self) -> pathlib.Path:
+        go = shutil.which("go")
+
+        if not go:
+            self.app.abort(
+                "Did not find the 'go' binary. You need Go to build wandb"
+                " from source. See https://go.dev/doc/install.",
+            )
+            raise AssertionError("unreachable")
+
+        return pathlib.Path(go)

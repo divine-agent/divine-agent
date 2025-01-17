@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 """Compile proto files to python and go files."""
 
-import importlib.metadata
 import os
-import pathlib
 
 import grpc_tools  # type: ignore
 from grpc_tools import protoc  # type: ignore
-from packaging import version
 
 
 proto_root = os.path.join(os.path.dirname(grpc_tools.__file__), "_proto")
@@ -23,9 +20,9 @@ for proto_file in [
             proto_root,
             "-I",
             ".",
-            f"--python_out=.",
-            f"--pyi_out=.",
-            f"--go_out=.",
+            "--python_out=.",
+            "--pyi_out=.",
+            "--go_out=.",
             f"divi/proto/{proto_file}",
         )
     )
@@ -42,11 +39,11 @@ for proto_file in [
             proto_root,
             "-I",
             ".",
-            f"--python_out=.",
-            f"--pyi_out=.",
-            f"--grpc_python_out=.",
-            f"--go_out=.",
-            f"--go-grpc_out=.",
+            "--python_out=.",
+            "--pyi_out=.",
+            "--grpc_python_out=.",
+            "--go_out=.",
+            "--go-grpc_out=.",
             f"divi/proto/{proto_file}",
         )
     )

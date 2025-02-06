@@ -8,7 +8,7 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/Kaikaikaifang/divine-agent/core/proto"
+	pb "github.com/Kaikaikaifang/divine-agent/services/proto"
 	"google.golang.org/grpc"
 )
 

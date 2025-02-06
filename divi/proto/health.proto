@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package core;
 
-option go_package = "core/proto";
+option go_package = "services/proto";
 
 message HealthCheckRequest { string version = 1; }
 

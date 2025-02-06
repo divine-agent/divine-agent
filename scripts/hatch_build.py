@@ -9,7 +9,7 @@ from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 
 class CustomBuildHook(BuildHookInterface):
     def initialize(self, version, build_data):
-        target_path = pathlib.Path("core", "main.go")
+        target_path = pathlib.Path("services", "cmd", "core", "core.go")
         output_path = pathlib.Path("divi", "bin", "core")
         self._go_build(target_path, output_path)
         build_data["tag"] = f"py3-none-{self._get_platform_tag()}"

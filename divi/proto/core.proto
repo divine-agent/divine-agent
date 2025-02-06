@@ -4,7 +4,7 @@ package core;
 
 import "divi/proto/health.proto";
 
-option go_package = "core/proto";
+option go_package = "services/proto";
 
 // Health is a service that implements health check.
 service Core {

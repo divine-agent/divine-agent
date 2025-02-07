@@ -4,11 +4,11 @@ Agent Platform for Observability • Evaluation • Playground
 
 ## TODO
 
-[ ] tailwind-config in packages
-[ ] apollo-client in nextjs
-[ ] eslint in graphql server
-[ ] datapark and auth services
-[ ] [auth service with fiber](https://github.com/gofiber/recipes/tree/master/auth-docker-postgres-jwt)
+- [ ] tailwind-config in packages
+- [ ] apollo-client in nextjs
+- [ ] eslint in graphql server
+- [ ] datapark and auth services
+- [ ] [auth service with fiber](https://github.com/gofiber/recipes/tree/master/auth-docker-postgres-jwt)
 
 ## Structure
 

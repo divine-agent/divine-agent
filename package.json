@@ -1,5 +1,5 @@
 {
-  "name": "tmp",
+  "name": "divine-agent",
   "private": true,
   "scripts": {
     "build": "turbo build",

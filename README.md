@@ -8,7 +8,6 @@ Agent Platform for Observability • Evaluation • Playground
 - [ ] apollo-client in nextjs
 - [ ] eslint in graphql server
 - [ ] datapark and auth services
-- [ ] [auth service with fiber](https://github.com/gofiber/recipes/tree/master/auth-docker-postgres-jwt)
 
 ## Structure
 

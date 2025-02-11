@@ -16,7 +16,7 @@ func main() {
 		CaseSensitive: true,
 		StrictRouting: true,
 		ServerHeader:  "Fiber",
-		AppName:       "App Name",
+		AppName:       "Divi Auth Service",
 	})
 	// app.Use(cors.New())
 

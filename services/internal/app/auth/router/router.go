@@ -20,6 +20,7 @@ func SetupRoutes(app *fiber.App) {
 	// Auth
 	auth := api.Group("/auth")
 	auth.Post("/login", handler.Login)
+	auth.Post("/api_key")
 
 	// User
 	user := api.Group("/user")
@@ -27,4 +28,10 @@ func SetupRoutes(app *fiber.App) {
 	user.Post("/", handler.CreateUser)
 	user.Patch("/:id", jwtware, handler.UpdateUser)
 	user.Delete("/:id", jwtware, handler.DeleteUser)
+
+	// API Key
+	apiKey := api.Group("/api_key")
+	apiKey.Get("/:id", jwtware, handler.GetAPIKey)
+	apiKey.Post("/", jwtware, handler.CreateAPIKey)
+	apiKey.Delete("/:id", jwtware, handler.DeleteAPIKey)
 }

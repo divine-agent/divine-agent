@@ -63,7 +63,7 @@ func Login(c *fiber.Ctx) error {
 	type UserData struct {
 		ID       uint   `json:"id"`
 		Username string `json:"username"`
-		Email    string `json:"email"`
+		// Email    string `json:"email"`
 		Password string `json:"password"`
 	}
 	input := new(LoginInput)
@@ -92,7 +92,7 @@ func Login(c *fiber.Ctx) error {
 		ud = UserData{
 			ID:       userModel.ID,
 			Username: userModel.Username,
-			Email:    userModel.Email,
+			// Email:    userModel.Email,
 			Password: userModel.Password,
 		}
 	}
@@ -120,4 +120,9 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": t})
+}
+
+// LoginWithAPIKey login with api key
+func LoginWithAPIKey(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{"status": "success", "message": "Login with api key", "data": nil})
 }

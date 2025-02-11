@@ -20,7 +20,7 @@ func CreateAPIKey(c *fiber.Ctx) error {
 	}
 
 	db := database.DB
-	apiKey := new(model.APIKey)
+	var apiKey model.APIKey
 	token := c.Locals("user").(*jwt.Token)
 	apiKey.UserID = uint(token.Claims.(jwt.MapClaims)["user_id"].(float64))
 

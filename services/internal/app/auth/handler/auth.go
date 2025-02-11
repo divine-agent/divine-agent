@@ -29,26 +29,26 @@ func CheckPasswordHash(password, hash string) bool {
 
 func getUserByEmail(e string) (*model.User, error) {
 	db := database.DB
-	var user model.User
-	if err := db.Where(&model.User{Email: e}).First(&user).Error; err != nil {
+	user := new(model.User)
+	if err := db.Where(&model.User{Email: e}).First(user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
 		return nil, err
 	}
-	return &user, nil
+	return user, nil
 }
 
 func getUserByUsername(u string) (*model.User, error) {
 	db := database.DB
-	var user model.User
-	if err := db.Where(&model.User{Username: u}).First(&user).Error; err != nil {
+	user := new(model.User)
+	if err := db.Where(&model.User{Username: u}).First(user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
 		return nil, err
 	}
-	return &user, nil
+	return user, nil
 }
 
 func valid(email string) bool {
@@ -81,55 +81,40 @@ func Login(c *fiber.Ctx) error {
 		Identity string `json:"identity"`
 		Password string `json:"password"`
 	}
-	type UserData struct {
-		ID       uint   `json:"id"`
-		Username string `json:"username"`
-		// Email    string `json:"email"`
-		Password string `json:"password"`
-	}
-	input := new(LoginInput)
-	var ud UserData
-
-	if err := c.BodyParser(input); err != nil {
+	var input LoginInput
+	if err := c.BodyParser(&input); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Error on login request", "errors": err.Error()})
 	}
 
 	identity := input.Identity
 	pass := input.Password
-	userModel, err := new(model.User), *new(error)
+	user, err := new(model.User), error(nil)
 
 	if valid(identity) {
-		userModel, err = getUserByEmail(identity)
+		user, err = getUserByEmail(identity)
 	} else {
-		userModel, err = getUserByUsername(identity)
+		user, err = getUserByUsername(identity)
 	}
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Internal Server Error", "data": err})
-	} else if userModel == nil {
+	} else if user == nil {
 		CheckPasswordHash(pass, "")
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid identity or password", "data": err})
-	} else {
-		ud = UserData{
-			ID:       userModel.ID,
-			Username: userModel.Username,
-			// Email:    userModel.Email,
-			Password: userModel.Password,
-		}
 	}
 
-	if !CheckPasswordHash(pass, ud.Password) {
+	if !CheckPasswordHash(pass, user.Password) {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid identity or password", "data": nil})
 	}
 
 	claims := jwt.MapClaims{
-		"username": ud.Username,
-		"user_id":  ud.ID,
+		"username": user.Username,
+		"user_id":  user.ID,
 		"exp":      time.Now().Add(time.Hour * 24 * 7).Unix(),
 	}
 	t, err := createTokenByRS256(claims)
 	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create token", "data": err})
 	}
 
 	return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": t})
@@ -140,8 +125,8 @@ func LoginWithAPIKey(c *fiber.Ctx) error {
 	type LoginInput struct {
 		APIKey string `json:"api_key"`
 	}
-	input := new(LoginInput)
-	if err := c.BodyParser(input); err != nil {
+	var input LoginInput
+	if err := c.BodyParser(&input); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Error on login request", "errors": err.Error()})
 	}
 
@@ -154,16 +139,16 @@ func LoginWithAPIKey(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid api key", "data": nil})
 	}
 
-	var ud model.User
-	db.First(&ud, apiKey.UserID)
+	var user model.User
+	db.First(&user, apiKey.UserID)
 	claims := jwt.MapClaims{
-		"username": ud.Username,
-		"user_id":  ud.ID,
+		"username": user.Username,
+		"user_id":  user.ID,
 		"exp":      time.Now().Add(time.Hour * 24 * 7).Unix(),
 	}
 	t, err := createTokenByRS256(claims)
 	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create token", "data": err})
 	}
 
 	return c.JSON(fiber.Map{"status": "success", "message": "Success login with api key", "data": t})

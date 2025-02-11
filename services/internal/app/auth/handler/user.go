@@ -47,7 +47,7 @@ func GetUser(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
 	var user model.User
-	db.Find(&user, id)
+	db.Omit("password").Find(&user, id)
 	if user.Username == "" {
 		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "No user found with ID", "data": nil})
 	}
@@ -62,13 +62,13 @@ func CreateUser(c *fiber.Ctx) error {
 	}
 
 	db := database.DB
-	user := new(model.User)
-	if err := c.BodyParser(user); err != nil {
+	var user model.User
+	if err := c.BodyParser(&user); err != nil {
 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Review your input", "errors": err.Error()})
 	}
 
 	validate := validator.New()
-	if err := validate.Struct(user); err != nil {
+	if err := validate.Struct(&user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid request body", "errors": err.Error()})
 	}
 
@@ -110,7 +110,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	db := database.DB
 	var user model.User
 
-	db.First(&user, id)
+	db.Omit("password").First(&user, id)
 	user.Name = uui.Name
 	db.Save(&user)
 
@@ -130,7 +130,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 
 	if !validToken(token, id) {
-		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Invalid token id", "data": nil})
+		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Invalid user id", "data": nil})
 	}
 
 	if !validUser(id, pi.Password) {

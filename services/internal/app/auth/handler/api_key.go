@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"crypto/sha256"
+	"encoding/base64"
 	"fmt"
 
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/database"
@@ -13,7 +15,8 @@ import (
 // CreateAPIKey create a new api key
 func CreateAPIKey(c *fiber.Ctx) error {
 	type NewAPIKey struct {
-		Key string `json:"key"`
+		ID     uint   `json:"id"`
+		APIKey string `json:"api_key"`
 	}
 
 	db := database.DB
@@ -22,31 +25,52 @@ func CreateAPIKey(c *fiber.Ctx) error {
 	apiKey.UserID = uint(token.Claims.(jwt.MapClaims)["user_id"].(float64))
 
 	// generate api key with uuid
-	key := uuid.New().String()
-	key = fmt.Sprintf("divi-%s", key)
+	prefix := "divi-"
+	key := prefix + uuid.New().String()
+	// slice 4 digits from the end
+	apiKey.Mask = fmt.Sprintf("%s...%s", prefix, key[len(key)-4:])
 
 	// db store hashed api key
-	hashedKey, err := hashPassword(key)
-	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Failed to create api key", "data": nil})
-	}
-	apiKey.Key = hashedKey
+	digest := sha256.Sum256([]byte(key))
+	apiKey.Digest = base64.StdEncoding.EncodeToString(digest[:])
 
 	// db store api key
 	if err := db.Create(&apiKey).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Failed to create api key", "data": nil})
 	}
 
-	newAPIKey := NewAPIKey{Key: key}
+	newAPIKey := NewAPIKey{ID: apiKey.ID, APIKey: key}
 	return c.JSON(fiber.Map{"status": "success", "message": "Created api key", "data": newAPIKey})
 }
 
-// GetAPIKey get api key
-func GetAPIKey(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"status": "success", "message": "Get api key", "data": nil})
+// GetAPIKeys get all api keys
+func GetAPIKeys(c *fiber.Ctx) error {
+	db := database.DB
+	var apiKeys []model.APIKey
+	// where: user_id = token.user_id
+	token := c.Locals("user").(*jwt.Token)
+	userID := uint(token.Claims.(jwt.MapClaims)["user_id"].(float64))
+	// omit digest (hashed api key)
+	if err := db.Where(&model.APIKey{UserID: userID}).Omit("Digest").Find(&apiKeys).Error; err != nil {
+		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Failed to get api keys", "data": nil})
+	}
+	return c.JSON(fiber.Map{"status": "success", "message": "Get all api keys", "data": apiKeys})
 }
 
 // DeleteAPIKey delete api key
-func DeleteAPIKey(c *fiber.Ctx) error {
+func RevokeAPIKey(c *fiber.Ctx) error {
+	id := c.Params("id")
+	token := c.Locals("user").(*jwt.Token)
+	userID := uint(token.Claims.(jwt.MapClaims)["user_id"].(float64))
+
+	db := database.DB
+	var apiKey model.APIKey
+
+	db.First(&apiKey, id)
+	if apiKey.UserID != userID {
+		return c.Status(403).JSON(fiber.Map{"status": "error", "message": "Forbidden", "data": nil})
+	}
+
+	db.Delete(&apiKey)
 	return c.JSON(fiber.Map{"status": "success", "message": "Deleted api key", "data": nil})
 }

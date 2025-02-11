@@ -10,6 +10,7 @@ __pycache__/
 .next/
 dist/
 out/
+tmp/
 build/
 divi/bin/
 

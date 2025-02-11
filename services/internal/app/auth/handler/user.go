@@ -138,10 +138,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	}
 
 	db := database.DB
-	var user model.User
 
-	db.First(&user, id)
-
-	db.Delete(&user)
+	db.Delete(&model.User{}, id)
 	return c.JSON(fiber.Map{"status": "success", "message": "User successfully deleted", "data": nil})
 }

@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"crypto/sha256"
+	"encoding/base64"
 	"errors"
 	"log"
 	"net/mail"
@@ -54,6 +56,25 @@ func valid(email string) bool {
 	return err == nil
 }
 
+// createTokenByRS256 create token by RS256 algorithm
+func createTokenByRS256(claims jwt.MapClaims) (t string, err error) {
+	token := jwt.New(jwt.SigningMethodRS256)
+	token.Claims = claims
+
+	encodedPrivateKey := config.Config("ACCESS_TOKEN_PRIVATE_KEY")
+	privateKey, err := auth.ParsePrivateKey(encodedPrivateKey)
+	if err != nil {
+		return "", err
+	}
+
+	t, err = token.SignedString(privateKey)
+	if err != nil {
+		return "", err
+	}
+
+	return t, nil
+}
+
 // Login get user and password
 func Login(c *fiber.Ctx) error {
 	type LoginInput struct {
@@ -101,20 +122,12 @@ func Login(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid identity or password", "data": nil})
 	}
 
-	token := jwt.New(jwt.SigningMethodRS256)
-
-	claims := token.Claims.(jwt.MapClaims)
-	claims["username"] = ud.Username
-	claims["user_id"] = ud.ID
-	claims["exp"] = time.Now().Add(time.Hour * 24 * 7).Unix()
-
-	encodedPrivateKey := config.Config("ACCESS_TOKEN_PRIVATE_KEY")
-	privateKey, err := auth.ParsePrivateKey(encodedPrivateKey)
-	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
+	claims := jwt.MapClaims{
+		"username": ud.Username,
+		"user_id":  ud.ID,
+		"exp":      time.Now().Add(time.Hour * 24 * 7).Unix(),
 	}
-
-	t, err := token.SignedString(privateKey)
+	t, err := createTokenByRS256(claims)
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
@@ -124,5 +137,34 @@ func Login(c *fiber.Ctx) error {
 
 // LoginWithAPIKey login with api key
 func LoginWithAPIKey(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"status": "success", "message": "Login with api key", "data": nil})
+	type LoginInput struct {
+		APIKey string `json:"api_key"`
+	}
+	input := new(LoginInput)
+	if err := c.BodyParser(input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Error on login request", "errors": err.Error()})
+	}
+
+	db := database.DB
+	var apiKey model.APIKey
+	// find user by api key's digest
+	d := sha256.Sum256([]byte(input.APIKey))
+	digest := base64.StdEncoding.EncodeToString(d[:])
+	if err := db.Where("digest=?", digest).First(&apiKey).Error; err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid api key", "data": nil})
+	}
+
+	var ud model.User
+	db.First(&ud, apiKey.UserID)
+	claims := jwt.MapClaims{
+		"username": ud.Username,
+		"user_id":  ud.ID,
+		"exp":      time.Now().Add(time.Hour * 24 * 7).Unix(),
+	}
+	t, err := createTokenByRS256(claims)
+	if err != nil {
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "message": "Success login with api key", "data": t})
 }

@@ -5,8 +5,10 @@ import "gorm.io/gorm"
 // APIKey struct
 type APIKey struct {
 	gorm.Model
-	// Key is the hashed API key
-	Key string `gorm:"uniqueIndex;not null;" validate:"required" json:"key"`
+	// Digest is the hashed API key
+	Digest string `gorm:"uniqueIndex;not null;" json:"digest,omitempty"`
+	// Mask is the masked API key
+	Mask string `gorm:"not null;" json:"mask"`
 
 	// Foreign Keys
 	UserID uint `gorm:"not null;" json:"user_id"`

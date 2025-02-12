@@ -4,6 +4,7 @@ Agent Platform for Observability • Evaluation • Playground
 
 ## TODO
 
+- [ ] clients access auth service
 - [ ] tailwind-config in packages
 - [ ] apollo-client in nextjs
 - [ ] eslint in graphql server

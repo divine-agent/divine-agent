@@ -10,6 +10,7 @@ import (
 
 	pb "github.com/Kaikaikaifang/divine-agent/services/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 )
 
 var (
@@ -22,7 +23,14 @@ type server struct {
 }
 
 func (s *server) Check(ctx context.Context, in *pb.HealthCheckRequest) (*pb.HealthCheckResponse, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, fmt.Errorf("missing metadata")
+	}
+	log.Printf("metadata: %v", md.Get("version"))
 	log.Printf("SDK Version: %s", in.Version)
+	trailer := metadata.Pairs("trailer-key", "val")
+	grpc.SetTrailer(ctx, trailer)
 	return &pb.HealthCheckResponse{
 		Status:  true,
 		Message: "ok",

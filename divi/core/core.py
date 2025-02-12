@@ -1,0 +1,40 @@
+from subprocess import Popen
+from typing import Callable, List, Optional
+
+import grpc
+
+import divi
+from divi.proto.core_pb2_grpc import CoreStub
+from divi.proto.health_pb2 import HealthCheckRequest
+
+
+class Core:
+    """Core Runtime Class."""
+
+    def __init__(self, host="localhost", port=50051) -> None:
+        self.host: str = host
+        self.port: int = port
+        self.process: Optional[Popen] = None
+        self.hooks: List[Callable[[], None]] = []
+
+    @property
+    def target(self) -> str:
+        """Return the target string."""
+        return f"{self.host}:{self.port}"
+
+    def check_health(self) -> bool:
+        """Check the health of the service."""
+        with grpc.insecure_channel(self.target) as channel:
+            stub = CoreStub(channel)
+            response, call = stub.Check.with_call(
+                HealthCheckRequest(version=divi.__version__),
+                # Note: ((),) notice the `,` at the end of the tuple
+                metadata=(("version", divi.__version__),),
+            )
+        print(f"Health check: {response.message}")
+        for key, value in call.trailing_metadata():
+            print(
+                "python client received trailing metadata: key=%s value=%s"
+                % (key, value)
+            )
+        return response.status

@@ -4,12 +4,12 @@ import divi
 
 
 def finish():
-    """Clean up the run."""
-    run = divi.run
-    if run is None:
+    """Clean up the core."""
+    core = divi._core
+    if core is None:
         return
 
     # Clean up the hooks
-    for hook in run.hooks:
+    for hook in core.hooks:
         hook()
         atexit.unregister(hook)

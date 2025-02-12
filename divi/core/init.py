@@ -1,59 +1,56 @@
-import grpc
-import time
-import socket
 import atexit
+import socket
 import subprocess
-
+import time
 from typing import Union
 
-import divi
+import grpc
 
-from divi.core.run import Run
+import divi
+from divi.core import Core
 from divi.utils import get_server_path
 
 
-def init(
-    host: Union[str, None] = None, port: Union[str, None] = None
-) -> Union[Run, None]:
-    divi.run = Run(host, port)
+def init(host="localhost", port=50051) -> Union[Core, None]:
+    divi._core = Core(host=host, port=port)
     _start_server()
+    return divi._core
 
 
 def _start_server():
     """Start the backend server."""
     # get the run object
-    run = divi.run
-    if run is None:
+    core = divi._core
+    if core is None:
         return
 
     # start the server
     bin_path = get_server_path()
     command = [bin_path]
-    run.process = subprocess.Popen(command)
+    core.process = subprocess.Popen(command)
 
     # Wait for the port to be open
-    if not _wait_for_port(run.host, run.port, 10):
-        run.process.terminate()
+    if not _wait_for_port(core.host, core.port, 10):
+        core.process.terminate()
         raise RuntimeError("Service failed to start: port not open")
 
     # Check if the gRPC channel is ready
-    channel = grpc.insecure_channel(run.target)
+    channel = grpc.insecure_channel(core.target)
     try:
         grpc.channel_ready_future(channel).result(timeout=10)
     except grpc.FutureTimeoutError:
-        run.process.terminate()
+        core.process.terminate()
         raise RuntimeError("gRPC channel not ready")
     finally:
         channel.close()
 
-    # Health check
-    status = run.check_health()
-    if not status:
-        run.process.terminate()
-        raise RuntimeError("Service failed health check")
+    core.hooks.append(core.process.terminate)
+    atexit.register(core.process.terminate)
 
-    run.hooks.append(run.process.terminate)
-    atexit.register(run.process.terminate)
+    # Health check
+    status = core.check_health()
+    if not status:
+        raise RuntimeError("Service failed health check")
 
 
 def _wait_for_port(host, port, timeout_seconds):
@@ -78,3 +75,7 @@ def _is_port_open(host, port):
     except Exception as e:
         print(f"Error checking port: {e}")
         return False
+
+
+if __name__ == "__main__":
+    init()

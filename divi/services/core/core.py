@@ -6,21 +6,16 @@ import grpc
 import divi
 from divi.proto.core_pb2_grpc import CoreStub
 from divi.proto.health_pb2 import HealthCheckRequest
+from divi.service import Service
 
 
-class Core:
+class Core(Service):
     """Core Runtime Class."""
 
     def __init__(self, host="localhost", port=50051) -> None:
-        self.host: str = host
-        self.port: int = port
+        super().__init__(host, port)
         self.process: Optional[Popen] = None
         self.hooks: List[Callable[[], None]] = []
-
-    @property
-    def target(self) -> str:
-        """Return the target string."""
-        return f"{self.host}:{self.port}"
 
     def check_health(self) -> bool:
         """Check the health of the service."""

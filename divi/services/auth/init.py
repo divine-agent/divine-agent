@@ -2,7 +2,7 @@ import os
 from typing import Union
 
 import divi
-from divi.auth import Auth
+from divi.services.auth import Auth
 
 DIVI_API_KEY = "DIVI_API_KEY"
 

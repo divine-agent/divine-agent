@@ -7,7 +7,7 @@ from typing import Union
 import grpc
 
 import divi
-from divi.core import Core
+from divi.services import Core
 from divi.utils import get_server_path
 
 

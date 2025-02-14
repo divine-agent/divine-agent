@@ -6,7 +6,7 @@ import grpc
 import divi
 from divi.proto.core_pb2_grpc import CoreStub
 from divi.proto.health_pb2 import HealthCheckRequest
-from divi.service import Service
+from divi.services.service import Service
 
 
 class Core(Service):

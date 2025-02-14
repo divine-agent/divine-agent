@@ -1,21 +1,19 @@
 import time
-from weakref import ReferenceType, ref
+from weakref import ref
 
 import jwt
-
-from divi.services.auth.auth import Auth
 
 
 class Token:
     """JWT Manager Class."""
 
-    def __init__(self, auth: Auth) -> None:
-        self.auth: ReferenceType[Auth] = ref(auth)
+    def __init__(self, auth) -> None:
+        self.auth = ref(auth)
         self.claims: dict = {}
         self.__token: str = ""
 
     def __str__(self) -> str:
-        return self.__token
+        return self.token
 
     @property
     def exp(self) -> int:

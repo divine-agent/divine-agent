@@ -7,5 +7,5 @@ class Service:
 
     @property
     def target(self) -> str:
-        """Return the target string."""
+        """Return the target string: host:port."""
         return f"{self.host}:{self.port}"

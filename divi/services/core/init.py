@@ -2,16 +2,16 @@ import atexit
 import socket
 import subprocess
 import time
-from typing import Union
+from typing import Optional
 
 import grpc
 
 import divi
-from divi.services import Core
+from divi.services.core import Core
 from divi.utils import get_server_path
 
 
-def init(host="localhost", port=50051) -> Union[Core, None]:
+def init(host="localhost", port=50051) -> Optional[Core]:
     divi._core = Core(host=host, port=port)
     _start_server()
     return divi._core

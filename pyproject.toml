@@ -8,6 +8,7 @@ dependencies = [
     "grpcio>=1.69.0",
     "protobuf>=5.29.3",
     "pyjwt>=2.10.1",
+    "requests>=2.32.3",
 ]
 
 [build-system]

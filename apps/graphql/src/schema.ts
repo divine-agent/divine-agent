@@ -2,24 +2,14 @@ import gql from "graphql-tag";
 
 export const typeDefs = gql`
   type Query {
-    "Query to get tracks array for the homepage grid"
-    tracksForHome: [Track!]!
+    "Fetch a specific user by id"
+    user(id: ID!): User!
   }
 
-  "A track is a group of Modules that teaches about a specific topic"
-  type Track {
+  "User is a registered user of the application"
+  type User {
     id: ID!
-    title: String!
-    author: Author!
-    thumbnail: String
-    length: Int
-    modulesCount: Int
-  }
-
-  "Author of a complete Track or a Module"
-  type Author {
-    id: ID!
-    name: String!
-    photo: String
+    username: String!
+    email: String!
   }
 `;

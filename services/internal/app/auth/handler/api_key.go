@@ -47,13 +47,15 @@ func CreateAPIKey(c *fiber.Ctx) error {
 func GetAPIKeys(c *fiber.Ctx) error {
 	db := database.DB
 	var apiKeys []model.APIKey
-	// where: user_id = token.user_id
+
 	token := c.Locals("user").(*jwt.Token)
 	userID := uint(token.Claims.(jwt.MapClaims)["user_id"].(float64))
+
 	// omit digest (hashed api key)
 	if err := db.Where(&model.APIKey{UserID: userID}).Omit("Digest").Find(&apiKeys).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Failed to get api keys", "data": nil})
 	}
+
 	return c.JSON(fiber.Map{"status": "success", "message": "Get all api keys", "data": apiKeys})
 }
 

@@ -1,39 +1,21 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { typeDefs } from "./schema";
-import { makeExecutableSchema } from "@graphql-tools/schema";
-import { addMocksToSchema } from "@graphql-tools/mock";
-
-const mocks = {
-  Query: () => ({
-    tracksForHome: () => Array.from({ length: 6 }),
-  }),
-  Track: () => ({
-    id: () => "track_01",
-    title: () => "Astro Kitty, Space Explorer",
-    author: () => {
-      return {
-        name: "Grumpy Cat",
-        photo:
-          "https://res.cloudinary.com/apollographql/image/upload/v1730818804/odyssey/lift-off-api/catstrophysicist_bqfh9n_j0amow.jpg",
-      };
-    },
-    thumbnail: () =>
-      "https://res.cloudinary.com/apollographql/image/upload/v1730818804/odyssey/lift-off-api/nebula_cat_djkt9r_nzifdj.jpg",
-    length: () => 1210,
-    modulesCount: () => 6,
-  }),
-};
+import { resolvers } from "./resolvers";
+import { AuthAPI } from "./datasources/auth-api";
 
 async function startApolloServer() {
-  const server = new ApolloServer({
-    schema: addMocksToSchema({
-      schema: makeExecutableSchema({ typeDefs }),
-      mocks,
-    }),
+  const server = new ApolloServer({ typeDefs, resolvers });
+  const { url } = await startStandaloneServer(server, {
+    context: async () => {
+      const { cache } = server;
+      return {
+        dataSources: {
+          authAPI: new AuthAPI({ cache }),
+        },
+      };
+    },
   });
-  const { url } = await startStandaloneServer(server);
-
   console.log(`
     🚀  Server is running!
     📭  Query at ${url}

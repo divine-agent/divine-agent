@@ -11,5 +11,12 @@ export const typeDefs = gql`
     id: ID!
     username: String!
     email: String!
+    api_keys: [APIKey]
+  }
+
+  "APIKey is a key used to authenticate requests to the API"
+  type APIKey {
+    id: ID!
+    api_key: String!
   }
 `;

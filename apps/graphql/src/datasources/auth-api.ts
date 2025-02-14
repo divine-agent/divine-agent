@@ -1,11 +1,25 @@
-import type { FetchResponse, User } from "../models";
-import { RESTDataSource } from "@apollo/datasource-rest";
+import type { APIKey, FetchResponse, User } from "../models";
+import { RESTDataSource, type AugmentedRequest } from "@apollo/datasource-rest";
+import type { KeyValueCache } from "@apollo/utils.keyvaluecache";
 
 export class AuthAPI extends RESTDataSource {
   override baseURL = "http://localhost:3000/";
-  private token: string | null = null;
+  private token: string;
+
+  constructor(options: { token: string; cache: KeyValueCache }) {
+    super(options);
+    this.token = options.token;
+  }
+
+  override willSendRequest(_path: string, request: AugmentedRequest) {
+    request.headers.authorization = this.token;
+  }
 
   async getUser(userId: string) {
     return (await this.get<FetchResponse<User>>(`/api/user/${userId}`)).data;
+  }
+
+  async getAPIKeys() {
+    return (await this.get<FetchResponse<APIKey[]>>("/api/api_key/")).data;
   }
 }

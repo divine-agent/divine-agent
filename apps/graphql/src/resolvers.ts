@@ -6,4 +6,9 @@ export const resolvers: Resolvers = {
       return dataSources.authAPI.getUser(id);
     },
   },
+  User: {
+    api_keys: async (user, args, { dataSources }) => {
+      return dataSources.authAPI.getAPIKeys();
+    },
+  },
 };

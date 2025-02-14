@@ -28,7 +28,7 @@ func CreateAPIKey(c *fiber.Ctx) error {
 	prefix := "divi-"
 	key := prefix + uuid.New().String()
 	// slice 4 digits from the end
-	apiKey.Mask = fmt.Sprintf("%s...%s", prefix, key[len(key)-4:])
+	apiKey.APIKey = fmt.Sprintf("%s...%s", prefix, key[len(key)-4:])
 
 	// db store hashed api key
 	digest := sha256.Sum256([]byte(key))

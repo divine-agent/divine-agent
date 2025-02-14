@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { User } from './models';
+import { User, APIKey } from './models';
 import { DataSourceContext } from './context';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -18,6 +18,13 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+/** APIKey is a key used to authenticate requests to the API */
+export type ApiKey = {
+  __typename?: 'APIKey';
+  api_key: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
   /** Fetch a specific user by id */
@@ -32,6 +39,7 @@ export type QueryUserArgs = {
 /** User is a registered user of the application */
 export type User = {
   __typename?: 'User';
+  api_keys?: Maybe<Array<Maybe<ApiKey>>>;
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   username: Scalars['String']['output'];
@@ -108,6 +116,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  APIKey: ResolverTypeWrapper<APIKey>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Query: ResolverTypeWrapper<{}>;
@@ -117,6 +126,7 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  APIKey: APIKey;
   Boolean: Scalars['Boolean']['output'];
   ID: Scalars['ID']['output'];
   Query: {};
@@ -124,11 +134,18 @@ export type ResolversParentTypes = {
   User: User;
 };
 
+export type ApiKeyResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['APIKey'] = ResolversParentTypes['APIKey']> = {
+  api_key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
 };
 
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  api_keys?: Resolver<Maybe<Array<Maybe<ResolversTypes['APIKey']>>>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -136,6 +153,7 @@ export type UserResolvers<ContextType = DataSourceContext, ParentType extends Re
 };
 
 export type Resolvers<ContextType = DataSourceContext> = {
+  APIKey?: ApiKeyResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };

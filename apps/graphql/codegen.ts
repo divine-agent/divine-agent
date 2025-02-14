@@ -8,7 +8,8 @@ const config: CodegenConfig = {
       config: {
         contextType: "./context#DataSourceContext",
         mappers: {
-          Track: "./models#User",
+          User: "./models#User",
+          APIKey: "./models#APIKey",
         },
       },
     },

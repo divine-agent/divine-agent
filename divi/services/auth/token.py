@@ -1,14 +1,16 @@
 import time
-from typing import Union
+from weakref import ReferenceType, ref
 
 import jwt
+
+from divi.services.auth.auth import Auth
 
 
 class Token:
     """JWT Manager Class."""
 
-    def __init__(self, api_key: str) -> None:
-        self.api_key: Union[str, None] = api_key
+    def __init__(self, auth: Auth) -> None:
+        self.auth: ReferenceType[Auth] = ref(auth)
         self.claims: dict = {}
         self.__token: str = ""
 
@@ -30,17 +32,11 @@ class Token:
 
     def _init_token(self):
         """Initialize the token."""
-        if not self.api_key:
-            raise ValueError("API key is required")
-        self.__token = _get_token(self.api_key)
-        claims = _decode_token(self.__token)
-        self.claims = claims
-
-
-def _get_token(api_key: str) -> str:
-    """Get token with the API key."""
-    # Simulate the token generation process
-    return "token"
+        auth = self.auth()
+        if not auth:
+            raise ValueError("Auth object is not available")
+        self.__token = auth.auth_with_api_key()
+        self.claims = _decode_token(self.__token)
 
 
 def _decode_token(token: str) -> dict:

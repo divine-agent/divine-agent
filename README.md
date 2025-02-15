@@ -4,11 +4,10 @@ Agent Platform for Observability • Evaluation • Playground
 
 ## TODO
 
-- [ ] clients access auth service
+- [ ] [apollo-client in nextjs](https://github.com/apollographql/apollo-client-nextjs)
 - [ ] tailwind-config in packages
-- [ ] apollo-client in nextjs
 - [ ] eslint in graphql server
-- [ ] datapark and auth services
+- [ ] datapark services
 
 ## Structure
 

@@ -11,6 +11,8 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@apollo/client": "^3.13.1",
+    "@apollo/experimental-nextjs-app-support": "^0.11.9",
     "@repo/ui": "workspace:*",
     "next": "^15.1.7",
     "react": "^19.0.0",

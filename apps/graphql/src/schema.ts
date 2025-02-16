@@ -6,6 +6,17 @@ export const typeDefs = gql`
     user(id: ID!): User!
   }
 
+  type Mutation {
+    createAPIKey: CreateAPIKeyResponse!
+  }
+
+  "MutationResponse is a response to a mutation"
+  interface MutationResponse {
+    code: Int!
+    message: String!
+    success: Boolean!
+  }
+
   "User is a registered user of the application"
   type User {
     id: ID!
@@ -18,5 +29,13 @@ export const typeDefs = gql`
   type APIKey {
     id: ID!
     api_key: String!
+  }
+
+  "CreateAPIKeyResponse is a response to the createAPIKey mutation"
+  type CreateAPIKeyResponse implements MutationResponse {
+    code: Int!
+    message: String!
+    success: Boolean!
+    data: APIKey
   }
 `;

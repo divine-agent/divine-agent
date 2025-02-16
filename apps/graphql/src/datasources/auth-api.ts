@@ -16,10 +16,14 @@ export class AuthAPI extends RESTDataSource {
   }
 
   async getUser(userId: string) {
-    return (await this.get<FetchResponse<User>>(`/api/user/${userId}`)).data;
+    return await this.get<FetchResponse<User>>(`/api/user/${userId}`);
   }
 
   async getAPIKeys() {
-    return (await this.get<FetchResponse<APIKey[]>>("/api/api_key/")).data;
+    return await this.get<FetchResponse<APIKey[]>>("/api/api_key/");
+  }
+
+  async createAPIKey() {
+    return await this.post<FetchResponse<APIKey>>("/api/api_key/");
   }
 }

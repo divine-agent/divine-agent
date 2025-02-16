@@ -1,4 +1,4 @@
-import type { AuthAPI } from "./datasources/auth-api";
+import type { AuthAPI } from "@/datasources/auth-api";
 
 export type DataSourceContext = {
   dataSources: {

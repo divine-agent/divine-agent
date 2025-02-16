@@ -1,5 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { User, APIKey } from './models';
+import { UserModel } from './user';
+import { APIKeyModel } from './api-key';
 import { DataSourceContext } from './context';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -186,7 +187,7 @@ export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = 
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  APIKey: ResolverTypeWrapper<APIKey>;
+  APIKey: ResolverTypeWrapper<APIKeyModel>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreateAPIKeyResponse: ResolverTypeWrapper<Omit<CreateApiKeyResponse, 'data'> & { data?: Maybe<ResolversTypes['APIKey']> }>;
   CreateTokenResponse: ResolverTypeWrapper<CreateTokenResponse>;
@@ -197,12 +198,12 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   RevokeAPIKeyResponse: ResolverTypeWrapper<RevokeApiKeyResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
-  User: ResolverTypeWrapper<User>;
+  User: ResolverTypeWrapper<UserModel>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  APIKey: APIKey;
+  APIKey: APIKeyModel;
   Boolean: Scalars['Boolean']['output'];
   CreateAPIKeyResponse: Omit<CreateApiKeyResponse, 'data'> & { data?: Maybe<ResolversParentTypes['APIKey']> };
   CreateTokenResponse: CreateTokenResponse;
@@ -213,7 +214,7 @@ export type ResolversParentTypes = {
   Query: {};
   RevokeAPIKeyResponse: RevokeApiKeyResponse;
   String: Scalars['String']['output'];
-  User: User;
+  User: UserModel;
 };
 
 export type ApiKeyResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['APIKey'] = ResolversParentTypes['APIKey']> = {

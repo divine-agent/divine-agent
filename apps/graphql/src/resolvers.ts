@@ -1,5 +1,9 @@
-import type { Resolvers } from "./types";
-import type { ErrorResponse, FetchResponse, MutationResponse } from "./models";
+import type { Resolvers } from "@/types/types";
+import type {
+  ErrorResponse,
+  FetchResponse,
+  MutationResponse,
+} from "@/types/response";
 import type { GraphQLError } from "graphql";
 
 export const resolvers: Resolvers = {

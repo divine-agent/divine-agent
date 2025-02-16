@@ -1,4 +1,6 @@
-import type { APIKey, FetchResponse, User } from "../models";
+import type { FetchResponse } from "@/types/response";
+import type { APIKeyModel } from "@/types/api-key";
+import type { UserModel } from "@/types/user";
 import { RESTDataSource, type AugmentedRequest } from "@apollo/datasource-rest";
 import type { KeyValueCache } from "@apollo/utils.keyvaluecache";
 
@@ -16,15 +18,15 @@ export class AuthAPI extends RESTDataSource {
   }
 
   async getUser(userId: string) {
-    return await this.get<FetchResponse<User>>(`/api/user/${userId}`);
+    return await this.get<FetchResponse<UserModel>>(`/api/user/${userId}`);
   }
 
   async getAPIKeys() {
-    return await this.get<FetchResponse<APIKey[]>>("/api/api_key/");
+    return await this.get<FetchResponse<APIKeyModel[]>>("/api/api_key/");
   }
 
   async createAPIKey() {
-    return await this.post<FetchResponse<APIKey>>("/api/api_key/");
+    return await this.post<FetchResponse<APIKeyModel>>("/api/api_key/");
   }
 
   async revokeAPIKey(apiKeyId: string) {

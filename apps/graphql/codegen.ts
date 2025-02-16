@@ -3,13 +3,13 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 const config: CodegenConfig = {
   schema: "./src/schema.ts",
   generates: {
-    "./src/types.ts": {
+    "./src/types/types.d.ts": {
       plugins: ["typescript", "typescript-resolvers"],
       config: {
         contextType: "./context#DataSourceContext",
         mappers: {
-          User: "./models#User",
-          APIKey: "./models#APIKey",
+          User: "./user#UserModel",
+          APIKey: "./api-key#APIKeyModel",
         },
       },
     },

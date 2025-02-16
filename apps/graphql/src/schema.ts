@@ -8,6 +8,7 @@ export const typeDefs = gql`
 
   type Mutation {
     createAPIKey: CreateAPIKeyResponse!
+    revokeAPIKey(id: ID!): RevokeAPIKeyResponse!
   }
 
   "MutationResponse is a response to a mutation"
@@ -37,5 +38,12 @@ export const typeDefs = gql`
     message: String!
     success: Boolean!
     data: APIKey
+  }
+
+  "RevokeAPIKeyResponse is a response to the revokeAPIKey mutation"
+  type RevokeAPIKeyResponse implements MutationResponse {
+    code: Int!
+    message: String!
+    success: Boolean!
   }
 `;

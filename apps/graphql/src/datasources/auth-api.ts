@@ -26,4 +26,8 @@ export class AuthAPI extends RESTDataSource {
   async createAPIKey() {
     return await this.post<FetchResponse<APIKey>>("/api/api_key/");
   }
+
+  async revokeAPIKey(apiKeyId: string) {
+    return await this.delete<FetchResponse<null>>(`/api/api_key/${apiKeyId}`);
+  }
 }

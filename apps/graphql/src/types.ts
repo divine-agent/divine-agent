@@ -35,13 +35,41 @@ export type CreateApiKeyResponse = MutationResponse & {
   success: Scalars['Boolean']['output'];
 };
 
+/** CreateTokenResponse is a response to the login mutation */
+export type CreateTokenResponse = MutationResponse & {
+  __typename?: 'CreateTokenResponse';
+  code: Scalars['Int']['output'];
+  data?: Maybe<Scalars['String']['output']>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
+/** Mutation is a collection of mutations that can be made to the API */
 export type Mutation = {
   __typename?: 'Mutation';
+  /** API Key Mutations */
   createAPIKey: CreateApiKeyResponse;
+  /** Auth Mutations */
+  login: CreateTokenResponse;
+  loginWithAPIKey: CreateTokenResponse;
   revokeAPIKey: RevokeApiKeyResponse;
 };
 
 
+/** Mutation is a collection of mutations that can be made to the API */
+export type MutationLoginArgs = {
+  identity: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+
+/** Mutation is a collection of mutations that can be made to the API */
+export type MutationLoginWithApiKeyArgs = {
+  api_key: Scalars['String']['input'];
+};
+
+
+/** Mutation is a collection of mutations that can be made to the API */
 export type MutationRevokeApiKeyArgs = {
   id: Scalars['ID']['input'];
 };
@@ -53,6 +81,7 @@ export type MutationResponse = {
   success: Scalars['Boolean']['output'];
 };
 
+/** Query is a collection of queries that can be made to the API */
 export type Query = {
   __typename?: 'Query';
   /** Fetch a specific user by id */
@@ -60,6 +89,7 @@ export type Query = {
 };
 
 
+/** Query is a collection of queries that can be made to the API */
 export type QueryUserArgs = {
   id: Scalars['ID']['input'];
 };
@@ -151,7 +181,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
-  MutationResponse: ( Omit<CreateApiKeyResponse, 'data'> & { data?: Maybe<_RefType['APIKey']> } ) | ( RevokeApiKeyResponse );
+  MutationResponse: ( Omit<CreateApiKeyResponse, 'data'> & { data?: Maybe<_RefType['APIKey']> } ) | ( CreateTokenResponse ) | ( RevokeApiKeyResponse );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -159,6 +189,7 @@ export type ResolversTypes = {
   APIKey: ResolverTypeWrapper<APIKey>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreateAPIKeyResponse: ResolverTypeWrapper<Omit<CreateApiKeyResponse, 'data'> & { data?: Maybe<ResolversTypes['APIKey']> }>;
+  CreateTokenResponse: ResolverTypeWrapper<CreateTokenResponse>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -174,6 +205,7 @@ export type ResolversParentTypes = {
   APIKey: APIKey;
   Boolean: Scalars['Boolean']['output'];
   CreateAPIKeyResponse: Omit<CreateApiKeyResponse, 'data'> & { data?: Maybe<ResolversParentTypes['APIKey']> };
+  CreateTokenResponse: CreateTokenResponse;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Mutation: {};
@@ -198,13 +230,23 @@ export type CreateApiKeyResponseResolvers<ContextType = DataSourceContext, Paren
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateTokenResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['CreateTokenResponse'] = ResolversParentTypes['CreateTokenResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  data?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createAPIKey?: Resolver<ResolversTypes['CreateAPIKeyResponse'], ParentType, ContextType>;
+  login?: Resolver<ResolversTypes['CreateTokenResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'identity' | 'password'>>;
+  loginWithAPIKey?: Resolver<ResolversTypes['CreateTokenResponse'], ParentType, ContextType, RequireFields<MutationLoginWithApiKeyArgs, 'api_key'>>;
   revokeAPIKey?: Resolver<ResolversTypes['RevokeAPIKeyResponse'], ParentType, ContextType, RequireFields<MutationRevokeApiKeyArgs, 'id'>>;
 };
 
 export type MutationResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['MutationResponse'] = ResolversParentTypes['MutationResponse']> = {
-  __resolveType: TypeResolveFn<'CreateAPIKeyResponse' | 'RevokeAPIKeyResponse', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'CreateAPIKeyResponse' | 'CreateTokenResponse' | 'RevokeAPIKeyResponse', ParentType, ContextType>;
   code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -232,6 +274,7 @@ export type UserResolvers<ContextType = DataSourceContext, ParentType extends Re
 export type Resolvers<ContextType = DataSourceContext> = {
   APIKey?: ApiKeyResolvers<ContextType>;
   CreateAPIKeyResponse?: CreateApiKeyResponseResolvers<ContextType>;
+  CreateTokenResponse?: CreateTokenResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   MutationResponse?: MutationResponseResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

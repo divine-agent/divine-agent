@@ -1,21 +1,10 @@
 import gql from "graphql-tag";
 
 export const typeDefs = gql`
+  "Query is a collection of queries that can be made to the API"
   type Query {
     "Fetch a specific user by id"
     user(id: ID!): User!
-  }
-
-  type Mutation {
-    createAPIKey: CreateAPIKeyResponse!
-    revokeAPIKey(id: ID!): RevokeAPIKeyResponse!
-  }
-
-  "MutationResponse is a response to a mutation"
-  interface MutationResponse {
-    code: Int!
-    message: String!
-    success: Boolean!
   }
 
   "User is a registered user of the application"
@@ -32,6 +21,23 @@ export const typeDefs = gql`
     api_key: String!
   }
 
+  "Mutation is a collection of mutations that can be made to the API"
+  type Mutation {
+    "Auth Mutations"
+    login(identity: String!, password: String!): CreateTokenResponse!
+    loginWithAPIKey(api_key: String!): CreateTokenResponse!
+    "API Key Mutations"
+    createAPIKey: CreateAPIKeyResponse!
+    revokeAPIKey(id: ID!): RevokeAPIKeyResponse!
+  }
+
+  "MutationResponse is a response to a mutation"
+  interface MutationResponse {
+    code: Int!
+    message: String!
+    success: Boolean!
+  }
+
   "CreateAPIKeyResponse is a response to the createAPIKey mutation"
   type CreateAPIKeyResponse implements MutationResponse {
     code: Int!
@@ -45,5 +51,13 @@ export const typeDefs = gql`
     code: Int!
     message: String!
     success: Boolean!
+  }
+
+  "CreateTokenResponse is a response to the login mutation"
+  type CreateTokenResponse implements MutationResponse {
+    code: Int!
+    message: String!
+    success: Boolean!
+    data: String
   }
 `;

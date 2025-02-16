@@ -15,6 +15,16 @@ export const resolvers: Resolvers = {
     revokeAPIKey: async (_, { id }, { dataSources }) => {
       return await mutationAdaptor(dataSources.authAPI.revokeAPIKey(id));
     },
+    login: async (_, { identity, password }, { dataSources }) => {
+      return await mutationAdaptor(
+        dataSources.authAPI.login(identity, password),
+      );
+    },
+    loginWithAPIKey: async (_, { api_key }, { dataSources }) => {
+      return await mutationAdaptor(
+        dataSources.authAPI.loginWithAPIKey(api_key),
+      );
+    },
   },
   User: {
     api_keys: async (user, args, { dataSources }) => {
@@ -33,6 +43,7 @@ async function mutationAdaptor<T>(
 ): Promise<MutationResponse<T | null>> {
   return f
     .then((response): MutationResponse<T> => {
+      console.log("then", response);
       return {
         ...response,
         code: 200,
@@ -41,6 +52,10 @@ async function mutationAdaptor<T>(
     })
     .catch((error: GraphQLError): MutationResponse<null> => {
       const response = error.extensions.response as ErrorResponse;
+      // message = response.body if response.body is string else response.body.message
+      if (typeof response.body === "string") {
+        response.body = { message: response.body, data: null };
+      }
       return {
         code: response.status,
         success: false,

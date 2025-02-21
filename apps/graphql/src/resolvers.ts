@@ -13,7 +13,7 @@ export const resolvers: Resolvers = {
     },
   },
   Mutation: {
-    createAPIKey: async (_, args, { dataSources }) => {
+    createAPIKey: async (_, _args, { dataSources }) => {
       return await mutationAdaptor(dataSources.authAPI.createAPIKey());
     },
     revokeAPIKey: async (_, { id }, { dataSources }) => {
@@ -31,7 +31,7 @@ export const resolvers: Resolvers = {
     },
   },
   User: {
-    api_keys: async (user, args, { dataSources }) => {
+    api_keys: async (_user, _args, { dataSources }) => {
       return (await dataSources.authAPI.getAPIKeys()).data;
     },
   },
@@ -47,7 +47,6 @@ async function mutationAdaptor<T>(
 ): Promise<MutationResponse<T | null>> {
   return f
     .then((response): MutationResponse<T> => {
-      console.log("then", response);
       return {
         ...response,
         code: 200,

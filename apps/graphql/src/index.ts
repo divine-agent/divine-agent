@@ -7,17 +7,17 @@ import { AuthAPI } from "./datasources/auth-api";
 async function startApolloServer() {
   const server = new ApolloServer({ typeDefs, resolvers });
   const { url } = await startStandaloneServer(server, {
-    context: async ({ req }) => {
+    context: ({ req }) => {
       const token = req.headers.authorization || "";
       const { cache } = server;
-      return {
+      return Promise.resolve({
         dataSources: {
           authAPI: new AuthAPI({ token, cache }),
         },
-      };
+      });
     },
   });
-  console.log(`
+  console.info(`
     🚀  Server is running!
     📭  Query at ${url}
   `);

@@ -13,7 +13,3 @@
 ## [tailwind-config](https://github.com/vercel/turborepo/tree/main/examples/with-tailwind)
 
 > Shared tailwind configuration for the project.
-
-## ui
-
-> Shared UI components for the project.

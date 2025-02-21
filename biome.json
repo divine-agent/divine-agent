@@ -1,5 +1,19 @@
 {
+  "extends": ["ultracite"],
   "files": {
-    "ignore": ["apps/graphql/src/types/types.d.ts"]
+    "ignore": [
+      "apps/graphql/src/types/types.d.ts",
+      "packages/ui/components/*.tsx"
+    ]
+  },
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noConsole": {
+          "level": "info",
+          "options": { "allow": ["assert", "error", "info", "warn"] }
+        }
+      }
+    }
   }
 }

@@ -1,3 +1,5 @@
+import type { APIKeyModel } from "@/types/api-key";
+
 export type UserModel = {
   id: number;
   username: string;

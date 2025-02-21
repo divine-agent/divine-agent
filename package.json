@@ -5,14 +5,18 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "test": "turbo test",
+    "analyze": "turbo analyze",
+    "bump-deps": "npx npm-check-updates --deep -u -x react-day-picker && pnpm install"
   },
   "devDependencies": {
-    "prettier": "^3.5.1",
+    "@biomejs/biome": "1.9.4",
+    "@workspace/typescript-config": "workspace:*",
     "turbo": "^2.4.2",
-    "typescript": "5.7.3"
+    "typescript": "5.7.3",
+    "ultracite": "^4.1.20"
   },
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.4.1",
   "engines": {
     "node": ">=18"
   }

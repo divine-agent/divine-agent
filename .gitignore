@@ -12,7 +12,7 @@ dist/
 out/
 tmp/
 build/
-divi/bin/
+bin/
 
 # Environments
 .venv/

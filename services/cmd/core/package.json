@@ -1,0 +1,7 @@
+{
+  "name": "@service/core",
+  "scripts": {
+    "build": "go build -o bin/core core.go",
+    "dev": "air --build.cmd 'go build -o bin/core core.go' --build.bin './bin/core'"
+  }
+}

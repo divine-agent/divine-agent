@@ -5,7 +5,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build", "test"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "bin/**"],
       "env": []
     },
     "test": {
@@ -19,7 +19,16 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": [
+        "POSTGRES_HOST",
+        "POSTGRES_PORT",
+        "POSTGRES_USER",
+        "POSTGRES_PASSWORD",
+        "POSTGRES_NAME",
+        "ACCESS_TOKEN_PUBLIC_KEY",
+        "ACCESS_TOKEN_PRIVATE_KEY"
+      ]
     }
   }
 }

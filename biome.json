@@ -13,6 +13,16 @@
           "level": "info",
           "options": { "allow": ["assert", "error", "info", "warn"] }
         }
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "error",
+          "fix": "safe",
+          "options": {
+            "attributes": ["className"],
+            "functions": ["cn"]
+          }
+        }
       }
     }
   }

@@ -7,20 +7,24 @@
     "dev": "next dev --turbopack --port 4001",
     "build": "next build",
     "start": "next start",
-    "analyze": "ANALYZE=true pnpm build"
+    "analyze": "ANALYZE=true pnpm build",
+    "prebuild": "graphql-codegen"
   },
   "dependencies": {
     "@apollo/client": "^3.13.1",
     "@apollo/experimental-nextjs-app-support": "^0.11.9",
+    "@workspace/graphql-client": "workspace:*",
+
     "@radix-ui/react-slot": "^1.1.2",
     "@workspace/ui": "workspace:*",
     "lucide-react": "^0.475.0",
+
     "next": "^15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.13.4",
+    "@types/node": "^22.13.5",
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
     "@workspace/typescript-config": "workspace:*",

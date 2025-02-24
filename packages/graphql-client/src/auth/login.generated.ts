@@ -1,0 +1,121 @@
+import type * as Types from '../types.generated';
+
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+};
+
+/** APIKey is a key used to authenticate requests to the API */
+export type ApiKey = {
+  __typename?: 'APIKey';
+  api_key: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+};
+
+/** CreateAPIKeyResponse is a response to the createAPIKey mutation */
+export type CreateApiKeyResponse = MutationResponse & {
+  __typename?: 'CreateAPIKeyResponse';
+  code: Scalars['Int']['output'];
+  data?: Maybe<ApiKey>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
+/** CreateTokenResponse is a response to the login mutation */
+export type CreateTokenResponse = MutationResponse & {
+  __typename?: 'CreateTokenResponse';
+  code: Scalars['Int']['output'];
+  data?: Maybe<Scalars['String']['output']>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
+/** Mutation is a collection of mutations that can be made to the API */
+export type Mutation = {
+  __typename?: 'Mutation';
+  /** API Key Mutations */
+  createAPIKey: CreateApiKeyResponse;
+  /** Auth Mutations */
+  login: CreateTokenResponse;
+  loginWithAPIKey: CreateTokenResponse;
+  revokeAPIKey: RevokeApiKeyResponse;
+};
+
+
+/** Mutation is a collection of mutations that can be made to the API */
+export type MutationLoginArgs = {
+  identity: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+
+/** Mutation is a collection of mutations that can be made to the API */
+export type MutationLoginWithApiKeyArgs = {
+  api_key: Scalars['String']['input'];
+};
+
+
+/** Mutation is a collection of mutations that can be made to the API */
+export type MutationRevokeApiKeyArgs = {
+  id: Scalars['ID']['input'];
+};
+
+/** MutationResponse is a response to a mutation */
+export type MutationResponse = {
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
+/** Query is a collection of queries that can be made to the API */
+export type Query = {
+  __typename?: 'Query';
+  /** Fetch a specific user by id */
+  user: User;
+};
+
+
+/** Query is a collection of queries that can be made to the API */
+export type QueryUserArgs = {
+  id: Scalars['ID']['input'];
+};
+
+/** RevokeAPIKeyResponse is a response to the revokeAPIKey mutation */
+export type RevokeApiKeyResponse = MutationResponse & {
+  __typename?: 'RevokeAPIKeyResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
+/** User is a registered user of the application */
+export type User = {
+  __typename?: 'User';
+  api_keys?: Maybe<Array<Maybe<ApiKey>>>;
+  email: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  username: Scalars['String']['output'];
+};
+
+export type LoginMutationVariables = Types.Exact<{
+  identity: Types.Scalars['String']['input'];
+  password: Types.Scalars['String']['input'];
+}>;
+
+
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'CreateTokenResponse', code: number, success: boolean, message: string, data?: string | null } };
+
+
+export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"identity"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"identity"},"value":{"kind":"Variable","name":{"kind":"Name","value":"identity"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"data"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;

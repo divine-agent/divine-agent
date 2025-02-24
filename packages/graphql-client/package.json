@@ -1,0 +1,27 @@
+{
+  "name": "@workspace/graphql-client",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "prebuild": "graphql-codegen"
+  },
+  "dependencies": {
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "graphql": "^16.0.1"
+  },
+  "devDependencies": {
+    "@workspace/typescript-config": "workspace:*",
+    "typescript": "5.7.3",
+
+    "@graphql-codegen/cli": "^5.0.5",
+    "@graphql-codegen/client-preset": "^4.6.4",
+    "@graphql-codegen/near-operation-file-preset": "^3.0.0",
+    "@graphql-codegen/typed-document-node": "^5.0.15",
+    "@graphql-codegen/typescript": "4.1.5"
+  },
+  "exports": {
+    "./types.generated.ts": "./src/types.generated.ts",
+    "./auth/*": "./src/auth/*.ts"
+  }
+}

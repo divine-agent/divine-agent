@@ -1,5 +1,10 @@
-import { Button } from "@workspace/ui/components/button";
+import { Button } from '@workspace/ui/components/button';
+import Link from 'next/link';
 
 export default function Home() {
-  return <Button>Click me</Button>;
+  return (
+    <Link href="/login">
+      <Button>Login</Button>
+    </Link>
+  );
 }

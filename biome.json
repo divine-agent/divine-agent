@@ -3,6 +3,7 @@
   "files": {
     "ignore": [
       "apps/graphql/src/types/types.d.ts",
+      "packages/graphql-client/src/**/*.generated.ts",
       "packages/ui/components/*.tsx"
     ]
   },

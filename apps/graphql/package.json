@@ -2,7 +2,7 @@
   "name": "@app/graphql",
   "private": true,
   "version": "0.1.0",
-  "main": "src/index.js",
+  "main": "index.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn ./src/index.ts",
     "build": "tsc",

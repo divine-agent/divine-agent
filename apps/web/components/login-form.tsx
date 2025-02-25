@@ -1,39 +1,20 @@
-import { getClient } from '@/hooks/apolloClient';
-import {
-  LoginDocument,
-  type LoginMutationVariables,
-} from '@workspace/graphql-client/src/auth/login.generated';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
 import { cn } from '@workspace/ui/lib/utils';
 import Form from 'next/form';
-import { cookies } from 'next/headers';
 import type React from 'react';
 
 export function LoginForm({
+  loginAction,
   className,
   ...props
-}: React.ComponentPropsWithoutRef<'div'>) {
-  async function login(formData: FormData) {
-    'use server';
-    const variables: LoginMutationVariables = {
-      identity: formData.get('identity') as string,
-      password: formData.get('password') as string,
-    };
-    const data = await getClient().mutate({
-      mutation: LoginDocument,
-      variables,
-    });
-    if (data.data?.login.data) {
-      const cookie = await cookies();
-      cookie.set('token', data.data?.login.data);
-    }
-  }
-
+}: {
+  loginAction: (formData: FormData) => void;
+} & React.ComponentPropsWithoutRef<'div'>) {
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Form action={login}>
+      <Form action={loginAction}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2">
             <a

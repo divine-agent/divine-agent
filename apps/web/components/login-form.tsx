@@ -2,7 +2,6 @@ import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
 import { cn } from '@workspace/ui/lib/utils';
-import Form from 'next/form';
 import type React from 'react';
 
 export function LoginForm({
@@ -14,7 +13,7 @@ export function LoginForm({
 } & React.ComponentPropsWithoutRef<'div'>) {
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Form action={loginAction}>
+      <form action={loginAction}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2">
             <a
@@ -66,7 +65,7 @@ export function LoginForm({
             </Button>
           </div>
         </div>
-      </Form>
+      </form>
     </div>
   );
 }

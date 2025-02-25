@@ -7,8 +7,7 @@
     "dev": "next dev --turbopack --port 4001",
     "build": "next build",
     "start": "next start",
-    "analyze": "ANALYZE=true pnpm build",
-    "prebuild": "graphql-codegen"
+    "analyze": "ANALYZE=true pnpm build"
   },
   "dependencies": {
     "@apollo/client": "^3.13.1",

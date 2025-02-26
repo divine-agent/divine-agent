@@ -45,15 +45,51 @@ export type CreateTokenResponse = MutationResponse & {
   success: Scalars['Boolean']['output'];
 };
 
+/** CreateUserResponse is a response to the createUser mutation */
+export type CreateUserResponse = MutationResponse & {
+  __typename?: 'CreateUserResponse';
+  code: Scalars['Int']['output'];
+  data?: Maybe<User>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
+/** DeleteUserResponse is a response to the deleteUser mutation */
+export type DeleteUserResponse = MutationResponse & {
+  __typename?: 'DeleteUserResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
 /** Mutation is a collection of mutations that can be made to the API */
 export type Mutation = {
   __typename?: 'Mutation';
   /** API Key Mutations */
   createAPIKey: CreateApiKeyResponse;
+  /** User Mutations */
+  createUser: CreateUserResponse;
+  deleteUser: DeleteUserResponse;
   /** Auth Mutations */
   login: CreateTokenResponse;
   loginWithAPIKey: CreateTokenResponse;
   revokeAPIKey: RevokeApiKeyResponse;
+  updateUser: UpdateUserResponse;
+};
+
+
+/** Mutation is a collection of mutations that can be made to the API */
+export type MutationCreateUserArgs = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
+
+/** Mutation is a collection of mutations that can be made to the API */
+export type MutationDeleteUserArgs = {
+  id: Scalars['ID']['input'];
+  password: Scalars['String']['input'];
 };
 
 
@@ -73,6 +109,13 @@ export type MutationLoginWithApiKeyArgs = {
 /** Mutation is a collection of mutations that can be made to the API */
 export type MutationRevokeApiKeyArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+/** Mutation is a collection of mutations that can be made to the API */
+export type MutationUpdateUserArgs = {
+  id: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
 };
 
 /** MutationResponse is a response to a mutation */
@@ -103,12 +146,22 @@ export type RevokeApiKeyResponse = MutationResponse & {
   success: Scalars['Boolean']['output'];
 };
 
+/** UpdateUserResponse is a response to the updateUser mutation */
+export type UpdateUserResponse = MutationResponse & {
+  __typename?: 'UpdateUserResponse';
+  code: Scalars['Int']['output'];
+  data?: Maybe<User>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
 /** User is a registered user of the application */
 export type User = {
   __typename?: 'User';
   api_keys?: Maybe<Array<Maybe<ApiKey>>>;
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
   username: Scalars['String']['output'];
 };
 
@@ -182,7 +235,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
-  MutationResponse: ( Omit<CreateApiKeyResponse, 'data'> & { data?: Maybe<_RefType['APIKey']> } ) | ( CreateTokenResponse ) | ( RevokeApiKeyResponse );
+  MutationResponse: ( Omit<CreateApiKeyResponse, 'data'> & { data?: Maybe<_RefType['APIKey']> } ) | ( CreateTokenResponse ) | ( Omit<CreateUserResponse, 'data'> & { data?: Maybe<_RefType['User']> } ) | ( DeleteUserResponse ) | ( RevokeApiKeyResponse ) | ( Omit<UpdateUserResponse, 'data'> & { data?: Maybe<_RefType['User']> } );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -191,6 +244,8 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreateAPIKeyResponse: ResolverTypeWrapper<Omit<CreateApiKeyResponse, 'data'> & { data?: Maybe<ResolversTypes['APIKey']> }>;
   CreateTokenResponse: ResolverTypeWrapper<CreateTokenResponse>;
+  CreateUserResponse: ResolverTypeWrapper<Omit<CreateUserResponse, 'data'> & { data?: Maybe<ResolversTypes['User']> }>;
+  DeleteUserResponse: ResolverTypeWrapper<DeleteUserResponse>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -198,6 +253,7 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   RevokeAPIKeyResponse: ResolverTypeWrapper<RevokeApiKeyResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  UpdateUserResponse: ResolverTypeWrapper<Omit<UpdateUserResponse, 'data'> & { data?: Maybe<ResolversTypes['User']> }>;
   User: ResolverTypeWrapper<UserModel>;
 };
 
@@ -207,6 +263,8 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   CreateAPIKeyResponse: Omit<CreateApiKeyResponse, 'data'> & { data?: Maybe<ResolversParentTypes['APIKey']> };
   CreateTokenResponse: CreateTokenResponse;
+  CreateUserResponse: Omit<CreateUserResponse, 'data'> & { data?: Maybe<ResolversParentTypes['User']> };
+  DeleteUserResponse: DeleteUserResponse;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Mutation: {};
@@ -214,6 +272,7 @@ export type ResolversParentTypes = {
   Query: {};
   RevokeAPIKeyResponse: RevokeApiKeyResponse;
   String: Scalars['String']['output'];
+  UpdateUserResponse: Omit<UpdateUserResponse, 'data'> & { data?: Maybe<ResolversParentTypes['User']> };
   User: UserModel;
 };
 
@@ -239,15 +298,33 @@ export type CreateTokenResponseResolvers<ContextType = DataSourceContext, Parent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateUserResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['CreateUserResponse'] = ResolversParentTypes['CreateUserResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  data?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteUserResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['DeleteUserResponse'] = ResolversParentTypes['DeleteUserResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createAPIKey?: Resolver<ResolversTypes['CreateAPIKeyResponse'], ParentType, ContextType>;
+  createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email' | 'password' | 'username'>>;
+  deleteUser?: Resolver<ResolversTypes['DeleteUserResponse'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id' | 'password'>>;
   login?: Resolver<ResolversTypes['CreateTokenResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'identity' | 'password'>>;
   loginWithAPIKey?: Resolver<ResolversTypes['CreateTokenResponse'], ParentType, ContextType, RequireFields<MutationLoginWithApiKeyArgs, 'api_key'>>;
   revokeAPIKey?: Resolver<ResolversTypes['RevokeAPIKeyResponse'], ParentType, ContextType, RequireFields<MutationRevokeApiKeyArgs, 'id'>>;
+  updateUser?: Resolver<ResolversTypes['UpdateUserResponse'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'id' | 'name'>>;
 };
 
 export type MutationResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['MutationResponse'] = ResolversParentTypes['MutationResponse']> = {
-  __resolveType: TypeResolveFn<'CreateAPIKeyResponse' | 'CreateTokenResponse' | 'RevokeAPIKeyResponse', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'CreateAPIKeyResponse' | 'CreateTokenResponse' | 'CreateUserResponse' | 'DeleteUserResponse' | 'RevokeAPIKeyResponse' | 'UpdateUserResponse', ParentType, ContextType>;
   code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -264,10 +341,19 @@ export type RevokeApiKeyResponseResolvers<ContextType = DataSourceContext, Paren
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateUserResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['UpdateUserResponse'] = ResolversParentTypes['UpdateUserResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  data?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   api_keys?: Resolver<Maybe<Array<Maybe<ResolversTypes['APIKey']>>>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -276,10 +362,13 @@ export type Resolvers<ContextType = DataSourceContext> = {
   APIKey?: ApiKeyResolvers<ContextType>;
   CreateAPIKeyResponse?: CreateApiKeyResponseResolvers<ContextType>;
   CreateTokenResponse?: CreateTokenResponseResolvers<ContextType>;
+  CreateUserResponse?: CreateUserResponseResolvers<ContextType>;
+  DeleteUserResponse?: DeleteUserResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   MutationResponse?: MutationResponseResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RevokeAPIKeyResponse?: RevokeApiKeyResponseResolvers<ContextType>;
+  UpdateUserResponse?: UpdateUserResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 

@@ -1,10 +1,10 @@
-import type { Resolvers } from "@/types/types";
 import type {
   ErrorResponse,
   FetchResponse,
   MutationResponse,
-} from "@/types/response";
-import type { GraphQLError } from "graphql";
+} from '@/types/response';
+import type { Resolvers } from '@/types/types';
+import type { GraphQLError } from 'graphql';
 
 export const resolvers: Resolvers = {
   Query: {
@@ -21,12 +21,25 @@ export const resolvers: Resolvers = {
     },
     login: async (_, { identity, password }, { dataSources }) => {
       return await mutationAdaptor(
-        dataSources.authAPI.login(identity, password),
+        dataSources.authAPI.login(identity, password)
       );
     },
     loginWithAPIKey: async (_, { api_key }, { dataSources }) => {
       return await mutationAdaptor(
-        dataSources.authAPI.loginWithAPIKey(api_key),
+        dataSources.authAPI.loginWithAPIKey(api_key)
+      );
+    },
+    deleteUser: async (_, { id, password }, { dataSources }) => {
+      return await mutationAdaptor(
+        dataSources.authAPI.deleteUser(id, password)
+      );
+    },
+    updateUser: async (_, { id, name }, { dataSources }) => {
+      return await mutationAdaptor(dataSources.authAPI.updateUser(id, name));
+    },
+    createUser: async (_, { email, password, username }, { dataSources }) => {
+      return await mutationAdaptor(
+        dataSources.authAPI.createUser(email, password, username)
       );
     },
   },
@@ -43,7 +56,7 @@ export const resolvers: Resolvers = {
  * @returns { MutationResponse<T> }
  */
 async function mutationAdaptor<T>(
-  f: Promise<FetchResponse<T>>,
+  f: Promise<FetchResponse<T>>
 ): Promise<MutationResponse<T | null>> {
   return f
     .then((response): MutationResponse<T> => {
@@ -56,7 +69,7 @@ async function mutationAdaptor<T>(
     .catch((error: GraphQLError): MutationResponse<null> => {
       const response = error.extensions.response as ErrorResponse;
       // message = response.body if response.body is string else response.body.message
-      if (typeof response.body === "string") {
+      if (typeof response.body === 'string') {
         response.body = { message: response.body, data: null };
       }
       return {

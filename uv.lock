@@ -1,4 +1,5 @@
 version = 1
+revision = 1
 requires-python = ">=3.11"
 
 [[package]]
@@ -136,7 +137,6 @@ wheels = [
 
 [[package]]
 name = "divi"
-version = "0.0.1.dev11"
 source = { editable = "." }
 dependencies = [
     { name = "grpcio" },

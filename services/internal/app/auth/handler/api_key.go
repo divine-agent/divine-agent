@@ -36,11 +36,11 @@ func CreateAPIKey(c *fiber.Ctx) error {
 
 	// db store api key
 	if err := db.Create(&apiKey).Error; err != nil {
-		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Failed to create api key", "data": nil})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create api key", "data": nil})
 	}
 
 	newAPIKey := NewAPIKey{ID: apiKey.ID, APIKey: key}
-	return c.JSON(fiber.Map{"status": "success", "message": "Created api key", "data": newAPIKey})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "message": "Created api key", "data": newAPIKey})
 }
 
 // GetAPIKeys get all api keys
@@ -53,7 +53,7 @@ func GetAPIKeys(c *fiber.Ctx) error {
 
 	// omit digest (hashed api key)
 	if err := db.Where(&model.APIKey{UserID: userID}).Omit("Digest").Find(&apiKeys).Error; err != nil {
-		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Failed to get api keys", "data": nil})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to get api keys", "data": nil})
 	}
 
 	return c.JSON(fiber.Map{"status": "success", "message": "Get all api keys", "data": apiKeys})
@@ -70,7 +70,7 @@ func RevokeAPIKey(c *fiber.Ctx) error {
 
 	db.First(&apiKey, id)
 	if apiKey.UserID != userID {
-		return c.Status(403).JSON(fiber.Map{"status": "error", "message": "Forbidden", "data": nil})
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"status": "error", "message": "Forbidden", "data": nil})
 	}
 
 	db.Delete(&apiKey)

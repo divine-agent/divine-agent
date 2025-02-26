@@ -20,8 +20,8 @@ export default function SignupPage() {
       <div className="hidden bg-muted lg:flex lg:items-center lg:justify-center">
         <Image
           src="/peeking-angel.png"
-          width={300}
-          height={300}
+          width={200}
+          height={200}
           alt="Image"
           className="dark:brightness-[0.2] dark:grayscale"
         />

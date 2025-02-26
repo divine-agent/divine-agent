@@ -1,8 +1,14 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
+import gql from 'graphql-tag';
 import { AuthAPI } from './datasources/auth-api';
 import { resolvers } from './resolvers';
-import { typeDefs } from './schema';
+
+const typeDefs = gql(
+  readFileSync(join(__dirname, './schema.graphql'), { encoding: 'utf-8' })
+);
 
 async function startApolloServer() {
   const server = new ApolloServer({ typeDefs, resolvers });

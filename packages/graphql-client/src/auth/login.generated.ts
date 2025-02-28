@@ -42,15 +42,51 @@ export type CreateTokenResponse = MutationResponse & {
   success: Scalars['Boolean']['output'];
 };
 
+/** CreateUserResponse is a response to the createUser mutation */
+export type CreateUserResponse = MutationResponse & {
+  __typename?: 'CreateUserResponse';
+  code: Scalars['Int']['output'];
+  data?: Maybe<User>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
+/** DeleteUserResponse is a response to the deleteUser mutation */
+export type DeleteUserResponse = MutationResponse & {
+  __typename?: 'DeleteUserResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
 /** Mutation is a collection of mutations that can be made to the API */
 export type Mutation = {
   __typename?: 'Mutation';
   /** API Key Mutations */
   createAPIKey: CreateApiKeyResponse;
+  /** User Mutations */
+  createUser: CreateUserResponse;
+  deleteUser: DeleteUserResponse;
   /** Auth Mutations */
   login: CreateTokenResponse;
   loginWithAPIKey: CreateTokenResponse;
   revokeAPIKey: RevokeApiKeyResponse;
+  updateUser: UpdateUserResponse;
+};
+
+
+/** Mutation is a collection of mutations that can be made to the API */
+export type MutationCreateUserArgs = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
+
+/** Mutation is a collection of mutations that can be made to the API */
+export type MutationDeleteUserArgs = {
+  id: Scalars['ID']['input'];
+  password: Scalars['String']['input'];
 };
 
 
@@ -70,6 +106,13 @@ export type MutationLoginWithApiKeyArgs = {
 /** Mutation is a collection of mutations that can be made to the API */
 export type MutationRevokeApiKeyArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+/** Mutation is a collection of mutations that can be made to the API */
+export type MutationUpdateUserArgs = {
+  id: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
 };
 
 /** MutationResponse is a response to a mutation */
@@ -100,12 +143,22 @@ export type RevokeApiKeyResponse = MutationResponse & {
   success: Scalars['Boolean']['output'];
 };
 
+/** UpdateUserResponse is a response to the updateUser mutation */
+export type UpdateUserResponse = MutationResponse & {
+  __typename?: 'UpdateUserResponse';
+  code: Scalars['Int']['output'];
+  data?: Maybe<User>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
 /** User is a registered user of the application */
 export type User = {
   __typename?: 'User';
   api_keys?: Maybe<Array<Maybe<ApiKey>>>;
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
   username: Scalars['String']['output'];
 };
 

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"strconv"
+	"sync"
 
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/database"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/model"
@@ -67,6 +68,33 @@ func CreateUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid request body", "errors": err.Error()})
 	}
 
+	// check if username or email already exists
+	var (
+		checkUsername model.User
+		checkEmail    model.User
+		wg            sync.WaitGroup
+		usernameExist bool
+		emailExist    bool
+	)
+	// neet to wait 2 goroutines
+	wg.Add(2)
+	// check username
+	go func() {
+		defer wg.Done()
+		db.Where("username = ?", user.Username).First(&checkUsername)
+		usernameExist = checkUsername.Username != ""
+	}()
+	// check email
+	go func() {
+		defer wg.Done()
+		db.Where("email = ?", user.Email).First(&checkEmail)
+		emailExist = checkEmail.Email != ""
+	}()
+	wg.Wait()
+	if usernameExist || emailExist {
+		return c.Status(fiber.StatusConflict).JSON(fiber.Map{"status": "error", "message": "Username or email is already exists", "data": nil})
+	}
+
 	hash, err := hashPassword(user.Password)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Couldn't hash password", "errors": err.Error()})
@@ -74,7 +102,7 @@ func CreateUser(c *fiber.Ctx) error {
 
 	user.Password = hash
 	if err := db.Create(&user).Error; err != nil {
-		return c.Status(fiber.StatusConflict).JSON(fiber.Map{"status": "error", "message": "Couldn't create user", "errors": err.Error()})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Couldn't create user", "errors": err.Error()})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "message": "Created user", "data": user})

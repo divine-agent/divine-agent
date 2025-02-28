@@ -18,14 +18,18 @@ export default function LoginPage() {
       identity: formData.get('identity') as string,
       password: formData.get('password') as string,
     };
-    const data = await getClient().mutate({
-      mutation: LoginDocument,
-      variables,
-    });
-    if (data.data?.login.data) {
+    const data = (
+      await getClient().mutate({
+        mutation: LoginDocument,
+        variables,
+      })
+    ).data?.login;
+    if (data?.success) {
       const cookie = await cookies();
       // TODO set properties of cookie
-      cookie.set('token', data.data?.login.data);
+      data?.data && cookie.set('token', data?.data);
+    } else {
+      console.error(`Login failed: [${data?.code}] ${data?.message}`);
     }
   }
 

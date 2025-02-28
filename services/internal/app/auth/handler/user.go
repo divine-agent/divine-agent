@@ -129,7 +129,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	var user model.User
 
 	db.Omit("password").First(&user, id)
-	user.Name = uui.Name
+	user.Name = &uui.Name
 	db.Save(&user)
 
 	return c.JSON(fiber.Map{"status": "success", "message": "User successfully updated", "data": user})

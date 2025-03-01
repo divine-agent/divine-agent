@@ -22,5 +22,7 @@ func main() {
 	database.ConnectDB()
 
 	router.SetupRoutes(app)
-	log.Fatal(app.Listen(":3000"))
+	if err := app.Listen(":3000"); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }

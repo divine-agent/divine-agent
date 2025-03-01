@@ -26,7 +26,7 @@ func ConnectDB() {
 		port,
 		config.Config("POSTGRES_USER"),
 		config.Config("POSTGRES_PASSWORD"),
-		config.Config("POSTGRES_NAME"),
+		config.Config("POSTGRES_DB"),
 	)
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {

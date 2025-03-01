@@ -5,7 +5,7 @@ import { type AugmentedRequest, RESTDataSource } from '@apollo/datasource-rest';
 import type { KeyValueCache } from '@apollo/utils.keyvaluecache';
 
 export class AuthAPI extends RESTDataSource {
-  override baseURL = 'http://localhost:3000/';
+  override baseURL = process.env.AUTH_SERVICE_URL;
   private token: string;
 
   constructor(options: { token: string; cache: KeyValueCache }) {

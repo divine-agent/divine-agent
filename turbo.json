@@ -25,7 +25,8 @@
         "POSTGRES_PORT",
         "POSTGRES_USER",
         "POSTGRES_PASSWORD",
-        "POSTGRES_NAME",
+        "POSTGRES_DB",
+        "AUTH_SERVICE_URL",
         "ACCESS_TOKEN_PUBLIC_KEY",
         "ACCESS_TOKEN_PRIVATE_KEY"
       ]

@@ -7,7 +7,8 @@
     "dev": "ts-node-dev --respawn ./src/index.ts",
     "build": "tsc",
     "start": "npm run build && nodemon ./dist/index.js",
-    "prebuild": "graphql-codegen"
+    "prebuild": "graphql-codegen",
+    "postbuild": "cp src/schema.graphql dist/"
   },
   "dependencies": {
     "@apollo/datasource-rest": "^6.4.1",

@@ -1,0 +1,60 @@
+services:
+  divi-postgres:
+    image: postgres:latest
+    container_name: divi-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    networks:
+      - private-network
+
+  divi-auth:
+    image: divi-auth:latest
+    build:
+      context: ./services
+      dockerfile: ./cmd/auth/Dockerfile
+    container_name: divi-auth
+    ports:
+      - "3000:3000"
+    networks:
+      - public-network
+      - private-network
+    depends_on:
+      - divi-postgres
+    restart: always
+    environment:
+      POSTGRES_HOST: divi-postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      ACCESS_TOKEN_PUBLIC_KEY: ${ACCESS_TOKEN_PUBLIC_KEY}
+      ACCESS_TOKEN_PRIVATE_KEY: ${ACCESS_TOKEN_PRIVATE_KEY}
+
+  divi-graphql:
+    image: divi-graphql:latest
+    build:
+      context: .
+      dockerfile: ./apps/graphql/Dockerfile
+    container_name: divi-graphql
+    ports:
+      - "4000:4000"
+    networks:
+      - public-network
+    depends_on:
+      - divi-auth
+    restart: always
+    environment:
+      AUTH_SERVICE_URL: http://divi-auth:3000/
+
+networks:
+  private-network:
+    name: divi-private-network
+    driver: bridge
+    internal: true
+  public-network:
+    name: divi-public-network
+    driver: bridge

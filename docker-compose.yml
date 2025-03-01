@@ -12,7 +12,7 @@ services:
       - private-network
 
   divi-auth:
-    image: divi-auth:latest
+    image: kaikaikaifang/divi-auth:latest
     build:
       context: ./services
       dockerfile: ./cmd/auth/Dockerfile
@@ -35,7 +35,7 @@ services:
       ACCESS_TOKEN_PRIVATE_KEY: ${ACCESS_TOKEN_PRIVATE_KEY}
 
   divi-graphql:
-    image: divi-graphql:latest
+    image: kaikaikaifang/divi-graphql:latest
     build:
       context: .
       dockerfile: ./apps/graphql/Dockerfile

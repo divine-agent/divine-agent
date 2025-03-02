@@ -4,9 +4,8 @@ Agent Platform for Observability • Evaluation • Playground
 
 ## TODO
 
-- [ ] [apollo-client in nextjs](https://github.com/apollographql/apollo-client-nextjs)
-- [ ] tailwind-config in packages
-- [ ] eslint in graphql server
+- [ ] trace: obs_openai()
+- [ ] trace: @obs
 - [ ] datapark services
 
 ## Structure

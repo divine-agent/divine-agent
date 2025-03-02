@@ -16,7 +16,12 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [dependency-groups]
-dev = ["cryptography>=44.0.0", "grpcio-tools>=1.69.0", "hatchling>=1.27.0"]
+dev = [
+    "cryptography>=44.0.0",
+    "grpcio-tools>=1.69.0",
+    "hatchling>=1.27.0",
+    "openai>=1.65.2",
+]
 
 [tool.pyright]
 venvPath = "."

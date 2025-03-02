@@ -31,29 +31,3 @@ def obs_openai(client: C) -> C:
         client.completions.create
     )
     return client
-
-
-if __name__ == "__main__":
-    from openai import OpenAI
-
-    client = obs_openai(
-        OpenAI(
-            api_key="sk-JxFTWMdorm6GvAh0AfC95e7e5c934127A810B40c423c31D4",
-            base_url="https://aihubmix.com/v1",
-        )
-    )
-    chat_completion = client.chat.completions.create(
-        messages=[
-            {
-                "role": "user",
-                "content": "Say this is a test",
-            }
-        ],
-        model="gpt-3.5-turbo",
-    )
-    print(chat_completion)
-    completion = client.completions.create(
-        prompt="This is a test",
-        model="gpt-3.5-turbo-instruct",
-    )
-    print(completion)

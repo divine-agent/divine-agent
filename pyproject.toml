@@ -21,6 +21,7 @@ dev = [
     "grpcio-tools>=1.69.0",
     "hatchling>=1.27.0",
     "openai>=1.65.2",
+    "pytest>=8.3.4",
 ]
 
 [tool.pyright]

@@ -21,7 +21,6 @@ def observable(*args, **kwargs) -> Callable:
                 yield item
             # TODO: collect results
 
-        print("Is generator", inspect.isgeneratorfunction(func))
         if inspect.isgeneratorfunction(func):
             return generator_wrapper
         return wrapper

@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-from divi.proto import health_pb2 as divi_dot_proto_dot_health__pb2
+from divi.proto.core.health.v1 import health_service_pb2 as divi_dot_proto_dot_core_dot_health_dot_v1_dot_health__service__pb2
 
 GRPC_GENERATED_VERSION = '1.69.0'
 GRPC_VERSION = grpc.__version__
@@ -18,15 +18,15 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in divi/proto/core_pb2_grpc.py depends on'
+        + f' but the generated code in divi/proto/core/health/v1/health_service_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class CoreStub(object):
-    """Health is a service that implements health check.
+class HealthServiceStub(object):
+    """HealthService is a service that implements health check.
     """
 
     def __init__(self, channel):
@@ -36,14 +36,14 @@ class CoreStub(object):
             channel: A grpc.Channel.
         """
         self.Check = channel.unary_unary(
-                '/core.Core/Check',
-                request_serializer=divi_dot_proto_dot_health__pb2.HealthCheckRequest.SerializeToString,
-                response_deserializer=divi_dot_proto_dot_health__pb2.HealthCheckResponse.FromString,
+                '/divi.proto.core.health.v1.HealthService/Check',
+                request_serializer=divi_dot_proto_dot_core_dot_health_dot_v1_dot_health__service__pb2.HealthCheckRequest.SerializeToString,
+                response_deserializer=divi_dot_proto_dot_core_dot_health_dot_v1_dot_health__service__pb2.HealthCheckResponse.FromString,
                 _registered_method=True)
 
 
-class CoreServicer(object):
-    """Health is a service that implements health check.
+class HealthServiceServicer(object):
+    """HealthService is a service that implements health check.
     """
 
     def Check(self, request, context):
@@ -53,23 +53,23 @@ class CoreServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_CoreServicer_to_server(servicer, server):
+def add_HealthServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Check': grpc.unary_unary_rpc_method_handler(
                     servicer.Check,
-                    request_deserializer=divi_dot_proto_dot_health__pb2.HealthCheckRequest.FromString,
-                    response_serializer=divi_dot_proto_dot_health__pb2.HealthCheckResponse.SerializeToString,
+                    request_deserializer=divi_dot_proto_dot_core_dot_health_dot_v1_dot_health__service__pb2.HealthCheckRequest.FromString,
+                    response_serializer=divi_dot_proto_dot_core_dot_health_dot_v1_dot_health__service__pb2.HealthCheckResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'core.Core', rpc_method_handlers)
+            'divi.proto.core.health.v1.HealthService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('core.Core', rpc_method_handlers)
+    server.add_registered_method_handlers('divi.proto.core.health.v1.HealthService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class Core(object):
-    """Health is a service that implements health check.
+class HealthService(object):
+    """HealthService is a service that implements health check.
     """
 
     @staticmethod
@@ -86,9 +86,9 @@ class Core(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/core.Core/Check',
-            divi_dot_proto_dot_health__pb2.HealthCheckRequest.SerializeToString,
-            divi_dot_proto_dot_health__pb2.HealthCheckResponse.FromString,
+            '/divi.proto.core.health.v1.HealthService/Check',
+            divi_dot_proto_dot_core_dot_health_dot_v1_dot_health__service__pb2.HealthCheckRequest.SerializeToString,
+            divi_dot_proto_dot_core_dot_health_dot_v1_dot_health__service__pb2.HealthCheckResponse.FromString,
             options,
             channel_credentials,
             insecure,

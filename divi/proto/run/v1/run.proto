@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package divi.proto.run.v1;
+
+import "divi/proto/common/v1/common.proto";
+
+option go_package = "services/proto";
+
+message Run {
+    // The user_id is the unique identifier of the user. It is a 16-byte array.
+    bytes user_id = 1;
+
+    // The run_id is the unique identifier of the run. It is a 16-byte array.
+    bytes run_id = 2;
+
+    // The name of the run.
+    string name = 3;
+
+    enum RunKind {
+        // Observation represents a run that is used for observation.
+        Observation = 0;
+
+        // Evaluation represents a run that is used for evaluation.
+        Evaluation = 1;
+
+        // Dataset represents a run that is used for creating a dataset.
+        Dataset = 2;
+    }
+
+    // The kind of the run.
+    RunKind kind = 4;
+
+    // The start_time_unix_nano is the start time of the run in Unix nanoseconds.
+    fixed64 start_time_unix_nano = 5;
+
+    // The end_time_unix_nano is the end time of the run in Unix nanoseconds.
+    fixed64 end_time_unix_nano = 6;
+
+    // Set of attributes that describe the run.
+    repeated divi.proto.common.v1.KeyValue attributes = 7;
+}

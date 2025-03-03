@@ -19,7 +19,7 @@ var (
 
 // server is used to implement health server.
 type server struct {
-	pb.UnimplementedCoreServer
+	pb.UnimplementedHealthServiceServer
 }
 
 func (s *server) Check(ctx context.Context, in *pb.HealthCheckRequest) (*pb.HealthCheckResponse, error) {
@@ -44,7 +44,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterCoreServer(s, &server{})
+	pb.RegisterHealthServiceServer(s, &server{})
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

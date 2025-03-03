@@ -6,12 +6,14 @@ import os
 import grpc_tools  # type: ignore
 from grpc_tools import protoc  # type: ignore
 
-
 proto_root = os.path.join(os.path.dirname(grpc_tools.__file__), "_proto")
 
 # messages
 for proto_file in [
-    "health.proto",
+    "common/v1/common.proto",
+    "run/v1/run.proto",
+    "trace/v1/trace.proto",
+    "metric/v1/metric.proto",
 ]:
     ret = protoc.main(
         (
@@ -30,7 +32,7 @@ for proto_file in [
 
 # grpc service
 for proto_file in [
-    "core.proto",
+    "core/health/v1/health_service.proto",
 ]:
     ret = protoc.main(
         (

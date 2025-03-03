@@ -1,6 +1,14 @@
 import functools
 import inspect
-from typing import Any, Callable, List
+from typing import Any, Callable, List, overload
+
+
+@overload
+def observable(func: Callable) -> Callable: ...
+
+
+@overload
+def observable() -> Callable: ...
 
 
 def observable(*args, **kwargs) -> Callable:

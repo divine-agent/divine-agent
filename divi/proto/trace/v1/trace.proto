@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package divi.proto.trace.v1;
+
+import "divi/proto/common/v1/common.proto";
+
+option go_package = "services/proto";
+
+message ScopeSpans {
+    // The scope of the message
+    divi.proto.common.v1.RunScope scope = 1;
+
+    // A list of spans that originate from a resource.
+    repeated Span spans = 2;
+}
+
+message Span {
+    // The trace_id is a unique identifier that represents a trace. It is a 16-byte array.
+    bytes trace_id = 1;
+
+    // The span_id is a unique identifier that represents a span. It is an 8-byte array.
+    bytes span_id = 2;
+
+    // The parent_span_id is the span_id of the parent span. It is an 8-byte array.
+    bytes parent_span_id = 3;
+
+    // The name of the span.
+    string name = 4;
+
+    // SpanKind is the type of the span.
+    enum SpanKind {
+        // Function represents a function call.
+        SPAN_KIND_FUNCTION = 0;
+
+        // LLM represents a llm api call.
+        SPAN_KIND_LLM = 1;
+    }
+
+    // The kind of the span.
+    SpanKind kind = 5;
+
+    // The start_time_unix_nano is the start time of the span in Unix nanoseconds.
+    fixed64 start_time_unix_nano = 6;
+
+    // The end_time_unix_nano is the end time of the span in Unix nanoseconds.
+    fixed64 end_time_unix_nano = 7;
+
+    // Set of attributes that describe the span.
+    repeated divi.proto.common.v1.KeyValue attributes = 8;
+}

@@ -4,8 +4,8 @@ from typing import Callable, List, Optional
 import grpc
 
 import divi
-from divi.proto.core_pb2_grpc import CoreStub
-from divi.proto.health_pb2 import HealthCheckRequest
+from divi.proto.core.health.v1.health_service_pb2 import HealthCheckRequest
+from divi.proto.core.health.v1.health_service_pb2_grpc import HealthServiceStub
 from divi.services.service import Service
 
 
@@ -20,7 +20,7 @@ class Core(Service):
     def check_health(self) -> bool:
         """Check the health of the service."""
         with grpc.insecure_channel(self.target) as channel:
-            stub = CoreStub(channel)
+            stub = HealthServiceStub(channel)
             response, call = stub.Check.with_call(
                 HealthCheckRequest(version=divi.__version__),
                 # Note: ((),) notice the `,` at the end of the tuple

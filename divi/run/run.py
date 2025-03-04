@@ -1,19 +1,24 @@
 from typing import Optional, TypedDict
+from uuid import uuid4
 
-
-class Run(TypedDict, total=False):
-    """Run information"""
-
-    run_name: Optional[str]
-    """Name of the Run"""
-    run_id: Optional[str]
-    """Run ID"""
+from pydantic.types import UUID4
 
 
 class RunExtra(TypedDict, total=False):
     """Extra information for Run"""
 
-    trace_id: Optional[str]
+    run_name: Optional[str]
+    """Name of the Run"""
+    trace_id: Optional[UUID4]
     """Trace ID"""
-    parent_span_id: Optional[str]
+    parent_span_id: Optional[UUID4]
     """Parent Span ID"""
+
+
+class Run:
+    def __init__(
+        self,
+        name: Optional[str] = None,
+    ):
+        self.id = uuid4()
+        self.name = name

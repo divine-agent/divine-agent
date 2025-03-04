@@ -2,28 +2,21 @@ import atexit
 import socket
 import subprocess
 import time
-from typing import Optional
 
 import grpc
 
-import divi
 from divi.services.core import Core
 from divi.utils import get_server_path
 
 
-def init(host="localhost", port=50051) -> Optional[Core]:
-    divi._core = Core(host=host, port=port)
-    _start_server()
-    return divi._core
+def init(host="localhost", port=50051) -> Core:
+    core = Core(host=host, port=port)
+    _start_server(core)
+    return core
 
 
-def _start_server():
+def _start_server(core: Core):
     """Start the backend server."""
-    # get the run object
-    core = divi._core
-    if core is None:
-        return
-
     # start the server
     bin_path = get_server_path()
     command = [bin_path]

@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from divi.decorators.observable import observable
 
 
@@ -21,16 +23,16 @@ def test_obs_generator():
 def test_obs_nested():
     @observable
     def span(text: str):
-        llm(text)
-        return text
+        return llm(text)
 
     @observable(kind="llm")
     def llm(text: str):
-        return text
+        return f"Hello {text}"
 
     @observable()
     def chain(text: str):
         span(text)
-        span(text)
+        return span(text)
 
-    chain("Hello", run_extra={"trace_id": "1234"})
+    message = chain("Hello", run_extra={"trace_id": uuid4()})
+    assert message == "Hello Hello"

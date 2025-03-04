@@ -59,7 +59,6 @@ def observable(
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, run_extra: Optional[RunExtra] = None, **kwargs):
-            print(run_extra, "Parent", _RUNEXTRA.get())
             # set current context
             token = _RUNEXTRA.set(run_extra)
             # execute the function
@@ -73,10 +72,15 @@ def observable(
         def generator_wrapper(
             *args, run_extra: Optional[RunExtra] = None, **kwargs
         ):
+            # set current context
+            token = _RUNEXTRA.set(run_extra)
+            # execute the function
             results: List[Any] = []
             for item in func(*args, **kwargs):
                 results.append(item)
                 yield item
+            # recover parent context
+            _RUNEXTRA.reset(token)
             # TODO: collect results
 
         if inspect.isgeneratorfunction(func):

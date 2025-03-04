@@ -1,3 +1,3 @@
-from .run import Run
+from .run import Run, RunExtra
 
-__all__ = ["Run"]
+__all__ = ["RunExtra", "Run"]

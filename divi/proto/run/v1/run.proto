@@ -7,14 +7,11 @@ import "divi/proto/common/v1/common.proto";
 option go_package = "services/proto";
 
 message Run {
-    // The user_id is the unique identifier of the user. It is a 16-byte array.
-    bytes user_id = 1;
-
     // The run_id is the unique identifier of the run. It is a 16-byte array.
-    bytes run_id = 2;
+    bytes run_id = 1;
 
     // The name of the run.
-    string name = 3;
+    string name = 2;
 
     enum RunKind {
         // Observation represents a run that is used for observation.
@@ -28,14 +25,14 @@ message Run {
     }
 
     // The kind of the run.
-    RunKind kind = 4;
+    RunKind kind = 3;
 
     // The start_time_unix_nano is the start time of the run in Unix nanoseconds.
-    fixed64 start_time_unix_nano = 5;
+    fixed64 start_time_unix_nano = 4;
 
     // The end_time_unix_nano is the end time of the run in Unix nanoseconds.
-    fixed64 end_time_unix_nano = 6;
+    fixed64 end_time_unix_nano = 5;
 
     // The metadata is a set of attributes that describe the run.
-    repeated divi.proto.common.v1.KeyValue metadata = 7;
+    repeated divi.proto.common.v1.KeyValue metadata = 6;
 }

@@ -16,24 +16,30 @@ from typing import (
     runtime_checkable,
 )
 
+from divi.run import RunExtra
+
 R = TypeVar("R", covariant=True)
 P = ParamSpec("P")
 
-_INJECT = contextvars.ContextVar[Optional[str]]("_INJECT", default=None)
+# ContextVar to store the extra information
+# from the Run and parent Span
+_RUNEXTRA = contextvars.ContextVar[Optional[RunExtra]](
+    "_RUNEXTRA", default=None
+)
 
 
 @runtime_checkable
-class SupportsInject(Protocol, Generic[P, R]):
+class WithRunExtra(Protocol, Generic[P, R]):
     def __call__(
         self,
         *args: P.args,
-        inject: Optional[str] = None,
+        run_extra: Optional[RunExtra] = None,  # type: ignore[valid-type]
         **kwargs: P.kwargs,
     ) -> R: ...
 
 
 @overload
-def observable(func: Callable[P, R]) -> SupportsInject[P, R]: ...
+def observable(func: Callable[P, R]) -> WithRunExtra[P, R]: ...
 
 
 @overload
@@ -42,7 +48,7 @@ def observable(
     *,
     name: Optional[str] = None,
     metadata: Optional[Mapping[str, Any]] = None,
-) -> Callable[[Callable[P, R]], SupportsInject[P, R]]: ...
+) -> Callable[[Callable[P, R]], WithRunExtra[P, R]]: ...
 
 
 def observable(
@@ -50,20 +56,23 @@ def observable(
 ) -> Union[Callable, Callable[[Callable], Callable]]:
     """Observable decorator factory."""
 
-    def decorator(func: Callable):
+    def decorator(func):
         @functools.wraps(func)
-        def wrapper(*args, inject: Optional[str] = "", **kwargs):
-            print(inject, "Parent", _INJECT.get())
-            token = _INJECT.set(inject)
-
+        def wrapper(*args, run_extra: Optional[RunExtra] = None, **kwargs):
+            print(run_extra, "Parent", _RUNEXTRA.get())
+            # set current context
+            token = _RUNEXTRA.set(run_extra)
+            # execute the function
             result = func(*args, **kwargs)
-
-            _INJECT.reset(token)
+            # recover parent context
+            _RUNEXTRA.reset(token)
             # TODO: collect result
-            return result + inject
+            return result
 
         @functools.wraps(func)
-        def generator_wrapper(*args, inject: Optional[str] = None, **kwargs):
+        def generator_wrapper(
+            *args, run_extra: Optional[RunExtra] = None, **kwargs
+        ):
             results: List[Any] = []
             for item in func(*args, **kwargs):
                 results.append(item)

@@ -6,8 +6,7 @@ def test_obs_function():
     def hello(message: str):
         return f"Hello {message}"
 
-    # assert hello("World") == "Hello World"
-    assert hello("world", inject="test") == "Hello worldtest"
+    assert hello("World") == "Hello World"
 
 
 def test_obs_generator():
@@ -22,7 +21,7 @@ def test_obs_generator():
 def test_obs_nested():
     @observable
     def span(text: str):
-        llm(text, inject="llm")
+        llm(text)
         return text
 
     @observable(kind="llm")
@@ -31,7 +30,7 @@ def test_obs_nested():
 
     @observable()
     def chain(text: str):
-        span(text, inject="call 1")
-        span(text, inject="call 2")
+        span(text)
+        span(text)
 
-    chain("Hello", inject="root")
+    chain("Hello", run_extra={"trace_id": "1234"})

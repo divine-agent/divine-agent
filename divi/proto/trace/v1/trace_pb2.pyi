@@ -16,7 +16,7 @@ class ScopeSpans(_message.Message):
     def __init__(self, scope: _Optional[_Union[_common_pb2.RunScope, _Mapping]] = ..., spans: _Optional[_Iterable[_Union[Span, _Mapping]]] = ...) -> None: ...
 
 class Span(_message.Message):
-    __slots__ = ("trace_id", "span_id", "parent_span_id", "name", "kind", "start_time_unix_nano", "end_time_unix_nano", "attributes")
+    __slots__ = ("trace_id", "span_id", "parent_span_id", "name", "kind", "start_time_unix_nano", "end_time_unix_nano", "metadata")
     class SpanKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
         __slots__ = ()
         SPAN_KIND_FUNCTION: _ClassVar[Span.SpanKind]
@@ -30,7 +30,7 @@ class Span(_message.Message):
     KIND_FIELD_NUMBER: _ClassVar[int]
     START_TIME_UNIX_NANO_FIELD_NUMBER: _ClassVar[int]
     END_TIME_UNIX_NANO_FIELD_NUMBER: _ClassVar[int]
-    ATTRIBUTES_FIELD_NUMBER: _ClassVar[int]
+    METADATA_FIELD_NUMBER: _ClassVar[int]
     trace_id: bytes
     span_id: bytes
     parent_span_id: bytes
@@ -38,5 +38,5 @@ class Span(_message.Message):
     kind: Span.SpanKind
     start_time_unix_nano: int
     end_time_unix_nano: int
-    attributes: _containers.RepeatedCompositeFieldContainer[_common_pb2.KeyValue]
-    def __init__(self, trace_id: _Optional[bytes] = ..., span_id: _Optional[bytes] = ..., parent_span_id: _Optional[bytes] = ..., name: _Optional[str] = ..., kind: _Optional[_Union[Span.SpanKind, str]] = ..., start_time_unix_nano: _Optional[int] = ..., end_time_unix_nano: _Optional[int] = ..., attributes: _Optional[_Iterable[_Union[_common_pb2.KeyValue, _Mapping]]] = ...) -> None: ...
+    metadata: _containers.RepeatedCompositeFieldContainer[_common_pb2.KeyValue]
+    def __init__(self, trace_id: _Optional[bytes] = ..., span_id: _Optional[bytes] = ..., parent_span_id: _Optional[bytes] = ..., name: _Optional[str] = ..., kind: _Optional[_Union[Span.SpanKind, str]] = ..., start_time_unix_nano: _Optional[int] = ..., end_time_unix_nano: _Optional[int] = ..., metadata: _Optional[_Iterable[_Union[_common_pb2.KeyValue, _Mapping]]] = ...) -> None: ...

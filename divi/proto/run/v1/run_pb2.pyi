@@ -8,7 +8,7 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class Run(_message.Message):
-    __slots__ = ("user_id", "run_id", "name", "kind", "start_time_unix_nano", "end_time_unix_nano", "attributes")
+    __slots__ = ("user_id", "run_id", "name", "kind", "start_time_unix_nano", "end_time_unix_nano", "metadata")
     class RunKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
         __slots__ = ()
         Observation: _ClassVar[Run.RunKind]
@@ -23,12 +23,12 @@ class Run(_message.Message):
     KIND_FIELD_NUMBER: _ClassVar[int]
     START_TIME_UNIX_NANO_FIELD_NUMBER: _ClassVar[int]
     END_TIME_UNIX_NANO_FIELD_NUMBER: _ClassVar[int]
-    ATTRIBUTES_FIELD_NUMBER: _ClassVar[int]
+    METADATA_FIELD_NUMBER: _ClassVar[int]
     user_id: bytes
     run_id: bytes
     name: str
     kind: Run.RunKind
     start_time_unix_nano: int
     end_time_unix_nano: int
-    attributes: _containers.RepeatedCompositeFieldContainer[_common_pb2.KeyValue]
-    def __init__(self, user_id: _Optional[bytes] = ..., run_id: _Optional[bytes] = ..., name: _Optional[str] = ..., kind: _Optional[_Union[Run.RunKind, str]] = ..., start_time_unix_nano: _Optional[int] = ..., end_time_unix_nano: _Optional[int] = ..., attributes: _Optional[_Iterable[_Union[_common_pb2.KeyValue, _Mapping]]] = ...) -> None: ...
+    metadata: _containers.RepeatedCompositeFieldContainer[_common_pb2.KeyValue]
+    def __init__(self, user_id: _Optional[bytes] = ..., run_id: _Optional[bytes] = ..., name: _Optional[str] = ..., kind: _Optional[_Union[Run.RunKind, str]] = ..., start_time_unix_nano: _Optional[int] = ..., end_time_unix_nano: _Optional[int] = ..., metadata: _Optional[_Iterable[_Union[_common_pb2.KeyValue, _Mapping]]] = ...) -> None: ...

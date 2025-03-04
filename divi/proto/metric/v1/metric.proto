@@ -24,6 +24,6 @@ message Metric {
     // The data of the metric.
     divi.proto.common.v1.AnyValue data = 3;
 
-    // Set of attributes that describe the span.
-    repeated divi.proto.common.v1.KeyValue attributes = 4;
+    // The metadata is a set of attributes that describe the span.
+    repeated divi.proto.common.v1.KeyValue metadata = 4;
 }

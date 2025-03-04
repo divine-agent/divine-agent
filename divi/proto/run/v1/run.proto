@@ -36,6 +36,6 @@ message Run {
     // The end_time_unix_nano is the end time of the run in Unix nanoseconds.
     fixed64 end_time_unix_nano = 6;
 
-    // Set of attributes that describe the run.
-    repeated divi.proto.common.v1.KeyValue attributes = 7;
+    // The metadata is a set of attributes that describe the run.
+    repeated divi.proto.common.v1.KeyValue metadata = 7;
 }

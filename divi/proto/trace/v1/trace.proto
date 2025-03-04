@@ -45,6 +45,6 @@ message Span {
     // The end_time_unix_nano is the end time of the span in Unix nanoseconds.
     fixed64 end_time_unix_nano = 7;
 
-    // Set of attributes that describe the span.
-    repeated divi.proto.common.v1.KeyValue attributes = 8;
+    // The metadata is a set of attributes that describe the span.
+    repeated divi.proto.common.v1.KeyValue metadata = 8;
 }

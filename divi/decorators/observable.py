@@ -59,17 +59,22 @@ def observable(
     """Observable decorator factory."""
 
     kind = kwargs.pop("kind", "function")
-    span = Span(kind, name=kwargs.get("name"), metadata=kwargs.get("metadata"))
+    name = kwargs.pop("name", None)
+    metadata = kwargs.pop("metadata", None)
 
     def decorator(func):
+        span = Span(kind=kind, name=name or func.__name__, metadata=metadata)
+
         @functools.wraps(func)
         def wrapper(*args, run_extra: Optional[RunExtra] = None, **kwargs):
-            tmp = setup(span, run_extra, _RUNEXTRA)
-            token = _RUNEXTRA.set(tmp)
+            run_extra = setup(span, _RUNEXTRA.get() or run_extra)
+            # set current context
+            token = _RUNEXTRA.set(run_extra)
             # execute the function
             span.start()
             result = func(*args, **kwargs)
             span.end()
+            # recover parent context
             _RUNEXTRA.reset(token)
             # TODO: collect result
             return result
@@ -78,13 +83,16 @@ def observable(
         def generator_wrapper(
             *args, run_extra: Optional[RunExtra] = None, **kwargs
         ):
+            run_extra = setup(span, _RUNEXTRA.get() or run_extra)
             # set current context
             token = _RUNEXTRA.set(run_extra)
             # execute the function
             results: List[Any] = []
+            span.start()
             for item in func(*args, **kwargs):
                 results.append(item)
                 yield item
+            span.end()
             # recover parent context
             _RUNEXTRA.reset(token)
             # TODO: collect results

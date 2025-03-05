@@ -33,4 +33,4 @@ def test_obs_nested():
         return span(text)
 
     message = chain("Hello", run_extra={"run_name": "test"})
-    assert message != "Hello Hello"
+    assert message == "Hello Hello"

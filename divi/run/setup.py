@@ -1,5 +1,3 @@
-from contextvars import ContextVar
-
 import divi
 from divi.run import Run, RunExtra
 from divi.signals.trace import Span
@@ -14,19 +12,16 @@ def init(run_extra: RunExtra) -> Run:
 def setup(
     span: Span,
     run_extra: RunExtra | None,
-    run_extra_context: ContextVar[RunExtra | None],
 ):
     """setup trace
 
     Args:
         span (Span): Span instance
         run_extra (RunExtra | None): Extra information from user input
-        run_extra_context (ContextVar[RunExtra | None]): ContextVar to store the extra information
-            from the Run and parent Span
     """
     # TOOD: merge run_extra input by user with the one from the context
     # temp solution: Priority: run_extra_context.get() > run_extra
-    run_extra = run_extra_context.get() or run_extra or RunExtra()
+    run_extra = run_extra or RunExtra()
 
     # init the Run if not already initialized
     if not divi._run:

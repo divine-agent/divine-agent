@@ -65,7 +65,9 @@ class Span:
         """Set the span as a root span."""
         self.trace_id = uuid4()
         print("as root")
+        print(f"name: {self.name}")
         print(f"trace_id: {self.trace_id}")
+        print(f"span_id: {self.span_id}")
 
     def _add_parent(self, trace_id: UUID4, parent_id: UUID4):
         """Set the parent span ID."""
@@ -73,6 +75,7 @@ class Span:
         self.parent_span_id = parent_id
 
         print("add parent")
+        print(f"name: {self.name}")
         print(f"trace_id: {trace_id}")
         print(f"span_id: {self.span_id}")
         print(f"parent_span_id: {parent_id}")

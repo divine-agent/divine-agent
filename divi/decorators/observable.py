@@ -17,6 +17,8 @@ from typing import (
 )
 
 from divi.run import RunExtra
+from divi.run.setup import setup
+from divi.signals.trace import Span
 
 R = TypeVar("R", covariant=True)
 P = ParamSpec("P")
@@ -56,15 +58,17 @@ def observable(
 ) -> Union[Callable, Callable[[Callable], Callable]]:
     """Observable decorator factory."""
 
+    kind = kwargs.pop("kind", "function")
+    span = Span(kind, name=kwargs.get("name"), metadata=kwargs.get("metadata"))
+
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, run_extra: Optional[RunExtra] = None, **kwargs):
-            # set current context
-            token = _RUNEXTRA.set(run_extra)
+            setup(span, run_extra, _RUNEXTRA)
             # execute the function
+            span.start()
             result = func(*args, **kwargs)
-            # recover parent context
-            _RUNEXTRA.reset(token)
+            span.end()
             # TODO: collect result
             return result
 

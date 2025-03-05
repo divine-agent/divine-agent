@@ -1,4 +1,3 @@
-from .metric import Metric
-from .trace import Trace
+from .trace import Span
 
-__all__ = ["Metric", "Trace"]
+__all__ = ["Span"]

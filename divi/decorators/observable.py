@@ -64,11 +64,13 @@ def observable(
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, run_extra: Optional[RunExtra] = None, **kwargs):
-            setup(span, run_extra, _RUNEXTRA)
+            tmp = setup(span, run_extra, _RUNEXTRA)
+            token = _RUNEXTRA.set(tmp)
             # execute the function
             span.start()
             result = func(*args, **kwargs)
             span.end()
+            _RUNEXTRA.reset(token)
             # TODO: collect result
             return result
 

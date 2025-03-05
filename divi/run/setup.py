@@ -1,14 +1,13 @@
-from contextvars import ContextVar, copy_context
+from contextvars import ContextVar
 
 import divi
 from divi.run import Run, RunExtra
-from divi.services import init as init_services
 from divi.signals.trace import Span
 
 
 def init(run_extra: RunExtra) -> Run:
     """init initializes the services and the Run"""
-    init_services()
+    # init_services()
     return Run(name=run_extra.get("run_name"))
 
 
@@ -51,5 +50,6 @@ def setup(
 
     # offer end hook to collect data at whe end of the span ?
     # offer hook to reset the context with the token
-    context = copy_context()
-    context.run(run_extra_context.set, run_extra)
+    # context = copy_context()
+    # context.run(run_extra_context.set, run_extra)
+    return run_extra

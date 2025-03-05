@@ -2,6 +2,8 @@ import time
 from typing import Any, Mapping, Optional
 from uuid import uuid4
 
+from pydantic import UUID4
+
 from divi.proto.common.v1.common_pb2 import KeyValue
 from divi.proto.trace.v1.trace_pb2 import Span as SpanProto
 
@@ -18,15 +20,28 @@ class Span:
         name: Optional[str] = None,
         metadata: Optional[Mapping[str, Any]] = None,
     ):
-        self.data: SpanProto = SpanProto(
-            span_id=uuid4().bytes,
-            kind=self._get_kind(kind),
-        )
+        self.span_id: UUID4 = uuid4()
+        self.name = name
+        self.kind = kind
+        self.metadata = metadata
+        self.start_time_unix_nano: int | None = None
+        self.end_time_unix_nano: int | None = None
 
-        self.data.metadata.extend(
-            KeyValue(key=k, value=v) for k, v in (metadata or dict()).items()
+        self.trace_id: UUID4 | None = None
+        self.parent_span_id: UUID4 | None = None
+
+    @property
+    def signal(self):
+        signal: SpanProto = SpanProto(
+            name=self.name,
+            span_id=self.span_id.bytes,
+            kind=self._get_kind(self.kind),
         )
-        print(f"init new span: {self.data.span_id}")
+        signal.metadata.extend(
+            KeyValue(key=k, value=v)
+            for k, v in (self.metadata or dict()).items()
+        )
+        return signal
 
     @classmethod
     def _get_kind(cls, kind: str) -> SpanProto.SpanKind:
@@ -44,26 +59,20 @@ class Span:
         """End the span by recording the end time in nanoseconds."""
         if self.start_time_unix_nano is None:
             raise ValueError("Span must be started before ending.")
-        self.data.end_time_unix_nano = time.time_ns()
+        self.end_time_unix_nano = time.time_ns()
 
     def _as_root(self):
         """Set the span as a root span."""
-        self.data.trace_id = uuid4().bytes
+        self.trace_id = uuid4()
         print("as root")
-        print(f"trace_id: {self.data.trace_id}")
+        print(f"trace_id: {self.trace_id}")
 
-    def _add_parent(self, trace_id: bytes, parent_id: bytes):
+    def _add_parent(self, trace_id: UUID4, parent_id: UUID4):
         """Set the parent span ID."""
-
-        if not isinstance(trace_id, bytes) or len(trace_id) != 16:
-            raise ValueError("Trace ID must be a 16-byte UUID.")
-
-        if not isinstance(parent_id, bytes) or len(parent_id) != 16:
-            raise ValueError("Parent span ID must be a 16-byte UUID.")
-
-        self.data.trace_id = trace_id
-        self.data.parent_span_id = parent_id
+        self.trace_id = trace_id
+        self.parent_span_id = parent_id
 
         print("add parent")
         print(f"trace_id: {trace_id}")
+        print(f"span_id: {self.span_id}")
         print(f"parent_span_id: {parent_id}")

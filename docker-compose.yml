@@ -13,7 +13,6 @@ services:
 
   divi-auth:
     image: kaikaikaifang/divi-auth:latest
-    # platform: linux/amd64
     build:
       context: ./services
       dockerfile: ./cmd/auth/Dockerfile
@@ -37,7 +36,6 @@ services:
 
   divi-graphql:
     image: kaikaikaifang/divi-graphql:latest
-    # platform: linux/amd64
     build:
       context: .
       dockerfile: ./apps/graphql/Dockerfile

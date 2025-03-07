@@ -7,6 +7,7 @@ Agent Platform for Observability • Evaluation • Playground
 - [ ] trace: obs_openai()
 - [ ] trace: @obs
 - [ ] datapark services
+- [ ] collect data
 
 ## Structure
 

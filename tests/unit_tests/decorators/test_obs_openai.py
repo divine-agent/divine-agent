@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock, patch
 
-from divi.decorators.obs_openai import obs_openai
+from divi.decorators import obs_openai
 
 
 @patch("openai.OpenAI")

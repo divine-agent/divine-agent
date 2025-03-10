@@ -1,4 +1,4 @@
-from divi.decorators.observable import observable
+from divi.decorators import observable
 
 
 def test_obs_function():

@@ -11,6 +11,8 @@ import (
 	"gorm.io/gorm"
 )
 
+// TODO Clickhouse and MongoDB
+
 // ConnectDB connect to db
 func ConnectDB() {
 	var err error

@@ -1,7 +1,6 @@
-package middleware
+package auth
 
 import (
-	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/auth"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/config"
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
@@ -10,7 +9,7 @@ import (
 // Protected protect routes
 func Protected() fiber.Handler {
 	encodedPublicKey := config.Config("ACCESS_TOKEN_PUBLIC_KEY")
-	publicKey, err := auth.ParsePublicKey(encodedPublicKey)
+	publicKey, err := ParsePublicKey(encodedPublicKey)
 	if err != nil {
 		panic(err)
 	}

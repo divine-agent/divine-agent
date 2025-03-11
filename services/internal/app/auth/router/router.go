@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/Kaikaikaifang/divine-agent/services/internal/app/auth/handler"
-	"github.com/Kaikaikaifang/divine-agent/services/internal/app/auth/middleware"
+	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/auth"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -11,7 +11,7 @@ import (
 // SetupRoutes setup router api
 func SetupRoutes(app *fiber.App) {
 	// Middleware
-	jwtware := middleware.Protected()
+	jwtware := auth.Protected()
 
 	// API
 	api := app.Group("/api", logger.New())

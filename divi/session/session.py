@@ -4,18 +4,18 @@ from uuid import uuid4
 from pydantic import UUID4
 
 
-class RunExtra(TypedDict, total=False):
-    """Extra information for Run"""
+class SessionExtra(TypedDict, total=False):
+    """Extra information for Session"""
 
-    run_name: Optional[str]
-    """Name of the Run"""
+    session_name: Optional[str]
+    """Name of the session"""
     trace_id: Optional[UUID4]
     """Trace ID UUID4"""
     parent_span_id: Optional[UUID4]
     """Parent Span ID UUID4"""
 
 
-class Run:
+class Session:
     def __init__(
         self,
         name: Optional[str] = None,

@@ -16,32 +16,32 @@ from typing import (
     runtime_checkable,
 )
 
-from divi.run import RunExtra
-from divi.run.setup import setup
+from divi.session import SessionExtra
+from divi.session.setup import setup
 from divi.signals.trace import Span
 
 R = TypeVar("R", covariant=True)
 P = ParamSpec("P")
 
 # ContextVar to store the extra information
-# from the Run and parent Span
-_RUNEXTRA = contextvars.ContextVar[Optional[RunExtra]](
-    "_RUNEXTRA", default=None
+# from the Session and parent Span
+_SESSION_EXTRA = contextvars.ContextVar[Optional[SessionExtra]](
+    "_SESSION_EXTRA", default=None
 )
 
 
 @runtime_checkable
-class WithRunExtra(Protocol, Generic[P, R]):
+class WithSessionExtra(Protocol, Generic[P, R]):
     def __call__(
         self,
         *args: P.args,
-        run_extra: Optional[RunExtra] = None,  # type: ignore[valid-type]
+        session_extra: Optional[SessionExtra] = None,  # type: ignore[valid-type]
         **kwargs: P.kwargs,
     ) -> R: ...
 
 
 @overload
-def observable(func: Callable[P, R]) -> WithRunExtra[P, R]: ...
+def observable(func: Callable[P, R]) -> WithSessionExtra[P, R]: ...
 
 
 @overload
@@ -50,7 +50,7 @@ def observable(
     *,
     name: Optional[str] = None,
     metadata: Optional[Mapping[str, Any]] = None,
-) -> Callable[[Callable[P, R]], WithRunExtra[P, R]]: ...
+) -> Callable[[Callable[P, R]], WithSessionExtra[P, R]]: ...
 
 
 def observable(
@@ -63,29 +63,35 @@ def observable(
     metadata = kwargs.pop("metadata", None)
 
     def decorator(func):
-        span = Span(kind=kind, name=name or func.__name__, metadata=metadata)
-
         @functools.wraps(func)
-        def wrapper(*args, run_extra: Optional[RunExtra] = None, **kwargs):
-            run_extra = setup(span, _RUNEXTRA.get() or run_extra)
+        def wrapper(
+            *args, session_extra: Optional[SessionExtra] = None, **kwargs
+        ):
+            span = Span(
+                kind=kind, name=name or func.__name__, metadata=metadata
+            )
+            session_extra = setup(span, _SESSION_EXTRA.get() or session_extra)
             # set current context
-            token = _RUNEXTRA.set(run_extra)
+            token = _SESSION_EXTRA.set(session_extra)
             # execute the function
             span.start()
             result = func(*args, **kwargs)
             span.end()
             # recover parent context
-            _RUNEXTRA.reset(token)
+            _SESSION_EXTRA.reset(token)
             # TODO: collect result
             return result
 
         @functools.wraps(func)
         def generator_wrapper(
-            *args, run_extra: Optional[RunExtra] = None, **kwargs
+            *args, session_extra: Optional[SessionExtra] = None, **kwargs
         ):
-            run_extra = setup(span, _RUNEXTRA.get() or run_extra)
+            span = Span(
+                kind=kind, name=name or func.__name__, metadata=metadata
+            )
+            session_extra = setup(span, _SESSION_EXTRA.get() or session_extra)
             # set current context
-            token = _RUNEXTRA.set(run_extra)
+            token = _SESSION_EXTRA.set(session_extra)
             # execute the function
             results: List[Any] = []
             span.start()
@@ -94,7 +100,7 @@ def observable(
                 yield item
             span.end()
             # recover parent context
-            _RUNEXTRA.reset(token)
+            _SESSION_EXTRA.reset(token)
             # TODO: collect results
 
         if inspect.isgeneratorfunction(func):

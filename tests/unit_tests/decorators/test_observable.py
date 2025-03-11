@@ -32,5 +32,5 @@ def test_obs_nested():
         span(text)
         return span(text)
 
-    message = chain("Hello", run_extra={"run_name": "test"})
+    message = chain("Hello", session_extra={"session_name": "test"})
     assert message == "Hello Hello"

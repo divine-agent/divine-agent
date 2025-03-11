@@ -14,7 +14,7 @@ C = TypeVar("C", bound=Union["OpenAI", "AsyncOpenAI"])
 def _get_observable_create(create: Callable) -> Callable:
     @functools.wraps(create)
     def observable_create(*args, stream: bool = False, **kwargs):
-        decorator = observable()
+        decorator = observable(kind="llm")
         return decorator(create)(*args, stream=stream, **kwargs)
 
     # TODO Async Observable Create

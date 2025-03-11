@@ -21,6 +21,7 @@ def test_chat_completion(mock_openai):
 
     # mock chat.completions.create method
     mock_chat_completion = MagicMock()
+    mock_client.chat.completions.create.__name__ = "create"
     mock_client.chat.completions.create.return_value = mock_chat_completion
 
     client = obs_openai(mock_client)
@@ -43,6 +44,7 @@ def test_completion(mock_openai):
     mock_openai.return_value = mock_client
 
     mock_completion = MagicMock()
+    mock_client.completions.create.__name__ = "create"
     mock_client.completions.create.return_value = mock_completion
 
     client = obs_openai(mock_client)

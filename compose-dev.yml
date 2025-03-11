@@ -1,0 +1,35 @@
+services:
+  divi-postgres:
+    image: postgres:16.8-alpine3.20
+    container_name: divi-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+
+  divi-mongo:
+    image: mongodb/mongodb-community-server:7.0.17-ubi8
+    container_name: divi-mongo
+    restart: always
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGODB_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGODB_INITDB_DATABASE: ${MONGO_DB}
+    ports:
+      - "${MONGO_PORT}:27017"
+
+  divi-clickhouse:
+    image: clickhouse/clickhouse-server:latest-alpine
+    container_name: divi-clickhouse
+    restart: always
+    environment:
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    ports:
+      - "${CLICKHOUSE_PORT}:9000"
+      - "8123:8123"

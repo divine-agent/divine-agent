@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -17,6 +18,7 @@ var (
 )
 
 func main() {
+	// Setup fiber app
 	app := fiber.New(fiber.Config{
 		Prefork:       true,
 		CaseSensitive: true,
@@ -27,11 +29,27 @@ func main() {
 		JSONDecoder:   sonic.Unmarshal,
 	})
 	// app.Use(cors.New())
-
-	database.ConnectDB()
-
 	router.SetupRoutes(app)
+
+	// Connect to database
+	if err := database.ConnectDB(); err != nil {
+		log.Fatalf("Failed to connect to postgres: %v", err)
+	}
+	if err := database.ConnectClickhouse(); err != nil {
+		log.Fatalf("Failed to connect to clickhouse: %v", err)
+	}
+	if err := database.ConnectMongoDB(); err != nil {
+		log.Fatalf("Failed to connect to mongodb: %v", err)
+	}
+
+	// Listen to port
 	if err := app.Listen(fmt.Sprintf(":%d", *port)); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
+
+	defer func() {
+		if err := database.MG.Disconnect(context.Background()); err != nil {
+			log.Fatalf("Failed to close mongodb: %v", err)
+		}
+	}()
 }

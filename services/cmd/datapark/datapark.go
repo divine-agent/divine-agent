@@ -47,9 +47,6 @@ func main() {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 
-	defer func() {
-		if err := database.MG.Disconnect(context.Background()); err != nil {
-			log.Fatalf("Failed to close mongodb: %v", err)
-		}
-	}()
+	// Close database connection
+	defer database.MG.Disconnect(context.Background())
 }

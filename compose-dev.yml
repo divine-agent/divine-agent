@@ -17,7 +17,6 @@ services:
     environment:
       MONGODB_INITDB_ROOT_USERNAME: ${MONGO_USER}
       MONGODB_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-      MONGODB_INITDB_DATABASE: ${MONGO_DB}
     ports:
       - "${MONGO_PORT}:27017"
 

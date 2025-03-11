@@ -6,9 +6,11 @@ import (
 	"gorm.io/gorm"
 )
 
-// DB gorm connector
 var (
+	// DB gorm connector
 	DB *gorm.DB
+	// CH clickhouse connector
 	CH *clickhouse.Conn
+	// MG mongo connector
 	MG *mongo.Client
 )

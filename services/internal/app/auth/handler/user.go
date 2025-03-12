@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"strconv"
 	"sync"
 
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/database"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/model"
+	"github.com/google/uuid"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -18,19 +18,14 @@ func hashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
-func validToken(t *jwt.Token, id string) bool {
-	n, err := strconv.Atoi(id)
-	if err != nil {
-		return false
-	}
-
+func validToken(t *jwt.Token, id uuid.UUID) bool {
 	claims := t.Claims.(jwt.MapClaims)
-	uid := int(claims["user_id"].(float64))
+	uid := claims["user_id"].(string)
 
-	return uid == n
+	return uid == id.String()
 }
 
-func validUser(id string, p string) bool {
+func validUser(id uuid.UUID, p string) bool {
 	db := database.DB
 	var user model.User
 	db.First(&user, id)
@@ -45,7 +40,10 @@ func validUser(id string, p string) bool {
 
 // GetUser get a user
 func GetUser(c *fiber.Ctx) error {
-	id := c.Params("id")
+	id, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid ID", "data": nil})
+	}
 	db := database.DB
 	var user model.User
 	db.Omit("password").Find(&user, id)
@@ -117,7 +115,10 @@ func UpdateUser(c *fiber.Ctx) error {
 	if err := c.BodyParser(&uui); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Review your input", "errors": err.Error()})
 	}
-	id := c.Params("id")
+	id, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid ID", "data": nil})
+	}
 	token := c.Locals("user").(*jwt.Token)
 
 	// Ensure the token is belongs to the user
@@ -144,7 +145,10 @@ func DeleteUser(c *fiber.Ctx) error {
 	if err := c.BodyParser(&pi); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Review your input", "errors": err.Error()})
 	}
-	id := c.Params("id")
+	id, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid ID", "data": nil})
+	}
 	token := c.Locals("user").(*jwt.Token)
 
 	if !validToken(token, id) {

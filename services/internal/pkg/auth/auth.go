@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 func ParsePrivateKey(encodedPrivateKey string) (*rsa.PrivateKey, error) {
@@ -29,4 +30,8 @@ func ParsePublicKey(encodedPublicKey string) (*rsa.PublicKey, error) {
 		return nil, err
 	}
 	return key, nil
+}
+
+func ParseUserId(token *jwt.Token) (uuid.UUID, error) {
+	return uuid.Parse(token.Claims.(jwt.MapClaims)["user_id"].(string))
 }

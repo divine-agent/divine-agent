@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/auth"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/database"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/model"
 	"github.com/gofiber/fiber/v2"
@@ -17,11 +18,15 @@ func GetTraces(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid session ID", "data": nil})
 	}
 	token := c.Locals("user").(*jwt.Token)
-	uid := uint(token.Claims.(jwt.MapClaims)["user_id"].(float64))
+	userID, err := auth.ParseUserId(token)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid user ID", "data": nil})
+	}
+
 	// check if session exists and belongs to user
 	// if not, return error
 	var session model.Session
-	if err := db.Where(&model.Session{ID: sessionId, UserID: uid}).Find(&session).Error; err != nil {
+	if err := db.Where(&model.Session{ID: sessionId, UserID: userID}).Find(&session).Error; err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "No session found with ID", "data": nil})
 	}
 
@@ -42,11 +47,14 @@ func CreateTrace(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid session ID", "data": nil})
 	}
 	token := c.Locals("user").(*jwt.Token)
-	uid := uint(token.Claims.(jwt.MapClaims)["user_id"].(float64))
+	userID, err := auth.ParseUserId(token)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid user ID", "data": nil})
+	}
 	// check if session exists and belongs to user
 	// if not, return error
 	var session model.Session
-	if err := db.Where(&model.Session{ID: sessionId, UserID: uid}).Find(&session).Error; err != nil {
+	if err := db.Where(&model.Session{ID: sessionId, UserID: userID}).Find(&session).Error; err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "No session found with ID", "data": nil})
 	}
 

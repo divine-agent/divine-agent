@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"fmt"
 
+	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/auth"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/database"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/model"
 	"github.com/gofiber/fiber/v2"
@@ -22,7 +23,11 @@ func CreateAPIKey(c *fiber.Ctx) error {
 	db := database.DB
 	var apiKey model.APIKey
 	token := c.Locals("user").(*jwt.Token)
-	apiKey.UserID = uint(token.Claims.(jwt.MapClaims)["user_id"].(float64))
+	userID, err := auth.ParseUserId(token)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid user ID", "data": nil})
+	}
+	apiKey.UserID = userID
 
 	// generate api key with uuid
 	prefix := "divi-"
@@ -49,7 +54,10 @@ func GetAPIKeys(c *fiber.Ctx) error {
 	var apiKeys []model.APIKey
 
 	token := c.Locals("user").(*jwt.Token)
-	userID := uint(token.Claims.(jwt.MapClaims)["user_id"].(float64))
+	userID, err := auth.ParseUserId(token)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid user ID", "data": nil})
+	}
 
 	// omit digest (hashed api key)
 	if err := db.Where(&model.APIKey{UserID: userID}).Omit("Digest").Find(&apiKeys).Error; err != nil {
@@ -61,9 +69,15 @@ func GetAPIKeys(c *fiber.Ctx) error {
 
 // DeleteAPIKey delete api key
 func RevokeAPIKey(c *fiber.Ctx) error {
-	id := c.Params("id")
+	id, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid API KEY ID", "data": nil})
+	}
 	token := c.Locals("user").(*jwt.Token)
-	userID := uint(token.Claims.(jwt.MapClaims)["user_id"].(float64))
+	userID, err := auth.ParseUserId(token)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid user ID", "data": nil})
+	}
 
 	db := database.DB
 	var apiKey model.APIKey

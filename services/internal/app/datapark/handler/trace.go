@@ -5,13 +5,17 @@ import (
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 func GetTraces(c *fiber.Ctx) error {
 	db := database.DB
 
 	// session id
-	sessionId := c.Params("id")
+	sessionId, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid session ID", "data": nil})
+	}
 	token := c.Locals("user").(*jwt.Token)
 	uid := uint(token.Claims.(jwt.MapClaims)["user_id"].(float64))
 	// check if session exists and belongs to user
@@ -33,7 +37,10 @@ func CreateTrace(c *fiber.Ctx) error {
 	db := database.DB
 
 	// session id
-	sessionId := c.Params("id")
+	sessionId, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid session ID", "data": nil})
+	}
 	token := c.Locals("user").(*jwt.Token)
 	uid := uint(token.Claims.(jwt.MapClaims)["user_id"].(float64))
 	// check if session exists and belongs to user

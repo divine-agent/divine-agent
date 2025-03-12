@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -11,7 +12,7 @@ import (
 type Trace struct {
 	gorm.Model `json:"-"`
 	// ID is a UUID4 string
-	ID string `gorm:"primaryKey;not null;size:36;" json:"id,omitempty"`
+	ID uuid.UUID `gorm:"primaryKey;not null;size:36;" json:"id,omitempty"`
 
 	// StartTime is the start time of the trace in Unix Nano
 	StartTime time.Time `json:"start_time"`
@@ -19,5 +20,5 @@ type Trace struct {
 	EndTime sql.NullTime `json:"end_time,omitempty"`
 
 	// Session ID
-	SessionID string `gorm:"not null;size:36;" json:"session_id,omitempty"`
+	SessionID uuid.UUID `gorm:"not null;size:36;" json:"session_id,omitempty"`
 }

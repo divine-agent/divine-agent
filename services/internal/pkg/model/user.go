@@ -10,7 +10,7 @@ import (
 type User struct {
 	gorm.Model `json:"-"`
 
-	ID       uint    `gorm:"primaryKey;autoIncrement;not null;" json:"id,omitempty"`
+	ID       uint    `gorm:"primaryKey;autoIncrement;not null;type:uuid;default:gen_random_uuid()" json:"id,omitempty"`
 	Username string  `gorm:"uniqueIndex:idx_username_active;not null;size:50;" validate:"required,min=3,max=50" json:"username"`
 	Email    string  `gorm:"uniqueIndex:idx_email_active;not null;size:255;" validate:"required,email" json:"email"`
 	Password string  `gorm:"not null;" validate:"required,min=6,max=50" json:"password,omitempty"`

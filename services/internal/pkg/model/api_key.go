@@ -1,11 +1,14 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
 
 // APIKey struct
 type APIKey struct {
 	gorm.Model `json:"-"`
-	ID         uint `gorm:"primaryKey;autoIncrement;not null;" json:"id,omitempty"`
+	ID         uuid.UUID `gorm:"primaryKey;autoIncrement;not null;type:uuid;default:gen_random_uuid()" json:"id,omitempty"`
 	// Digest is the hashed API key
 	Digest string `gorm:"uniqueIndex;not null;" json:"digest,omitempty"`
 	// APIKey is the masked API key

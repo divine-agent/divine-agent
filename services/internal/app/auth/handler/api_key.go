@@ -15,8 +15,8 @@ import (
 // CreateAPIKey create a new api key
 func CreateAPIKey(c *fiber.Ctx) error {
 	type NewAPIKey struct {
-		ID     uint   `json:"id"`
-		APIKey string `json:"api_key"`
+		ID     uuid.UUID `json:"id"`
+		APIKey string    `json:"api_key"`
 	}
 
 	db := database.DB

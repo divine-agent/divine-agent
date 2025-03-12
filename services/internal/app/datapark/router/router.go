@@ -17,11 +17,25 @@ func SetupRoutes(app *fiber.App) {
 	api := app.Group("/api", logger.New())
 	api.Get("/", jwtware, handler.Hello)
 
-	// Run / Session
+	// Session
+	session := api.Group("/session")
+	session.Get("/", jwtware, handler.GetSessions)
+	session.Post("/", jwtware, handler.CreateSession)
+	session.Get("/:id/traces", jwtware, handler.GetTraces)
+	session.Post("/:id/trace", jwtware, handler.CreateTrace)
 
+	// Trace
+	trace := api.Group("/trace")
 	// Span
+	trace.Get("/:id/spans", jwtware, handler.GetSpans)
+	trace.Post("/:id/spans", jwtware, handler.CreateSpans)
 
 	// Metric
+	metric := api.Group("/metric")
+	metric.Post("/", jwtware, handler.CreateMetrics)
 
-	// Input / Output
+	// OpenAI Input / Output
+	v1 := api.Group("/v1")
+	v1.Post("/chat/completions", jwtware, handler.CreateChatCompletion)
+	v1.Get("/chat/completions/:id", jwtware, handler.GetChatCompletions)
 }

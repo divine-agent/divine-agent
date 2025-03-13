@@ -6,7 +6,7 @@ def test_obs_function():
     def hello(message: str):
         return f"Hello {message}"
 
-    assert hello("World") != "Hello World"
+    assert hello("World") == "Hello World"
 
 
 def test_obs_generator():

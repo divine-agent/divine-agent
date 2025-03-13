@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"bytes"
 	"context"
+	"encoding/hex"
 	"fmt"
 	"time"
 
@@ -119,10 +121,19 @@ func GetSpans(c *fiber.Ctx) error {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var span model.Span
-		if err := rows.Scan(&span.ID, &span.TraceID, &span.ParentID, &span.Name, &span.Kind, &span.StartTime, &span.EndTime, &span.Duration, &span.Metadata); err != nil {
-			fmt.Println(err)
+		var (
+			span     model.Span
+			ID       []byte
+			parentID []byte
+		)
+		if err := rows.Scan(&ID, &span.TraceID, &parentID, &span.Name, &span.Kind, &span.StartTime, &span.EndTime, &span.Duration, &span.Metadata); err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to scan spans", "data": nil})
+		}
+
+		span.ID = hex.EncodeToString(ID)
+		// if parentID is not nil, convert to hex string
+		if !bytes.Equal(parentID, make([]byte, len(parentID))) {
+			span.ParentID = hex.EncodeToString(parentID)
 		}
 		spans = append(spans, span)
 	}
@@ -136,7 +147,6 @@ func CreateSpans(c *fiber.Ctx) error {
 	if err := protojson.Unmarshal(body, &spans); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid request body", "data": nil})
 	}
-	fmt.Println(spans.String())
 
 	db := database.DB
 	conn := *database.CH
@@ -179,13 +189,11 @@ func CreateSpans(c *fiber.Ctx) error {
 		PRIMARY KEY (trace_id, span_id);
 	`)
 	if err != nil {
-		fmt.Println(err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create table", "data": nil})
 	}
 
 	batch, err := conn.PrepareBatch(ctx, "INSERT INTO spans")
 	if err != nil {
-		fmt.Println(err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to prepare batch", "data": nil})
 	}
 	for _, span := range spans.Spans {

@@ -11,8 +11,8 @@ class SessionExtra(TypedDict, total=False):
     """Name of the session"""
     trace_id: Optional[UUID4]
     """Trace ID UUID4"""
-    parent_span_id: Optional[UUID4]
-    """Parent Span ID UUID4"""
+    parent_span_id: Optional[bytes]
+    """Parent Span ID fixed string(8)"""
 
 
 class Session:

@@ -4,7 +4,7 @@
 // - protoc             v5.29.0
 // source: divi/proto/core/health/v1/health_service.proto
 
-package proto
+package pb
 
 import (
 	context "context"

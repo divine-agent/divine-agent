@@ -16,6 +16,8 @@ from typing import (
     runtime_checkable,
 )
 
+import divi
+from divi.proto.trace.v1.trace_pb2 import ScopeSpans
 from divi.session import SessionExtra
 from divi.session.setup import setup
 from divi.signals.trace import Span
@@ -80,6 +82,10 @@ def observable(
             # recover parent context
             _SESSION_EXTRA.reset(token)
             # TODO: collect result
+            if divi._datapark and span.trace_id:
+                divi._datapark.create_spans(
+                    span.trace_id, ScopeSpans(spans=[span.signal])
+                )
             return result
 
         @functools.wraps(func)
@@ -99,6 +105,7 @@ def observable(
                 results.append(item)
                 yield item
             span.end()
+
             # recover parent context
             _SESSION_EXTRA.reset(token)
             # TODO: collect results

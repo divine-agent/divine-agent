@@ -11,7 +11,6 @@ proto_root = os.path.join(os.path.dirname(grpc_tools.__file__), "_proto")
 # messages
 for proto_file in [
     "common/v1/common.proto",
-    "run/v1/run.proto",
     "trace/v1/trace.proto",
     "metric/v1/metric.proto",
 ]:

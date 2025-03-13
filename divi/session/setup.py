@@ -1,11 +1,12 @@
 import divi
+from divi.services import init as init_services
 from divi.session import Session, SessionExtra
 from divi.signals.trace import Span
 
 
 def init(session_extra: SessionExtra) -> Session:
     """init initializes the services and the Run"""
-    # init_services()
+    init_services()
     return Session(name=session_extra.get("session_name"))
 
 

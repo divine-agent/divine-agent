@@ -25,16 +25,16 @@ _sym_db = _symbol_database.Default()
 from divi.proto.common.v1 import common_pb2 as divi_dot_proto_dot_common_dot_v1_dot_common__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n!divi/proto/metric/v1/metric.proto\x12\x14\x64ivi.proto.metric.v1\x1a!divi/proto/common/v1/common.proto\"l\n\x0cScopeMetrics\x12-\n\x05scope\x18\x01 \x01(\x0b\x32\x1e.divi.proto.common.v1.RunScope\x12-\n\x07metrics\x18\x02 \x03(\x0b\x32\x1c.divi.proto.metric.v1.Metric\"\x8b\x01\n\x06Metric\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12,\n\x04\x64\x61ta\x18\x03 \x01(\x0b\x32\x1e.divi.proto.common.v1.AnyValue\x12\x30\n\x08metadata\x18\x04 \x03(\x0b\x32\x1e.divi.proto.common.v1.KeyValueB\x10Z\x0eservices/protob\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n!divi/proto/metric/v1/metric.proto\x12\x14\x64ivi.proto.metric.v1\x1a!divi/proto/common/v1/common.proto\"=\n\x0cScopeMetrics\x12-\n\x07metrics\x18\x02 \x03(\x0b\x32\x1c.divi.proto.metric.v1.Metric\"\x8b\x01\n\x06Metric\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12,\n\x04\x64\x61ta\x18\x03 \x01(\x0b\x32\x1e.divi.proto.common.v1.AnyValue\x12\x30\n\x08metadata\x18\x04 \x03(\x0b\x32\x1e.divi.proto.common.v1.KeyValueB\rZ\x0bservices/pbb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'divi.proto.metric.v1.metric_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
-  _globals['DESCRIPTOR']._serialized_options = b'Z\016services/proto'
+  _globals['DESCRIPTOR']._serialized_options = b'Z\013services/pb'
   _globals['_SCOPEMETRICS']._serialized_start=94
-  _globals['_SCOPEMETRICS']._serialized_end=202
-  _globals['_METRIC']._serialized_start=205
-  _globals['_METRIC']._serialized_end=344
+  _globals['_SCOPEMETRICS']._serialized_end=155
+  _globals['_METRIC']._serialized_start=158
+  _globals['_METRIC']._serialized_end=297
 # @@protoc_insertion_point(module_scope)

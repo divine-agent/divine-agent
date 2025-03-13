@@ -19,7 +19,7 @@ def _start_server(core: Core):
     """Start the backend server."""
     # start the server
     bin_path = get_server_path()
-    command = [bin_path, f"-port {core.port}"]
+    command = [bin_path, "-port", str(core.port)]
     core.process = subprocess.Popen(command)
 
     # Wait for the port to be open

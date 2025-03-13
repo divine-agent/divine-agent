@@ -24,14 +24,14 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n!divi/proto/common/v1/common.proto\x12\x14\x64ivi.proto.common.v1\"\xfa\x01\n\x08\x41nyValue\x12\x16\n\x0cstring_value\x18\x01 \x01(\tH\x00\x12\x14\n\nbool_value\x18\x02 \x01(\x08H\x00\x12\x13\n\tint_value\x18\x03 \x01(\x03H\x00\x12\x16\n\x0c\x64ouble_value\x18\x04 \x01(\x01H\x00\x12\x37\n\x0b\x61rray_value\x18\x05 \x01(\x0b\x32 .divi.proto.common.v1.ArrayValueH\x00\x12:\n\x0ckvlist_value\x18\x06 \x01(\x0b\x32\".divi.proto.common.v1.KeyValueListH\x00\x12\x15\n\x0b\x62ytes_value\x18\x07 \x01(\x0cH\x00\x42\x07\n\x05value\"<\n\nArrayValue\x12.\n\x06values\x18\x01 \x03(\x0b\x32\x1e.divi.proto.common.v1.AnyValue\">\n\x0cKeyValueList\x12.\n\x06values\x18\x01 \x03(\x0b\x32\x1e.divi.proto.common.v1.KeyValue\"F\n\x08KeyValue\x12\x0b\n\x03key\x18\x01 \x01(\t\x12-\n\x05value\x18\x02 \x01(\x0b\x32\x1e.divi.proto.common.v1.AnyValue\"\x82\x01\n\x08RunScope\x12\x0e\n\x06run_id\x18\x01 \x01(\x0c\x12\x10\n\x08run_name\x18\x02 \x01(\t\x12\x32\n\nattributes\x18\x03 \x03(\x0b\x32\x1e.divi.proto.common.v1.KeyValue\x12 \n\x18\x64ropped_attributes_count\x18\x04 \x01(\rB\x10Z\x0eservices/protob\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n!divi/proto/common/v1/common.proto\x12\x14\x64ivi.proto.common.v1\"\xfa\x01\n\x08\x41nyValue\x12\x16\n\x0cstring_value\x18\x01 \x01(\tH\x00\x12\x14\n\nbool_value\x18\x02 \x01(\x08H\x00\x12\x13\n\tint_value\x18\x03 \x01(\x03H\x00\x12\x16\n\x0c\x64ouble_value\x18\x04 \x01(\x01H\x00\x12\x37\n\x0b\x61rray_value\x18\x05 \x01(\x0b\x32 .divi.proto.common.v1.ArrayValueH\x00\x12:\n\x0ckvlist_value\x18\x06 \x01(\x0b\x32\".divi.proto.common.v1.KeyValueListH\x00\x12\x15\n\x0b\x62ytes_value\x18\x07 \x01(\x0cH\x00\x42\x07\n\x05value\"<\n\nArrayValue\x12.\n\x06values\x18\x01 \x03(\x0b\x32\x1e.divi.proto.common.v1.AnyValue\">\n\x0cKeyValueList\x12.\n\x06values\x18\x01 \x03(\x0b\x32\x1e.divi.proto.common.v1.KeyValue\"F\n\x08KeyValue\x12\x0b\n\x03key\x18\x01 \x01(\t\x12-\n\x05value\x18\x02 \x01(\x0b\x32\x1e.divi.proto.common.v1.AnyValueB\rZ\x0bservices/pbb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'divi.proto.common.v1.common_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
-  _globals['DESCRIPTOR']._serialized_options = b'Z\016services/proto'
+  _globals['DESCRIPTOR']._serialized_options = b'Z\013services/pb'
   _globals['_ANYVALUE']._serialized_start=60
   _globals['_ANYVALUE']._serialized_end=310
   _globals['_ARRAYVALUE']._serialized_start=312
@@ -40,6 +40,4 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_KEYVALUELIST']._serialized_end=436
   _globals['_KEYVALUE']._serialized_start=438
   _globals['_KEYVALUE']._serialized_end=508
-  _globals['_RUNSCOPE']._serialized_start=511
-  _globals['_RUNSCOPE']._serialized_end=641
 # @@protoc_insertion_point(module_scope)

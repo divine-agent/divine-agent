@@ -24,14 +24,14 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n.divi/proto/core/health/v1/health_service.proto\x12\x19\x64ivi.proto.core.health.v1\"%\n\x12HealthCheckRequest\x12\x0f\n\x07version\x18\x01 \x01(\t\"6\n\x13HealthCheckResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t2y\n\rHealthService\x12h\n\x05\x43heck\x12-.divi.proto.core.health.v1.HealthCheckRequest\x1a..divi.proto.core.health.v1.HealthCheckResponse\"\x00\x42\x10Z\x0eservices/protob\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n.divi/proto/core/health/v1/health_service.proto\x12\x19\x64ivi.proto.core.health.v1\"%\n\x12HealthCheckRequest\x12\x0f\n\x07version\x18\x01 \x01(\t\"6\n\x13HealthCheckResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t2y\n\rHealthService\x12h\n\x05\x43heck\x12-.divi.proto.core.health.v1.HealthCheckRequest\x1a..divi.proto.core.health.v1.HealthCheckResponse\"\x00\x42\rZ\x0bservices/pbb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'divi.proto.core.health.v1.health_service_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
-  _globals['DESCRIPTOR']._serialized_options = b'Z\016services/proto'
+  _globals['DESCRIPTOR']._serialized_options = b'Z\013services/pb'
   _globals['_HEALTHCHECKREQUEST']._serialized_start=77
   _globals['_HEALTHCHECKREQUEST']._serialized_end=114
   _globals['_HEALTHCHECKRESPONSE']._serialized_start=116

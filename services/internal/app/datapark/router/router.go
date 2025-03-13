@@ -22,7 +22,7 @@ func SetupRoutes(app *fiber.App) {
 	session.Get("/", jwtware, handler.GetSessions)
 	session.Post("/", jwtware, handler.CreateSession)
 	session.Get("/:id/traces", jwtware, handler.GetTraces)
-	session.Post("/:id/trace", jwtware, handler.CreateTrace)
+	session.Post("/:id/traces", jwtware, handler.UpsertTrace)
 
 	// Trace
 	trace := api.Group("/trace")

@@ -1,3 +1,4 @@
+import os
 import time
 from typing import Any, Mapping, Optional
 from uuid import uuid4
@@ -20,7 +21,8 @@ class Span:
         name: Optional[str] = None,
         metadata: Optional[Mapping[str, Any]] = None,
     ):
-        self.span_id: UUID4 = uuid4()
+        # span_id is a FixedString(8)
+        self.span_id: bytes = self._generate_span_id()
         self.name = name
         self.kind = kind
         self.metadata = metadata
@@ -28,15 +30,20 @@ class Span:
         self.end_time_unix_nano: int | None = None
 
         self.trace_id: UUID4 | None = None
-        self.parent_span_id: UUID4 | None = None
+        self.parent_span_id: bytes | None = None
 
     @property
     def signal(self):
         signal: SpanProto = SpanProto(
             name=self.name,
-            span_id=self.span_id.bytes,
+            span_id=self.span_id,
             kind=self._get_kind(self.kind),
+            start_time_unix_nano=self.start_time_unix_nano,
+            end_time_unix_nano=self.end_time_unix_nano,
+            trace_id=self.trace_id.bytes if self.trace_id else None,
+            parent_span_id=self.parent_span_id,
         )
+        print(self.kind)
         signal.metadata.extend(
             KeyValue(key=k, value=v)
             for k, v in (self.metadata or dict()).items()
@@ -50,6 +57,10 @@ class Span:
                 f"Unknown kind: {kind}. Now allowed: {cls.KIND_MAP.keys()}"
             )
         return k
+
+    @classmethod
+    def _generate_span_id(cls) -> bytes:
+        return os.urandom(8)
 
     def start(self):
         """Start the span by recording the current time in nanoseconds."""
@@ -69,7 +80,7 @@ class Span:
         print(f"trace_id: {self.trace_id}")
         print(f"span_id: {self.span_id}")
 
-    def _add_parent(self, trace_id: UUID4, parent_id: UUID4):
+    def _add_parent(self, trace_id: UUID4, parent_id: bytes):
         """Set the parent span ID."""
         self.trace_id = trace_id
         self.parent_span_id = parent_id

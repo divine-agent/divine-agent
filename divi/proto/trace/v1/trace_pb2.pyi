@@ -8,12 +8,10 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class ScopeSpans(_message.Message):
-    __slots__ = ("scope", "spans")
-    SCOPE_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("spans",)
     SPANS_FIELD_NUMBER: _ClassVar[int]
-    scope: _common_pb2.RunScope
     spans: _containers.RepeatedCompositeFieldContainer[Span]
-    def __init__(self, scope: _Optional[_Union[_common_pb2.RunScope, _Mapping]] = ..., spans: _Optional[_Iterable[_Union[Span, _Mapping]]] = ...) -> None: ...
+    def __init__(self, spans: _Optional[_Iterable[_Union[Span, _Mapping]]] = ...) -> None: ...
 
 class Span(_message.Message):
     __slots__ = ("trace_id", "span_id", "parent_span_id", "name", "kind", "start_time_unix_nano", "end_time_unix_nano", "metadata")

@@ -4,12 +4,9 @@ package divi.proto.trace.v1;
 
 import "divi/proto/common/v1/common.proto";
 
-option go_package = "services/proto";
+option go_package = "services/pb";
 
 message ScopeSpans {
-    // The scope of the message
-    divi.proto.common.v1.RunScope scope = 1;
-
     // A list of spans that originate from a resource.
     repeated Span spans = 2;
 }

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package divi.proto.core.health.v1;
 
-option go_package = "services/proto";
+option go_package = "services/pb";
 
 // HealthService is a service that implements health check.
 service HealthService {

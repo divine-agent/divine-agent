@@ -35,7 +35,7 @@ func CreateSession(c *fiber.Ctx) error {
 	}
 	session.UserID = userID
 
-	if err := database.DB.Create(&session).Error; err != nil {
+	if err := database.DB.FirstOrCreate(&session).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create session", "data": nil})
 	}
 

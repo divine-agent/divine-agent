@@ -37,7 +37,7 @@ func ConnectDB() error {
 	if err != nil {
 		return err
 	}
-	return DB.AutoMigrate(&model.User{}, &model.APIKey{})
+	return DB.AutoMigrate(&model.User{}, &model.APIKey{}, &model.Session{}, &model.Trace{})
 }
 
 // ConnectClickhouse connect to clickhouse

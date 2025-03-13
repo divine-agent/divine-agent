@@ -42,15 +42,3 @@ class KeyValue(_message.Message):
     key: str
     value: AnyValue
     def __init__(self, key: _Optional[str] = ..., value: _Optional[_Union[AnyValue, _Mapping]] = ...) -> None: ...
-
-class RunScope(_message.Message):
-    __slots__ = ("run_id", "run_name", "attributes", "dropped_attributes_count")
-    RUN_ID_FIELD_NUMBER: _ClassVar[int]
-    RUN_NAME_FIELD_NUMBER: _ClassVar[int]
-    ATTRIBUTES_FIELD_NUMBER: _ClassVar[int]
-    DROPPED_ATTRIBUTES_COUNT_FIELD_NUMBER: _ClassVar[int]
-    run_id: bytes
-    run_name: str
-    attributes: _containers.RepeatedCompositeFieldContainer[KeyValue]
-    dropped_attributes_count: int
-    def __init__(self, run_id: _Optional[bytes] = ..., run_name: _Optional[str] = ..., attributes: _Optional[_Iterable[_Union[KeyValue, _Mapping]]] = ..., dropped_attributes_count: _Optional[int] = ...) -> None: ...

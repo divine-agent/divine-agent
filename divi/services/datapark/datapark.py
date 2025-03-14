@@ -51,13 +51,12 @@ class DataPark(Service):
     def create_chat_completion(
         self, span_id: bytes, completion: ChatCompletion
     ):
-        print(completion.to_json())
         r = requests.post(
             f"http://{self.target}/api/v1/chat/completions",
             headers=self.headers,
             json={
                 "span_id": span_id.hex(),
-                "completion": completion.to_json(),
+                "data": completion.model_dump(),
             },
         )
         if r.status_code != 201:

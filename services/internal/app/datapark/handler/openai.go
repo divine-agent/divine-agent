@@ -2,26 +2,27 @@ package handler
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/auth"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/database"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/google/uuid"
 	"github.com/openai/openai-go"
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 func CreateChatCompletion(c *fiber.Ctx) error {
 	type ChatCompletionReq struct {
-		spanID uuid.UUID
-		data   openai.ChatCompletion
+		SpanID string                `json:"span_id"`
+		Data   openai.ChatCompletion `json:"data"`
 	}
 	var chatCompletionReq ChatCompletionReq
 	if err := c.BodyParser(&chatCompletionReq); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Review your request body", "data": nil})
 	}
-	println(chatCompletionReq)
+	fmt.Println(chatCompletionReq.SpanID)
+	fmt.Println(chatCompletionReq.Data)
 
 	// parse user_id
 	token := c.Locals("user").(*jwt.Token)
@@ -36,9 +37,9 @@ func CreateChatCompletion(c *fiber.Ctx) error {
 	collection := client.Database("openai").Collection("chat-completions")
 
 	doc := bson.M{
-		"span_id": chatCompletionReq.spanID,
-		"user_id": userID,
-		"data":    chatCompletionReq.data,
+		"span_id": chatCompletionReq.SpanID,
+		"user_id": userID.String(),
+		"data":    chatCompletionReq.Data,
 	}
 	_, err = collection.InsertOne(ctx, doc)
 	if err != nil {

@@ -1,5 +1,6 @@
 import requests
 from google.protobuf.json_format import MessageToDict
+from openai.types.chat.chat_completion import ChatCompletion
 from pydantic import UUID4
 
 import divi
@@ -44,7 +45,20 @@ class DataPark(Service):
             headers=self.headers,
             json=MessageToDict(spans),
         )
-        print(spans.spans[0].kind)
-        print(MessageToDict(spans))
+        if r.status_code != 201:
+            raise ValueError(r.json()["message"])
+
+    def create_chat_completion(
+        self, span_id: bytes, completion: ChatCompletion
+    ):
+        print(completion.to_json())
+        r = requests.post(
+            f"http://{self.target}/api/v1/chat/completions",
+            headers=self.headers,
+            json={
+                "span_id": span_id.hex(),
+                "completion": completion.to_json(),
+            },
+        )
         if r.status_code != 201:
             raise ValueError(r.json()["message"])

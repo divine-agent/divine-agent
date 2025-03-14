@@ -16,6 +16,8 @@ from typing import (
     runtime_checkable,
 )
 
+from openai.types.chat import ChatCompletion
+
 import divi
 from divi.proto.trace.v1.trace_pb2 import ScopeSpans
 from divi.session import SessionExtra
@@ -96,6 +98,10 @@ def observable(
                     divi._datapark.upsert_traces(
                         session_id=trace.session_id, traces=[trace.signal]
                     )
+            if divi._datapark and isinstance(result, ChatCompletion):
+                divi._datapark.create_chat_completion(
+                    span_id=span.span_id, completion=result
+                )
             return result
 
         @functools.wraps(func)

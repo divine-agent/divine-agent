@@ -81,11 +81,21 @@ def observable(
             span.end()
             # recover parent context
             _SESSION_EXTRA.reset(token)
+
             # TODO: collect result
+            # create the span if it is the root span
             if divi._datapark and span.trace_id:
                 divi._datapark.create_spans(
                     span.trace_id, ScopeSpans(spans=[span.signal])
                 )
+            # end the trace if it is the root span
+            if divi._datapark and not span.parent_span_id:
+                trace = session_extra.get("trace")
+                if trace:
+                    trace.end()
+                    divi._datapark.upsert_traces(
+                        session_id=trace.session_id, traces=[trace.signal]
+                    )
             return result
 
         @functools.wraps(func)

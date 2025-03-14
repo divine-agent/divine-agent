@@ -1,12 +1,71 @@
 import os
 import time
+from datetime import UTC, datetime
 from typing import Any, Mapping, Optional
 from uuid import uuid4
 
 from pydantic import UUID4
+from typing_extensions import TypedDict
 
 from divi.proto.common.v1.common_pb2 import KeyValue
 from divi.proto.trace.v1.trace_pb2 import Span as SpanProto
+
+
+class NullTime(TypedDict, total=False):
+    """Null time"""
+
+    Time: str
+    """Time in iso format"""
+    Valid: bool
+    """Valid"""
+
+
+class TraceSignal(TypedDict, total=False):
+    """Trace request"""
+
+    id: str
+    """Trace ID UUID4"""
+    start_time: str
+    """Start time in iso format"""
+    end_time: NullTime
+    """End time in iso format"""
+
+
+class Trace:
+    def __init__(self, session_id: UUID4):
+        self.trace_id: UUID4 = uuid4()
+        self.start_time: str | None = None
+        self.end_time: str | None = None
+        self.session_id: UUID4 = session_id
+
+    @property
+    def signal(self) -> TraceSignal:
+        if self.start_time is None:
+            raise ValueError("Trace must be started.")
+        signal = TraceSignal(
+            id=str(self.trace_id),
+            start_time=self.start_time,
+        )
+        if self.end_time is not None:
+            signal["end_time"] = NullTime(
+                Time=self.end_time,
+                Valid=True,
+            )
+        return signal
+
+    @staticmethod
+    def unix_nano_to_iso(unix_nano: int) -> str:
+        return datetime.utcfromtimestamp(unix_nano / 1e9).isoformat()
+
+    def start(self):
+        """Start the trace by recording the current time in nanoseconds."""
+        self.start_time = datetime.now(UTC).isoformat()
+
+    def end(self):
+        """End the trace by recording the end time in nanoseconds."""
+        if self.start_time is None:
+            raise ValueError("Span must be started before ending.")
+        self.end_time = datetime.now(UTC).isoformat()
 
 
 class Span:
@@ -33,7 +92,7 @@ class Span:
         self.parent_span_id: bytes | None = None
 
     @property
-    def signal(self):
+    def signal(self) -> SpanProto:
         signal: SpanProto = SpanProto(
             name=self.name,
             span_id=self.span_id,
@@ -72,9 +131,9 @@ class Span:
             raise ValueError("Span must be started before ending.")
         self.end_time_unix_nano = time.time_ns()
 
-    def _as_root(self):
+    def _as_root(self, trace_id: UUID4):
         """Set the span as a root span."""
-        self.trace_id = uuid4()
+        self.trace_id = trace_id
         print("as root")
         print(f"name: {self.name}")
         print(f"trace_id: {self.trace_id}")

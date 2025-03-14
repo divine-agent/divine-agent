@@ -86,7 +86,7 @@ func UpsertTrace(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create trace", "data": nil})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "message": "Created traces", "data": traces})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "message": "Upserted traces", "data": traces})
 }
 
 func GetSpans(c *fiber.Ctx) error {
@@ -218,7 +218,7 @@ func CreateSpans(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to execute", "data": nil})
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "message": "Created spans", "data": nil})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "message": "Created spans", "data": nil})
 }
 
 // unixNanoToTime converts a UnixNano timestamp to a time.Time object

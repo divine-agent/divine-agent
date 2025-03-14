@@ -5,6 +5,8 @@ from pydantic import UUID4
 import divi
 from divi.proto.trace.v1.trace_pb2 import ScopeSpans
 from divi.services.service import Service
+from divi.session.session import SessionSignal
+from divi.signals.trace.trace import TraceSignal
 
 
 class DataPark(Service):
@@ -18,14 +20,31 @@ class DataPark(Service):
     def headers(self):
         return {"Authorization": f"Bearer {self.token}"}
 
+    def create_session(self, session: SessionSignal):
+        r = requests.post(
+            f"http://{self.target}/api/session/",
+            headers=self.headers,
+            json=session,
+        )
+        if r.status_code != 201:
+            raise ValueError(r.json()["message"])
+
+    def upsert_traces(self, session_id: UUID4, traces: list[TraceSignal]):
+        r = requests.post(
+            f"http://{self.target}/api/session/{session_id}/traces",
+            headers=self.headers,
+            json=traces,
+        )
+        if r.status_code != 201:
+            raise ValueError(r.json()["message"])
+
     def create_spans(self, trace_id: UUID4, spans: ScopeSpans):
         r = requests.post(
             f"http://{self.target}/api/trace/{trace_id}/spans",
-            json=MessageToDict(spans),
             headers=self.headers,
+            json=MessageToDict(spans),
         )
         print(spans.spans[0].kind)
         print(MessageToDict(spans))
-        if r.status_code == 200:
-            return r.json()["data"]
-        raise ValueError(r.json()["message"])
+        if r.status_code != 201:
+            raise ValueError(r.json()["message"])

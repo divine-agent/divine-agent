@@ -2,7 +2,7 @@ from divi.decorators import observable
 
 
 def test_obs_function():
-    @observable(kind="llm")
+    @observable()
     def hello(message: str):
         return f"Hello {message}"
 
@@ -32,5 +32,6 @@ def test_obs_nested():
         span(text)
         return span(text)
 
+    message = chain("Hello", session_extra={"session_name": "test"})
     message = chain("Hello", session_extra={"session_name": "test"})
     assert message == "Hello Hello"

@@ -1,7 +1,7 @@
 from typing import Optional, TypedDict
 from uuid import uuid4
 
-from pydantic import UUID4
+from divi.signals.trace.trace import Trace
 
 
 class SessionExtra(TypedDict, total=False):
@@ -9,10 +9,19 @@ class SessionExtra(TypedDict, total=False):
 
     session_name: Optional[str]
     """Name of the session"""
-    trace_id: Optional[UUID4]
+    trace: Optional[Trace]
     """Trace ID UUID4"""
     parent_span_id: Optional[bytes]
     """Parent Span ID fixed string(8)"""
+
+
+class SessionSignal(TypedDict, total=False):
+    """Session request"""
+
+    id: str
+    """Session ID UUID4"""
+    name: Optional[str]
+    """Session name"""
 
 
 class Session:
@@ -22,3 +31,10 @@ class Session:
     ):
         self.id = uuid4()
         self.name = name
+
+    @property
+    def signal(self) -> SessionSignal:
+        return SessionSignal(
+            id=str(self.id),
+            name=self.name,
+        )

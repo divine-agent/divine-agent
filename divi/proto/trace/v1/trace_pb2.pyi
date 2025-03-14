@@ -7,6 +7,18 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class Trace(_message.Message):
+    __slots__ = ("trace_id", "start_time_unix_nano", "end_time_unix_nano", "spans")
+    TRACE_ID_FIELD_NUMBER: _ClassVar[int]
+    START_TIME_UNIX_NANO_FIELD_NUMBER: _ClassVar[int]
+    END_TIME_UNIX_NANO_FIELD_NUMBER: _ClassVar[int]
+    SPANS_FIELD_NUMBER: _ClassVar[int]
+    trace_id: bytes
+    start_time_unix_nano: int
+    end_time_unix_nano: int
+    spans: _containers.RepeatedCompositeFieldContainer[ScopeSpans]
+    def __init__(self, trace_id: _Optional[bytes] = ..., start_time_unix_nano: _Optional[int] = ..., end_time_unix_nano: _Optional[int] = ..., spans: _Optional[_Iterable[_Union[ScopeSpans, _Mapping]]] = ...) -> None: ...
+
 class ScopeSpans(_message.Message):
     __slots__ = ("spans",)
     SPANS_FIELD_NUMBER: _ClassVar[int]

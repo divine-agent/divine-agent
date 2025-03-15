@@ -23,15 +23,15 @@ def test_obs_nested():
     def span(text: str):
         return llm(text)
 
-    @observable(kind="llm")
+    @observable
     def llm(text: str):
         return f"Hello {text}"
 
     @observable()
-    def chain(text: str):
-        span(text)
-        return span(text)
+    def trace(text: str):
+        completion1 = span(text)
+        completion2 = span(text)
+        return f"{completion1} {completion2}"
 
-    message = chain("Hello", session_extra={"session_name": "test"})
-    message = chain("Hello", session_extra={"session_name": "test"})
-    assert message == "Hello Hello"
+    message = trace("Hello", session_extra={"session_name": "test"})
+    assert message == "Hello Hello Hello Hello"

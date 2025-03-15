@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 from openai.types.chat import ChatCompletionMessage
 from openai.types.chat.chat_completion import ChatCompletion, Choice
 
-from divi.decorators import obs_openai
+from divi.decorators import obs_openai, observable
 
 
 @patch("openai.OpenAI")
@@ -50,3 +50,91 @@ def test_chat_completion(openai_create):
     )
     response = r.choices[0].message.content
     assert response == EXPECTED_RESPONSE
+
+@patch("openai.resources.chat.Completions.create")
+def test_nested_chat_completion(openai_create):
+    from openai import OpenAI
+
+    EXPECTED_RESPONSE = "The mock is working! ;)"
+    openai_create.__name__ = "createChatCompletion"
+    openai_create.return_value = create_chat_completion(EXPECTED_RESPONSE)
+
+    openai_client = obs_openai(OpenAI(api_key="sk-..."))
+
+    class QaAgent:
+        def completion(self, prompt: str):
+            res = openai_client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are a qa engineer and only output python code, no markdown tags.",
+                    },
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.5,
+            )
+            return res.choices[0].message.content
+
+
+    class EngineerAgent:
+        def completion(self, prompt: str):
+            res = openai_client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are a software engineer and only output python code, no markdown tags.",
+                    },
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.5,
+            )
+            return res.choices[0].message.content
+
+    class AnalystAgent:
+        def completion(self, prompt: str):
+            res = openai_client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are a data analyst and only output true or false based on test cases' outputs.",
+                    },
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.5,
+            )
+            return res.choices[0].message.content
+
+    qa = QaAgent()
+    engineer = EngineerAgent()
+    analyst = AnalystAgent()
+
+    @observable
+    def execute_code(code: str, test_code: str):
+        return "success"
+
+    @observable
+    def analyze_code(code: str, test_code: str):
+        output = execute_code(code, test_code)
+        generated_analyst = analyst.completion(
+            "Analyze the following code and test cases with outputs: \n" + code + "\n" + test_code + "\n" + output
+        )
+        return "success"
+
+    @observable
+    def code(demand: str):
+        generated_func = engineer.completion(demand)
+        assert generated_func == EXPECTED_RESPONSE
+        generated_test = qa.completion(
+            "Write a python unit test that test the following function: \n "
+            + generated_func
+        )
+        assert generated_test == EXPECTED_RESPONSE
+        res = execute_code(generated_func, generated_test)
+        assert res == "success"
+        return generated_func
+
+    func = code("python function to test prime number")
+    assert func == EXPECTED_RESPONSE

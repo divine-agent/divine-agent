@@ -37,5 +37,5 @@ func SetupRoutes(app *fiber.App) {
 	// OpenAI Input / Output
 	v1 := api.Group("/v1")
 	v1.Post("/chat/completions", jwtware, handler.CreateChatCompletion)
-	v1.Get("/chat/completions/:id", jwtware, handler.GetChatCompletions)
+	v1.Get("/chat/completions/:id", jwtware, handler.GetChatCompletion)
 }

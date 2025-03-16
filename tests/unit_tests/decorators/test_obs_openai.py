@@ -51,6 +51,7 @@ def test_chat_completion(openai_create):
     response = r.choices[0].message.content
     assert response == EXPECTED_RESPONSE
 
+
 @patch("openai.resources.chat.Completions.create")
 def test_nested_chat_completion(openai_create):
     from openai import OpenAI
@@ -75,7 +76,6 @@ def test_nested_chat_completion(openai_create):
                 temperature=0.5,
             )
             return res.choices[0].message.content
-
 
     class EngineerAgent:
         def completion(self, prompt: str):
@@ -118,10 +118,16 @@ def test_nested_chat_completion(openai_create):
     @observable
     def analyze_code(code: str, test_code: str):
         output = execute_code(code, test_code)
+        assert output == "success"
         generated_analyst = analyst.completion(
-            "Analyze the following code and test cases with outputs: \n" + code + "\n" + test_code + "\n" + output
+            "Analyze the following code and test cases with outputs: \n"
+            + code
+            + "\n"
+            + test_code
+            + "\n"
+            + output
         )
-        return "success"
+        return generated_analyst
 
     @observable
     def code(demand: str):
@@ -132,8 +138,8 @@ def test_nested_chat_completion(openai_create):
             + generated_func
         )
         assert generated_test == EXPECTED_RESPONSE
-        res = execute_code(generated_func, generated_test)
-        assert res == "success"
+        generated_analyst = analyze_code(generated_func, generated_test)
+        assert generated_analyst == EXPECTED_RESPONSE
         return generated_func
 
     func = code("python function to test prime number")

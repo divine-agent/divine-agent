@@ -4,10 +4,7 @@
 
 ## TODO
 
-- [ ] trace: obs_openai()
-- [ ] trace: @obs
-- [ ] datapark services
-- [ ] collect data
+- [ ] Web
 
 ## Architecture
 

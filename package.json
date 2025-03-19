@@ -14,7 +14,7 @@
     "@workspace/typescript-config": "workspace:*",
     "turbo": "^2.4.4",
     "typescript": "5.7.3",
-    "ultracite": "^4.1.20"
+    "ultracite": "^4.1.21"
   },
   "packageManager": "pnpm@10.5.0",
   "engines": {

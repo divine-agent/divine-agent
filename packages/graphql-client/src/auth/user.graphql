@@ -10,3 +10,12 @@ mutation Signup($username: String!, $email: String!, $password: String!) {
     }
   }
 }
+
+query GetCurrentUser {
+  me {
+    id
+    email
+    name
+    username
+  }
+}

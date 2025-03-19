@@ -122,6 +122,8 @@ export type MutationResponse = {
 /** Query is a collection of queries that can be made to the API */
 export type Query = {
   __typename?: 'Query';
+  /** Fetch current user */
+  me: User;
   /** Fetch a specific user by id */
   user: User;
 };

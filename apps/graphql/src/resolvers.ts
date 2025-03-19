@@ -8,6 +8,9 @@ import type { GraphQLError } from 'graphql';
 
 export const resolvers: Resolvers = {
   Query: {
+    me: async (_, _args, { dataSources }) => {
+      return (await dataSources.authAPI.getCurrentUser()).data;
+    },
     user: async (_, { id }, { dataSources }) => {
       return (await dataSources.authAPI.getUser(id)).data;
     },

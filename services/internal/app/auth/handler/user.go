@@ -3,6 +3,7 @@ package handler
 import (
 	"sync"
 
+	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/auth"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/database"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/model"
 	"github.com/google/uuid"
@@ -47,6 +48,22 @@ func GetUser(c *fiber.Ctx) error {
 	db := database.DB
 	var user model.User
 	db.Omit("password").Find(&user, id)
+	if user.Username == "" {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "No user found with ID", "data": nil})
+	}
+	return c.JSON(fiber.Map{"status": "success", "message": "User found", "data": user})
+}
+
+// GetCurrentUser get current user
+func GetCurrentUser(c *fiber.Ctx) error {
+	token := c.Locals("user").(*jwt.Token)
+	id, err := auth.ParseUserId(token)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid user ID", "data": nil})
+	}
+	db := database.DB
+	var user model.User
+	db.Omit("password").First(&user, id)
 	if user.Username == "" {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "No user found with ID", "data": nil})
 	}

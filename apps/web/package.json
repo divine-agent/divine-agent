@@ -9,15 +9,16 @@
     "analyze": "ANALYZE=true pnpm build"
   },
   "dependencies": {
-    "@apollo/client": "^3.13.2",
-    "@apollo/experimental-nextjs-app-support": "^0.11.9",
+    "@apollo/client": "^3.13.4",
+    "@apollo/experimental-nextjs-app-support": "^0.11.11",
     "@icons-pack/react-simple-icons": "^12.3.0",
     "@workspace/graphql-client": "workspace:*",
     "@workspace/ui": "workspace:*",
     "lucide-react": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@types/node": "catalog:",

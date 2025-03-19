@@ -128,6 +128,8 @@ export type MutationResponse = {
 /** Query is a collection of queries that can be made to the API */
 export type Query = {
   __typename?: 'Query';
+  /** Fetch current user */
+  me: User;
   /** Fetch a specific user by id */
   user: User;
 };
@@ -331,6 +333,7 @@ export type MutationResponseResolvers<ContextType = DataSourceContext, ParentTyp
 };
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
 };
 

@@ -1,5 +1,7 @@
 "Query is a collection of queries that can be made to the API"
 type Query {
+  "Fetch current user"
+  me: User!
   "Fetch a specific user by id"
   user(id: ID!): User!
 }

@@ -23,6 +23,10 @@ export class AuthAPI extends RESTDataSource {
     });
   }
 
+  async getCurrentUser() {
+    return await this.get<FetchResponse<UserModel>>('/api/user/');
+  }
+
   async getUser(userId: string) {
     return await this.get<FetchResponse<UserModel>>(`/api/user/${userId}`);
   }

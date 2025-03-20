@@ -3,6 +3,7 @@ import { getClient } from '@/hooks/apolloClient';
 import { setSessionTokenCookie } from '@/lib/server/cookies';
 import { LoginDocument } from '@workspace/graphql-client/src/auth/login.generated';
 import type { LoginMutationVariables } from '@workspace/graphql-client/src/auth/login.generated';
+import { redirect } from 'next/navigation';
 
 export default function LoginPage() {
   /**
@@ -27,6 +28,7 @@ export default function LoginPage() {
       // set the expiredAt of cookie to 7 day
       // which will refresh in middleware
       await setSessionTokenCookie(data.data, new Date(Date.now() + 7 * 864e5));
+      redirect('/dashboard');
     } else {
       console.error(`Login failed: [${data?.code}] ${data?.message}`);
     }

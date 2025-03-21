@@ -5,6 +5,7 @@ import { NavSecondary } from '@/components/nav-secondary';
 import { NavUser } from '@/components/nav-user';
 import {
   IconBinaryTree,
+  IconBook,
   IconCurrencyDollar,
   IconDashboard,
   IconSettings,
@@ -46,6 +47,11 @@ const data = {
     },
   ],
   navSecondary: [
+    {
+      title: 'Docs',
+      url: 'https://docs.divine-agent.com',
+      icon: IconBook,
+    },
     {
       title: 'Settings',
       url: '/dashboard/settings',

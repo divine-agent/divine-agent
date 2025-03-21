@@ -1,8 +1,8 @@
 {
-  "name": "docs",
+  "name": "@app/docs",
   "private": true,
   "scripts": {
-    "dev": "mintlify dev --port 3004",
+    "dev": "mintlify dev --port 4002",
     "lint": "mintlify broken-links"
   },
   "devDependencies": {

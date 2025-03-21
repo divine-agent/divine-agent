@@ -13,7 +13,7 @@ export default function HomeHeader() {
   const navigationItems = [
     {
       title: 'Divine Agent',
-      href: '/home',
+      href: '/',
       description: 'Home page',
     },
   ];
@@ -36,12 +36,12 @@ export default function HomeHeader() {
             </NavigationMenuList>
           </NavigationMenu>
         </div>
-        <div className="flex pl-2 lg:justify-center">
+        <div className="flex px-2 lg:justify-center">
           <Link href="/">
             <p className="text-2xl">😇</p>
           </Link>
         </div>
-        <div className="flex w-full justify-end gap-4 pr-2">
+        <div className="flex w-full justify-end gap-4 px-2">
           <Link href="https://github.com/Kaikaikaifang/divine-agent">
             <SiGithub />
           </Link>

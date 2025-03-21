@@ -37,7 +37,7 @@ export default function HomeHeader() {
           </NavigationMenu>
         </div>
         <div className="flex pl-2 lg:justify-center">
-          <Link href="/home">
+          <Link href="/">
             <p className="text-2xl">😇</p>
           </Link>
         </div>

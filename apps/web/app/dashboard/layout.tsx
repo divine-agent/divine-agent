@@ -1,5 +1,6 @@
 import { AppSidebar } from '@/components/app-sidebar';
 import { SiteHeader } from '@/components/site-header';
+import { getCurrentUser } from '@/lib/server/auth';
 import {
   SidebarInset,
   SidebarProvider,
@@ -14,6 +15,10 @@ export default async function DashboardLayout({
 }) {
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get('sidebar_state')?.value === 'true';
+  const user = await getCurrentUser();
+  if (!user) {
+    return null;
+  }
 
   return (
     <SidebarProvider
@@ -24,7 +29,7 @@ export default async function DashboardLayout({
         } as CSSProperties
       }
     >
-      <AppSidebar variant="inset" />
+      <AppSidebar user={user} variant="inset" />
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">{children}</div>

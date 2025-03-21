@@ -1,6 +1,6 @@
 # divine-agent
 
-**Agent Platform for Observability • Evaluation • Playground**
+**Agent Platform for Observability**
 
 ## TODO
 

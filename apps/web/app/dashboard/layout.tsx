@@ -1,12 +1,25 @@
 import { AppSidebar } from '@/components/app-sidebar';
 import { SiteHeader } from '@/components/site-header';
 import { getCurrentUser } from '@/lib/server/auth';
+import { deleteSessionTokenCookie } from '@/lib/server/cookies';
 import {
   SidebarInset,
   SidebarProvider,
 } from '@workspace/ui/components/sidebar';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import type { CSSProperties, ReactNode } from 'react';
+
+/**
+ * Sign out
+ * @description Sign out the user and redirect to the home page
+ */
+async function signout() {
+  'use server';
+
+  await deleteSessionTokenCookie();
+  redirect('/');
+}
 
 export default async function DashboardLayout({
   children,
@@ -29,7 +42,7 @@ export default async function DashboardLayout({
         } as CSSProperties
       }
     >
-      <AppSidebar user={user} variant="inset" />
+      <AppSidebar variant="inset" user={user} signoutAction={signout} />
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">{children}</div>

@@ -7,32 +7,32 @@ import {
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 
-export default function SignupPage() {
-  /**
-   * Signup action with graphql mutation to create user
-   * @description redirect to login page if signup success
-   * @param formData
-   */
-  async function signup(formData: FormData) {
-    'use server';
-    const variables: SignupMutationVariables = {
-      email: formData.get('email') as string,
-      password: formData.get('password') as string,
-      username: formData.get('username') as string,
-    };
-    const data = (
-      await getClient().mutate({
-        mutation: SignupDocument,
-        variables,
-      })
-    ).data?.createUser;
-    if (data?.success) {
-      redirect('/login');
-    } else {
-      console.error(`Signup failed: [${data?.code}] ${data?.message}`);
-    }
+/**
+ * Signup action with graphql mutation to create user
+ * @description redirect to login page if signup success
+ * @param formData
+ */
+async function signup(formData: FormData) {
+  'use server';
+  const variables: SignupMutationVariables = {
+    email: formData.get('email') as string,
+    password: formData.get('password') as string,
+    username: formData.get('username') as string,
+  };
+  const data = (
+    await getClient().mutate({
+      mutation: SignupDocument,
+      variables,
+    })
+  ).data?.createUser;
+  if (data?.success) {
+    redirect('/login');
+  } else {
+    console.error(`Signup failed: [${data?.code}] ${data?.message}`);
   }
+}
 
+export default function SignupPage() {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">

@@ -56,8 +56,11 @@ const data = {
 
 export function AppSidebar({
   user,
+  signoutAction,
   ...props
-}: { user: User } & React.ComponentProps<typeof Sidebar>) {
+}: { user: User; signoutAction: () => void } & React.ComponentProps<
+  typeof Sidebar
+>) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -80,7 +83,7 @@ export function AppSidebar({
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser user={user} signoutAction={signoutAction} />
       </SidebarFooter>
     </Sidebar>
   );

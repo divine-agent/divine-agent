@@ -1,10 +1,8 @@
 'use client';
 
 import {
-  IconCreditCard,
   IconDotsVertical,
   IconLogout,
-  IconNotification,
   IconUserCircle,
 } from '@tabler/icons-react';
 import type { User } from '@workspace/graphql-client/src/types.generated';
@@ -32,8 +30,10 @@ import {
 
 export function NavUser({
   user,
+  signoutAction,
 }: {
   user: User;
+  signoutAction: () => void;
 }) {
   const { isMobile } = useSidebar();
   const name = user.name ?? user.username;
@@ -87,17 +87,9 @@ export function NavUser({
                 <IconUserCircle />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconCreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconNotification />
-                Notifications
-              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={signoutAction}>
               <IconLogout />
               Log out
             </DropdownMenuItem>

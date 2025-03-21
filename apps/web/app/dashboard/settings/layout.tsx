@@ -3,6 +3,7 @@ import Image from 'next/image';
 
 import { SidebarNav } from '@/components/sidebar-nav';
 import { Separator } from '@workspace/ui/components/separator';
+import type React from 'react';
 
 export const metadata: Metadata = {
   title: 'Forms',

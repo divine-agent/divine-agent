@@ -9,43 +9,37 @@
   },
   "favicon": "/favicon.ico",
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Documentation",
-        "groups": [
-          {
-            "group": "Get Started",
-            "pages": ["introduction"]
-          },
-          {
-            "group": "Tutorials",
-            "pages": ["tutorials/openai"]
-          },
-          {
-            "group": "Concepts",
-            "pages": ["concepts/session"]
-          },
-          {
-            "group": "Development",
-            "pages": ["development/roadmap"]
-          }
-        ]
+        "group": "Get Started",
+        "pages": ["introduction"]
+      },
+      {
+        "group": "Tutorials",
+        "pages": ["tutorials/openai"]
+      },
+      {
+        "group": "Concepts",
+        "pages": ["concepts/session"]
+      },
+      {
+        "group": "Development",
+        "pages": ["development/roadmap"]
       }
     ],
     "global": {
       "anchors": [
         {
-          "anchor": "Python SDK",
-          "href": "https://github.com/Kaikaikaifang/divine-agent",
-          "icon": "python"
+          "anchor": "Dashboard",
+          "href": "https://divine-agent.com",
+          "icon": "gauge-high"
         }
       ]
     }
   },
   "logo": {
     "light": "/images/researcher-angel.png",
-    "dark": "/images/scholar-angel.png",
-    "href": "https://divine-agent.com"
+    "dark": "/images/scholar-angel.png"
   },
   "navbar": {
     "links": [

@@ -5,6 +5,7 @@
 ## TODO
 
 - [ ] Web
+- [ ] Docs
 
 ## Architecture
 

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import '@workspace/ui/globals.css';
+import { ThemeProvider } from '@/components/theme-provider';
 import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev';
 import { Toaster } from '@workspace/ui/components/sonner';
 
@@ -21,10 +22,17 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        {children}
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

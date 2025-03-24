@@ -144,6 +144,9 @@ importers:
       next:
         specifier: 'catalog:'
         version: 15.2.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      next-themes:
+        specifier: ^0.4.6
+        version: 0.4.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react:
         specifier: 'catalog:'
         version: 19.0.0

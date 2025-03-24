@@ -5,17 +5,18 @@ import { GetCurrentUserDocument } from '@workspace/graphql-client/src/auth/user.
 import { cache } from 'react';
 
 export const getCurrentUser = cache(async () => {
-  const token = await getSessionTokenCookie();
-  if (!token) {
+  const context = await getAuthContext();
+  if (!context) {
     return null;
   }
   const { data } = await query({
     query: GetCurrentUserDocument,
-    context: {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    },
+    context,
   });
   return data?.me;
 });
+
+export const getAuthContext = async () => {
+  const token = await getSessionTokenCookie();
+  return token ? { headers: { authorization: `Bearer ${token}` } } : null;
+};

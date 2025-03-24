@@ -1,18 +1,23 @@
 import { AccountForm } from '@/components/account-form';
+import { getCurrentUser } from '@/lib/server/auth';
 import { Separator } from '@workspace/ui/components/separator';
 
-export default function SettingsAccountPage() {
+export default async function SettingsAccountPage() {
+  const user = await getCurrentUser();
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="space-y-6">
       <div>
         <h3 className="font-medium text-lg">Account</h3>
         <p className="text-muted-foreground text-sm">
-          Update your account settings. Set your preferred language and
-          timezone.
+          Update your account settings.
         </p>
       </div>
       <Separator />
-      <AccountForm />
+      <AccountForm user={user} />
     </div>
   );
 }

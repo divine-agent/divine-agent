@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import '@workspace/ui/globals.css';
 import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev';
+import { Toaster } from '@workspace/ui/components/sonner';
 
 if (process.env.NODE_ENV !== 'production') {
   // Adds messages only in a dev environment
@@ -21,7 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }

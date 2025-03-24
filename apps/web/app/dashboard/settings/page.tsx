@@ -1,7 +1,13 @@
 import { ProfileForm } from '@/components/profile-form';
+import { getCurrentUser } from '@/lib/server/auth';
 import { Separator } from '@workspace/ui/components/separator';
 
-export default function SettingsProfilePage() {
+export default async function SettingsProfilePage() {
+  const user = await getCurrentUser();
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -11,7 +17,7 @@ export default function SettingsProfilePage() {
         </p>
       </div>
       <Separator />
-      <ProfileForm />
+      <ProfileForm user={user} />
     </div>
   );
 }

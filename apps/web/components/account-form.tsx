@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { User } from '@workspace/graphql-client/src/types.generated';
 import { Button } from '@workspace/ui/components/button';
 import {
   Form,
@@ -29,19 +30,14 @@ const accountFormSchema = z.object({
 
 type AccountFormValues = z.infer<typeof accountFormSchema>;
 
-// This can come from your database or API.
-const defaultValues: Partial<AccountFormValues> = {
-  name: 'Your name',
-};
-
-export function AccountForm() {
+export function AccountForm({ user }: { user: User }) {
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
-    defaultValues,
+    defaultValues: { name: user.name ?? '' },
   });
 
   function onSubmit(data: AccountFormValues) {
-    toast(`${JSON.stringify(data, null, 2)}`);
+    toast.success('Account updated successfully!');
   }
 
   return (
@@ -57,8 +53,7 @@ export function AccountForm() {
                 <Input placeholder="Your name" {...field} />
               </FormControl>
               <FormDescription>
-                This is the name that will be displayed on your profile and in
-                emails.
+                This is the name that will be displayed on your profile.
               </FormDescription>
               <FormMessage />
             </FormItem>

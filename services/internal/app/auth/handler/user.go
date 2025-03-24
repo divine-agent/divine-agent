@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/auth"
@@ -146,10 +145,7 @@ func UpdateUser(c *fiber.Ctx) error {
 
 	db := database.DB
 	var user model.User
-
-	db.Omit("password").First(&user, id)
-	user.Name = &uui.Name
-	db.Save(&user)
+	db.Model(&user).Where("id = ?", id).Omit("password").Updates(uui)
 
 	return c.JSON(fiber.Map{"status": "success", "message": "User successfully updated", "data": user})
 }

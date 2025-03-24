@@ -27,6 +27,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@workspace/ui/components/sidebar';
+import Link from 'next/link';
 
 export function NavUser({
   user,
@@ -36,7 +37,7 @@ export function NavUser({
   signoutAction: () => void;
 }) {
   const { isMobile } = useSidebar();
-  const name = user.name ?? user.username;
+  const name = user.name || user.username;
   const avatar = '/thinking-angel.png';
 
   return (
@@ -83,9 +84,11 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Account
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/settings/account">
+                  <IconUserCircle />
+                  Account
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

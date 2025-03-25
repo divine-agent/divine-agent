@@ -24,7 +24,9 @@ export type Scalars = {
 export type ApiKey = {
   __typename?: 'APIKey';
   api_key: Scalars['String']['output'];
+  created_at: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
 };
 
 /** CreateAPIKeyResponse is a response to the createAPIKey mutation */
@@ -79,6 +81,12 @@ export type Mutation = {
 
 
 /** Mutation is a collection of mutations that can be made to the API */
+export type MutationCreateApiKeyArgs = {
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+/** Mutation is a collection of mutations that can be made to the API */
 export type MutationCreateUserArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -128,6 +136,8 @@ export type MutationResponse = {
 /** Query is a collection of queries that can be made to the API */
 export type Query = {
   __typename?: 'Query';
+  /** Fetch current user's API keys */
+  api_keys?: Maybe<Array<ApiKey>>;
   /** Fetch current user */
   me: User;
   /** Fetch a specific user by id */
@@ -160,7 +170,7 @@ export type UpdateUserResponse = MutationResponse & {
 /** User is a registered user of the application */
 export type User = {
   __typename?: 'User';
-  api_keys?: Maybe<Array<Maybe<ApiKey>>>;
+  api_keys?: Maybe<Array<ApiKey>>;
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name?: Maybe<Scalars['String']['output']>;
@@ -280,7 +290,9 @@ export type ResolversParentTypes = {
 
 export type ApiKeyResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['APIKey'] = ResolversParentTypes['APIKey']> = {
   api_key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  created_at?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -316,7 +328,7 @@ export type DeleteUserResponseResolvers<ContextType = DataSourceContext, ParentT
 };
 
 export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createAPIKey?: Resolver<ResolversTypes['CreateAPIKeyResponse'], ParentType, ContextType>;
+  createAPIKey?: Resolver<ResolversTypes['CreateAPIKeyResponse'], ParentType, ContextType, Partial<MutationCreateApiKeyArgs>>;
   createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email' | 'password' | 'username'>>;
   deleteUser?: Resolver<ResolversTypes['DeleteUserResponse'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id' | 'password'>>;
   login?: Resolver<ResolversTypes['CreateTokenResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'identity' | 'password'>>;
@@ -333,6 +345,7 @@ export type MutationResponseResolvers<ContextType = DataSourceContext, ParentTyp
 };
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  api_keys?: Resolver<Maybe<Array<ResolversTypes['APIKey']>>, ParentType, ContextType>;
   me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
 };
@@ -353,7 +366,7 @@ export type UpdateUserResponseResolvers<ContextType = DataSourceContext, ParentT
 };
 
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  api_keys?: Resolver<Maybe<Array<Maybe<ResolversTypes['APIKey']>>>, ParentType, ContextType>;
+  api_keys?: Resolver<Maybe<Array<ResolversTypes['APIKey']>>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

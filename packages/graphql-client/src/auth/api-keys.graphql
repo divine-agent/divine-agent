@@ -1,0 +1,21 @@
+mutation createMyAPIKey($name: String) {
+  createAPIKey(name: $name) {
+    code
+    success
+    message
+    data {
+      id
+      api_key
+      name
+    }
+  }
+}
+
+query getMyAPIKeys {
+  api_keys {
+    id
+    name
+    api_key
+    created_at
+  }
+}

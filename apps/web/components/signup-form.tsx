@@ -13,6 +13,7 @@ export function SignupForm({
 } & React.ComponentPropsWithoutRef<'form'>) {
   return (
     <form
+      id="signup-form"
       action={signupAction}
       className={cn('flex flex-col gap-6', className)}
       {...props}

@@ -4,6 +4,8 @@ type Query {
   me: User!
   "Fetch a specific user by id"
   user(id: ID!): User!
+  "Fetch current user's API keys"
+  api_keys: [APIKey!]
 }
 
 "User is a registered user of the application"
@@ -12,13 +14,15 @@ type User {
   name: String
   username: String!
   email: String!
-  api_keys: [APIKey]
+  api_keys: [APIKey!]
 }
 
 "APIKey is a key used to authenticate requests to the API"
 type APIKey {
   id: ID!
   api_key: String!
+  name: String
+  created_at: String!
 }
 
 "Mutation is a collection of mutations that can be made to the API"
@@ -27,7 +31,7 @@ type Mutation {
   login(identity: String!, password: String!): CreateTokenResponse!
   loginWithAPIKey(api_key: String!): CreateTokenResponse!
   "API Key Mutations"
-  createAPIKey: CreateAPIKeyResponse!
+  createAPIKey(name: String): CreateAPIKeyResponse!
   revokeAPIKey(id: ID!): RevokeAPIKeyResponse!
   "User Mutations"
   createUser(

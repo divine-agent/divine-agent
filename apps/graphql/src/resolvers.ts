@@ -14,10 +14,15 @@ export const resolvers: Resolvers = {
     user: async (_, { id }, { dataSources }) => {
       return (await dataSources.authAPI.getUser(id)).data;
     },
+    api_keys: async (_, _args, { dataSources }) => {
+      return (await dataSources.authAPI.getAPIKeys()).data;
+    },
   },
   Mutation: {
-    createAPIKey: async (_, _args, { dataSources }) => {
-      return await mutationAdaptor(dataSources.authAPI.createAPIKey());
+    createAPIKey: async (_, { name }, { dataSources }) => {
+      return await mutationAdaptor(
+        dataSources.authAPI.createAPIKey(name ?? 'Secret Key')
+      );
     },
     revokeAPIKey: async (_, { id }, { dataSources }) => {
       return await mutationAdaptor(dataSources.authAPI.revokeAPIKey(id));

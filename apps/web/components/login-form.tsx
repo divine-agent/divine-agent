@@ -13,7 +13,7 @@ export function LoginForm({
 } & React.ComponentPropsWithoutRef<'div'>) {
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <form action={loginAction}>
+      <form id="login-form" action={loginAction}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2">
             <a

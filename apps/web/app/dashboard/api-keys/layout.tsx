@@ -11,8 +11,8 @@ export default function APIKeysLayout({ children }: APIKeysLayoutProps) {
   return (
     <div className="space-y-3 py-3">
       <div className="flex items-center justify-between px-6">
-        <h1 className="font-medium text-xl tracking-tight">API Keys</h1>
-        <Button variant="default">
+        <h1 className=" text-xl tracking-tight">API Keys</h1>
+        <Button size="sm">
           <IconPlus />
           Create API Keys
         </Button>

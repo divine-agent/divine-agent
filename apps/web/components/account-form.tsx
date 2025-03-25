@@ -59,7 +59,7 @@ export function AccountForm({
 
   return (
     <Form {...form}>
-      <form action={updateAction} className="space-y-8">
+      <form id="account-form" action={updateAction} className="space-y-8">
         <FormField
           control={form.control}
           name="name"
@@ -76,7 +76,7 @@ export function AccountForm({
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={updatePending}>
+        <Button type="submit" size="sm" disabled={updatePending}>
           Update account
         </Button>
       </form>

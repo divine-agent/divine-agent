@@ -21,7 +21,9 @@ export type Scalars = {
 export type ApiKey = {
   __typename?: 'APIKey';
   api_key: Scalars['String']['output'];
+  created_at: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
 };
 
 /** CreateAPIKeyResponse is a response to the createAPIKey mutation */
@@ -76,6 +78,12 @@ export type Mutation = {
 
 
 /** Mutation is a collection of mutations that can be made to the API */
+export type MutationCreateApiKeyArgs = {
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+/** Mutation is a collection of mutations that can be made to the API */
 export type MutationCreateUserArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -125,6 +133,8 @@ export type MutationResponse = {
 /** Query is a collection of queries that can be made to the API */
 export type Query = {
   __typename?: 'Query';
+  /** Fetch current user's API keys */
+  api_keys?: Maybe<Array<ApiKey>>;
   /** Fetch current user */
   me: User;
   /** Fetch a specific user by id */
@@ -157,7 +167,7 @@ export type UpdateUserResponse = MutationResponse & {
 /** User is a registered user of the application */
 export type User = {
   __typename?: 'User';
-  api_keys?: Maybe<Array<Maybe<ApiKey>>>;
+  api_keys?: Maybe<Array<ApiKey>>;
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name?: Maybe<Scalars['String']['output']>;

@@ -3,6 +3,9 @@
   "globalDependencies": ["**/.env.*local"],
   "ui": "tui",
   "tasks": {
+    "prebuild": {
+      "dependsOn": ["^prebuild"]
+    },
     "build": {
       "dependsOn": ["^build", "test"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", "bin/**"],

@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
+	"time"
 
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/auth"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/database"
@@ -16,12 +17,17 @@ import (
 // CreateAPIKey create a new api key
 func CreateAPIKey(c *fiber.Ctx) error {
 	type NewAPIKey struct {
-		ID     uuid.UUID `json:"id"`
-		APIKey string    `json:"api_key"`
+		ID        uuid.UUID `json:"id"`
+		APIKey    string    `json:"api_key"`
+		Name      *string   `json:"name,omitempty"`
+		CraetedAt time.Time `json:"created_at"`
 	}
 
 	db := database.DB
 	var apiKey model.APIKey
+	if err := c.BodyParser(&apiKey); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failed to parse request", "data": nil})
+	}
 	token := c.Locals("user").(*jwt.Token)
 	userID, err := auth.ParseUserId(token)
 	if err != nil {
@@ -44,7 +50,7 @@ func CreateAPIKey(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create api key", "data": nil})
 	}
 
-	newAPIKey := NewAPIKey{ID: apiKey.ID, APIKey: key}
+	newAPIKey := NewAPIKey{ID: apiKey.ID, APIKey: key, Name: apiKey.Name, CraetedAt: apiKey.CreatedAt}
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "message": "Created api key", "data": newAPIKey})
 }
 

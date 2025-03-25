@@ -48,7 +48,7 @@ export function ProfileForm({ user }: { user: User }) {
 
   return (
     <Form {...form}>
-      <form className="space-y-8">
+      <form id="profile-form" className="space-y-8">
         <FormField
           disabled
           control={form.control}

@@ -14,7 +14,7 @@ export function AppearanceForm() {
   const { setTheme } = useTheme();
 
   return (
-    <form className="space-y-8">
+    <form id="appearance-form" className="space-y-8">
       <div className="grid gap-2 space-y-1">
         <Label>Theme</Label>
         <p className="text-muted-foreground text-sm">

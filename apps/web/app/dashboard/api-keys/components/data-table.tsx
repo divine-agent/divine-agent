@@ -192,7 +192,11 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     id: 'actions',
     cell: () => (
-      <Button variant="ghost" size="icon">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="hover:bg-red-100 dark:hover:bg-red-950"
+      >
         <IconTrash className="text-red-500 dark:text-red-400" />
       </Button>
     ),

@@ -8,6 +8,7 @@ import {
   IconBook,
   IconCurrencyDollar,
   IconDashboard,
+  IconKey,
   IconSettings,
 } from '@tabler/icons-react';
 import type { User } from '@workspace/graphql-client/src/types.generated';
@@ -44,6 +45,11 @@ const data = {
       title: 'Usage',
       url: '/dashboard/usage',
       icon: IconCurrencyDollar,
+    },
+    {
+      title: 'API Keys',
+      url: '/dashboard/api-keys',
+      icon: IconKey,
     },
   ],
   navSecondary: [

@@ -6,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@workspace/ui/components/dropdown-menu';
+import { Label } from '@workspace/ui/components/label';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
@@ -14,9 +15,11 @@ export function AppearanceForm() {
 
   return (
     <form className="space-y-8">
-      <div className="space-y-1">
-        <div>Theme</div>
-        <div>Select the theme for the dashboard.</div>
+      <div className="grid gap-2 space-y-1">
+        <Label>Theme</Label>
+        <p className="text-muted-foreground text-sm">
+          Select the theme for the dashboard.
+        </p>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon">

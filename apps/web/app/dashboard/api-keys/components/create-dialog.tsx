@@ -1,3 +1,4 @@
+import { IconPlus } from '@tabler/icons-react';
 import { Button } from '@workspace/ui/components/button';
 import {
   Dialog,
@@ -15,31 +16,30 @@ export function CreateDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
+        <Button size="sm">
+          <IconPlus />
+          Create API Key
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
+          <DialogTitle>Create New API Key</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            This API key is tied to your account and can make requests against
+            the whole account.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
-          </div>
+          <Label htmlFor="name" className="text-right">
+            Name
+            <span className="font-light text-muted-foreground">Optional</span>
+          </Label>
+          <Input id="name" placeholder="Secret Key" className="col-span-3" />
         </div>
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <Button type="submit" size="sm">
+            Create API Key
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

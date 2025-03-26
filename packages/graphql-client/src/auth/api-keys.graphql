@@ -7,6 +7,7 @@ mutation createMyAPIKey($name: String) {
       id
       api_key
       name
+      created_at
     }
   }
 }
@@ -17,5 +18,13 @@ query getMyAPIKeys {
     name
     api_key
     created_at
+  }
+}
+
+mutation revokeMyAPIKey($revokeApiKeyId: ID!) {
+  revokeAPIKey(id: $revokeApiKeyId) {
+    code
+    success
+    message
   }
 }

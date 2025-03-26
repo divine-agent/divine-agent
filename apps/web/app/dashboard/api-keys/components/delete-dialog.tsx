@@ -1,3 +1,5 @@
+import { IconTrash } from '@tabler/icons-react';
+import type { ApiKey } from '@workspace/graphql-client/src/types.generated';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,24 +12,36 @@ import {
   AlertDialogTrigger,
 } from '@workspace/ui/components/alert-dialog';
 import { Button } from '@workspace/ui/components/button';
+import { Input } from '@workspace/ui/components/input';
 
-export function DeleteDialog() {
+export function DeleteDialog({ apiKey }: { apiKey: ApiKey }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline">Show Dialog</Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hover:bg-red-100 dark:hover:bg-red-950"
+        >
+          <IconTrash className="text-red-500 dark:text-red-400" />
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+          <AlertDialogTitle>Revoke API Key</AlertDialogTitle>
+          <AlertDialogDescription className="text-muted-foreground text-sm">
+            This API key will immediately be disabled. API requests made using
+            this key will be rejected, which could cause any systems still
+            depending on it to break. Once revoked, you'll no longer be able to
+            view or modify this API key.
           </AlertDialogDescription>
         </AlertDialogHeader>
+        <Input defaultValue={apiKey.api_key} disabled />
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <Button variant="destructive" asChild>
+            <AlertDialogAction>Revoke Key</AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -28,7 +28,6 @@ import {
   IconCircleCheckFilled,
   IconGripVertical,
   IconLayoutColumns,
-  IconTrash,
 } from '@tabler/icons-react';
 import {
   type ColumnDef,
@@ -75,6 +74,7 @@ import { Tabs, TabsContent } from '@workspace/ui/components/tabs';
 import * as React from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { DeleteDialog } from './delete-dialog';
 
 export const schema = z.object({
   id: z.string(),
@@ -191,15 +191,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
   {
     id: 'actions',
-    cell: () => (
-      <Button
-        variant="ghost"
-        size="icon"
-        className="hover:bg-red-100 dark:hover:bg-red-950"
-      >
-        <IconTrash className="text-red-500 dark:text-red-400" />
-      </Button>
-    ),
+    cell: ({ row }) => <DeleteDialog apiKey={row.original} />,
   },
 ];
 

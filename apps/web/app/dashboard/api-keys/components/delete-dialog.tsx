@@ -1,3 +1,5 @@
+import { createToastCallbacks } from '@/lib/callback/toast-callback';
+import { withCallbacks } from '@/lib/callback/with-callback';
 import { IconTrash } from '@tabler/icons-react';
 import type { ApiKey } from '@workspace/graphql-client/src/types.generated';
 import {
@@ -13,8 +15,20 @@ import {
 } from '@workspace/ui/components/alert-dialog';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
+import { useActionState } from 'react';
+import { revokeAPIKey } from '../actions';
 
 export function DeleteDialog({ apiKey }: { apiKey: ApiKey }) {
+  const [, revokeAction, revokePending] = useActionState(
+    withCallbacks(
+      revokeAPIKey.bind(null, apiKey.id),
+      createToastCallbacks({
+        loadingMessage: 'Revoking API Key...',
+      })
+    ),
+    null
+  );
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -36,13 +50,20 @@ export function DeleteDialog({ apiKey }: { apiKey: ApiKey }) {
             view or modify this API key.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <Input defaultValue={apiKey.api_key} disabled />
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <Button variant="destructive" asChild>
-            <AlertDialogAction>Revoke Key</AlertDialogAction>
-          </Button>
-        </AlertDialogFooter>
+        <form action={revokeAction} className="flex flex-col gap-4">
+          <Input defaultValue={apiKey.api_key} disabled />
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <Button
+              type="submit"
+              variant="destructive"
+              disabled={revokePending}
+              asChild
+            >
+              <AlertDialogAction>Revoke Key</AlertDialogAction>
+            </Button>
+          </AlertDialogFooter>
+        </form>
       </AlertDialogContent>
     </AlertDialog>
   );

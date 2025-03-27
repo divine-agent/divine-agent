@@ -21,7 +21,7 @@ export const resolvers: Resolvers = {
   Mutation: {
     createAPIKey: async (_, { name }, { dataSources }) => {
       return await mutationAdaptor(
-        dataSources.authAPI.createAPIKey(name ?? 'Secret Key')
+        dataSources.authAPI.createAPIKey(name || 'Secret Key')
       );
     },
     revokeAPIKey: async (_, { id }, { dataSources }) => {

@@ -24,6 +24,11 @@ export const resolvers: Resolvers = {
         dataSources.authAPI.createAPIKey(name || 'Secret Key')
       );
     },
+    updateAPIKey: async (_, { id, name }, { dataSources }) => {
+      return await mutationAdaptor(
+        dataSources.authAPI.updateAPIKey(id, name || undefined)
+      );
+    },
     revokeAPIKey: async (_, { id }, { dataSources }) => {
       return await mutationAdaptor(dataSources.authAPI.revokeAPIKey(id));
     },
@@ -43,7 +48,9 @@ export const resolvers: Resolvers = {
       );
     },
     updateUser: async (_, { id, name }, { dataSources }) => {
-      return await mutationAdaptor(dataSources.authAPI.updateUser(id, name));
+      return await mutationAdaptor(
+        dataSources.authAPI.updateUser(id, name ?? undefined)
+      );
     },
     createUser: async (_, { email, password, username }, { dataSources }) => {
       return await mutationAdaptor(

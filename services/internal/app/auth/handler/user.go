@@ -126,7 +126,7 @@ func CreateUser(c *fiber.Ctx) error {
 // UpdateUser update user
 func UpdateUser(c *fiber.Ctx) error {
 	type UpdateUserInput struct {
-		Name string `json:"name"`
+		Name *string `json:"name"`
 	}
 	var uui UpdateUserInput
 	if err := c.BodyParser(&uui); err != nil {

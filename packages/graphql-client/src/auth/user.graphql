@@ -11,7 +11,7 @@ mutation Signup($username: String!, $email: String!, $password: String!) {
   }
 }
 
-mutation UpdateAccount($updateUserId: ID!, $name: String!) {
+mutation UpdateAccount($updateUserId: ID!, $name: String) {
   updateUser(id: $updateUserId, name: $name) {
     code
     message

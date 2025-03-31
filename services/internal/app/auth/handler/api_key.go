@@ -66,7 +66,7 @@ func GetAPIKeys(c *fiber.Ctx) error {
 	}
 
 	// omit digest (hashed api key)
-	if err := db.Where(&model.APIKey{UserID: userID}).Omit("Digest").Find(&apiKeys).Error; err != nil {
+	if err := db.Where(&model.APIKey{UserID: userID}).Omit("Digest").Order("created_at desc").Find(&apiKeys).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to get api keys", "data": nil})
 	}
 
@@ -95,4 +95,34 @@ func RevokeAPIKey(c *fiber.Ctx) error {
 
 	db.Delete(&apiKey)
 	return c.JSON(fiber.Map{"status": "success", "message": "Deleted api key", "data": nil})
+}
+
+// UpdateAPIKey update api key
+func UpdateAPIKey(c *fiber.Ctx) error {
+	type UpdateAPIKeyInput struct {
+		Name *string `json:"name"`
+	}
+	var ui UpdateAPIKeyInput
+	if err := c.BodyParser(&ui); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failed to parse request", "data": nil})
+	}
+	id, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid API KEY ID", "data": nil})
+	}
+	token := c.Locals("user").(*jwt.Token)
+	userID, err := auth.ParseUserId(token)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid user ID", "data": nil})
+	}
+
+	db := database.DB
+	var apiKey model.APIKey
+	db.First(&apiKey, id)
+	if apiKey.UserID != userID {
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"status": "error", "message": "Forbidden", "data": nil})
+	}
+	db.Model(&apiKey).Updates(ui)
+
+	return c.JSON(fiber.Map{"status": "success", "message": "Updated api key", "data": apiKey})
 }

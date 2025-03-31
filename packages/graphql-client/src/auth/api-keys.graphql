@@ -21,6 +21,17 @@ query getMyAPIKeys {
   }
 }
 
+mutation updateMyAPIKey($updateApiKeyId: ID!, $name: String) {
+  updateAPIKey(id: $updateApiKeyId, name: $name) {
+    code
+    success
+    message
+    data {
+      name
+    }
+  }
+}
+
 mutation revokeMyAPIKey($revokeApiKeyId: ID!) {
   revokeAPIKey(id: $revokeApiKeyId) {
     code

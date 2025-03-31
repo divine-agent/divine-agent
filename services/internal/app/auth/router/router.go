@@ -34,5 +34,6 @@ func SetupRoutes(app *fiber.App) {
 	apiKey := api.Group("/api_key")
 	apiKey.Get("/", jwtware, handler.GetAPIKeys)
 	apiKey.Post("/", jwtware, handler.CreateAPIKey)
+	apiKey.Patch("/:id", jwtware, handler.UpdateAPIKey)
 	apiKey.Delete("/:id", jwtware, handler.RevokeAPIKey)
 }

@@ -1,5 +1,7 @@
 'use client';
 
+import { createToastCallbacks } from '@/lib/callback/toast-callback';
+import { withCallbacks } from '@/lib/callback/with-callback';
 import {
   DndContext,
   type DragEndEvent,
@@ -48,6 +50,16 @@ import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import { Checkbox } from '@workspace/ui/components/checkbox';
 import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@workspace/ui/components/drawer';
+import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -71,9 +83,11 @@ import {
   TableRow,
 } from '@workspace/ui/components/table';
 import { Tabs, TabsContent } from '@workspace/ui/components/tabs';
+import { useIsMobile } from '@workspace/ui/hooks/use-mobile';
+import { useActionState } from 'react';
 import * as React from 'react';
-import { toast } from 'sonner';
 import { z } from 'zod';
+import { updateAPIKey } from '../actions';
 import { DeleteDialog } from './delete-dialog';
 
 export const schema = z.object({
@@ -139,27 +153,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
-    cell: ({ row }) => (
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-            loading: `Saving Name: ${row.original.name}`,
-            success: 'Done',
-            error: 'Error',
-          });
-        }}
-      >
-        <Label htmlFor={`name-${row.original.id}`} className="sr-only">
-          Target
-        </Label>
-        <Input
-          className="h-8 min-w-24 border-transparent bg-transparent shadow-none hover:bg-input/30 focus-visible:border focus-visible:bg-background dark:bg-transparent dark:focus-visible:bg-input/30 dark:hover:bg-input/30"
-          defaultValue={row.original.name ?? ''}
-          id={`name-${row.original.id}`}
-        />
-      </form>
-    ),
+    cell: ({ row }) => <TableCellViewer item={row.original} />,
     enableHiding: false,
   },
   {
@@ -479,5 +473,76 @@ export function DataTable({
         <div className="aspect-video w-full flex-1 rounded-lg border border-dashed" />
       </TabsContent>
     </Tabs>
+  );
+}
+
+function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
+  const isMobile = useIsMobile();
+  const [, updateAction, updatePending] = useActionState(
+    withCallbacks(
+      updateAPIKey.bind(null, item.id),
+      createToastCallbacks({ loadingMessage: 'Updating API Key...' })
+    ),
+    null
+  );
+
+  return (
+    <Drawer direction={isMobile ? 'bottom' : 'right'}>
+      <DrawerTrigger asChild>
+        <Button variant="link" className="w-fit px-0 text-left text-foreground">
+          {item.name || 'Secret Key'}
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader className="gap-1">
+          <DrawerTitle>API Key</DrawerTitle>
+          <DrawerDescription>
+            Update the API key: {item.name || 'Secret Key'}
+          </DrawerDescription>
+        </DrawerHeader>
+        <form
+          action={updateAction}
+          className="flex h-full flex-col justify-between"
+        >
+          <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
+            <div className="flex flex-col gap-3">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                name="name"
+                defaultValue={item.name || 'Secret Key'}
+              />
+            </div>
+            <div className="flex flex-col gap-3">
+              <Label htmlFor="permission">Permission</Label>
+              <Select defaultValue={item.permission || 'ALL'}>
+                <SelectTrigger id="permission" className="w-full">
+                  <SelectValue placeholder="Permission" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ALL">
+                    <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
+                    ALL
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-col gap-3">
+              <Label htmlFor="api-key">API Key</Label>
+              <Input id="api-key" defaultValue={item.api_key} disabled />
+            </div>
+            <div className="flex flex-col gap-3">
+              <Label htmlFor="created">Limit</Label>
+              <Input id="created" defaultValue={item.created_at} disabled />
+            </div>
+          </div>
+          <DrawerFooter>
+            <DrawerClose asChild>
+              <Button type="submit">Submit</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </form>
+      </DrawerContent>
+    </Drawer>
   );
 }

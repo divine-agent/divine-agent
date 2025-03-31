@@ -8,6 +8,7 @@ import {
   CreateMyApiKeyDocument,
   RevokeMyApiKeyDocument,
   type RevokeMyApiKeyMutationVariables,
+  UpdateMyApiKeyDocument,
 } from '@workspace/graphql-client/src/auth/api-keys.generated';
 import { GetMyApiKeysDocument } from '@workspace/graphql-client/src/auth/api-keys.generated';
 import type { ApiKey } from '@workspace/graphql-client/src/types.generated';
@@ -59,6 +60,34 @@ export async function createAPIKey(
     return { message: 'API Key created', status: 'SUCCESS', data: data.data };
   }
   return { message: data?.message ?? 'API Key create failed', status: 'ERROR' };
+}
+
+export async function updateAPIKey(
+  id: string,
+  _actionState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const context = await getAuthContext();
+  if (!context) {
+    return { message: 'Unauthorized', status: 'ERROR' };
+  }
+  const variables = {
+    updateApiKeyId: id,
+    name: formData.get('name') as string,
+  };
+  const data = (
+    await getClient().mutate({
+      mutation: UpdateMyApiKeyDocument,
+      variables,
+      context,
+    })
+  ).data?.updateAPIKey;
+
+  if (data?.success) {
+    revalidatePath('/dashboard/api-keys', 'page');
+    return { message: 'API Key updated', status: 'SUCCESS' };
+  }
+  return { message: data?.message ?? 'API Key update failed', status: 'ERROR' };
 }
 
 /**

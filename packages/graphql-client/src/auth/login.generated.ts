@@ -73,6 +73,7 @@ export type Mutation = {
   login: CreateTokenResponse;
   loginWithAPIKey: CreateTokenResponse;
   revokeAPIKey: RevokeApiKeyResponse;
+  updateAPIKey: UpdateApiKeyResponse;
   updateUser: UpdateUserResponse;
 };
 
@@ -118,9 +119,16 @@ export type MutationRevokeApiKeyArgs = {
 
 
 /** Mutation is a collection of mutations that can be made to the API */
+export type MutationUpdateApiKeyArgs = {
+  id: Scalars['ID']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+/** Mutation is a collection of mutations that can be made to the API */
 export type MutationUpdateUserArgs = {
   id: Scalars['ID']['input'];
-  name: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** MutationResponse is a response to a mutation */
@@ -151,6 +159,15 @@ export type QueryUserArgs = {
 export type RevokeApiKeyResponse = MutationResponse & {
   __typename?: 'RevokeAPIKeyResponse';
   code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
+/** UpdateAPIKeyResponse is a response to the updateAPIKey mutation */
+export type UpdateApiKeyResponse = MutationResponse & {
+  __typename?: 'UpdateAPIKeyResponse';
+  code: Scalars['Int']['output'];
+  data?: Maybe<ApiKey>;
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
 };

@@ -31,7 +31,7 @@ export class AuthAPI extends RESTDataSource {
     return await this.get<FetchResponse<UserModel>>(`/api/user/${userId}`);
   }
 
-  async updateUser(userId: string, name: string) {
+  async updateUser(userId: string, name: string | undefined) {
     return await this.patch<FetchResponse<UserModel>>(`/api/user/${userId}`, {
       body: { name },
     });
@@ -51,6 +51,15 @@ export class AuthAPI extends RESTDataSource {
     return await this.post<FetchResponse<APIKeyModel>>('/api/api_key/', {
       body: { name },
     });
+  }
+
+  async updateAPIKey(apiKeyId: string, name: string | undefined) {
+    return await this.patch<FetchResponse<APIKeyModel>>(
+      `/api/api_key/${apiKeyId}`,
+      {
+        body: { name },
+      }
+    );
   }
 
   async revokeAPIKey(apiKeyId: string) {

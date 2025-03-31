@@ -32,6 +32,7 @@ type Mutation {
   loginWithAPIKey(api_key: String!): CreateTokenResponse!
   "API Key Mutations"
   createAPIKey(name: String): CreateAPIKeyResponse!
+  updateAPIKey(id: ID!, name: String): UpdateAPIKeyResponse!
   revokeAPIKey(id: ID!): RevokeAPIKeyResponse!
   "User Mutations"
   createUser(
@@ -39,7 +40,7 @@ type Mutation {
     email: String!
     password: String!
   ): CreateUserResponse!
-  updateUser(id: ID!, name: String!): UpdateUserResponse!
+  updateUser(id: ID!, name: String): UpdateUserResponse!
   deleteUser(id: ID!, password: String!): DeleteUserResponse!
 }
 
@@ -52,6 +53,14 @@ interface MutationResponse {
 
 "CreateAPIKeyResponse is a response to the createAPIKey mutation"
 type CreateAPIKeyResponse implements MutationResponse {
+  code: Int!
+  message: String!
+  success: Boolean!
+  data: APIKey
+}
+
+"UpdateAPIKeyResponse is a response to the updateAPIKey mutation"
+type UpdateAPIKeyResponse implements MutationResponse {
   code: Int!
   message: String!
   success: Boolean!

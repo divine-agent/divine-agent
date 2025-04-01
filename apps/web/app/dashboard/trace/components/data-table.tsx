@@ -1,5 +1,7 @@
 'use client';
 
+import { DataTablePagination } from '@/components/data-table-pagination';
+import { DataTableRow } from '@/components/data-table-row';
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -17,8 +19,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import * as React from 'react';
-
 import {
   Table,
   TableBody,
@@ -27,9 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from '@workspace/ui/components/table';
-
-import { DataTablePagination } from './data-table-pagination';
-import { DataTableRow } from './data-table-row';
+import * as React from 'react';
 import { DataTableToolbar } from './data-table-toolbar';
 
 interface DataTableProps<TData, TValue> {
@@ -37,7 +35,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-export function TasksDataTable<TData, TValue>({
+export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {

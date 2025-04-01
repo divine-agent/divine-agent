@@ -1,5 +1,5 @@
 import { columns } from './components/columns';
-import { TasksDataTable } from './components/data-table';
+import { DataTable } from './components/data-table';
 import type { Trace } from './data/schema';
 
 export default function TracePage() {
@@ -30,13 +30,9 @@ export default function TracePage() {
     },
   ];
   return (
-    <div className="@container/main flex flex-1 flex-col gap-2">
-      <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-        <TasksDataTable
-          data={Array.from({ length: 10 }, () => data).flat()}
-          columns={columns}
-        />
-      </div>
-    </div>
+    <DataTable
+      data={Array.from({ length: 10 }, () => data).flat()}
+      columns={columns}
+    />
   );
 }

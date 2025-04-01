@@ -4,7 +4,7 @@ import type { Table } from '@tanstack/react-table';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { X } from 'lucide-react';
-import { statuses } from '../data/data';
+import { permissions } from '../data/data';
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -19,18 +19,18 @@ export function DataTableToolbar<TData>({
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Filter traces..."
+          placeholder="Filter API Keys..."
           value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
             table.getColumn('name')?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn('status') && (
+        {table.getColumn('permission') && (
           <DataTableFacetedFilter
-            column={table.getColumn('status')}
-            title="Status"
-            options={statuses}
+            column={table.getColumn('permission')}
+            title="Permission"
+            options={permissions}
           />
         )}
         {isFiltered && (

@@ -1,9 +1,10 @@
 'use client';
+
+import { DataTableColumnHeader } from '@/components/data-table-column-header';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { z } from 'zod';
 import { statuses } from '../data/data';
 import type { traceSchema } from '../data/schema';
-import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTableRowActions } from './data-table-row-action';
 
 export const columns: ColumnDef<z.infer<typeof traceSchema>>[] = [

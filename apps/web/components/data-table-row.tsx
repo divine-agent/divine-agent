@@ -1,4 +1,3 @@
-'use client';
 import { type Cell, type Row, flexRender } from '@tanstack/react-table';
 import { Button } from '@workspace/ui/components/button';
 import { TableCell, TableRow } from '@workspace/ui/components/table';

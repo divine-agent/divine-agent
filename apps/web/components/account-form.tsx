@@ -1,4 +1,5 @@
 'use client';
+
 import { createToastCallbacks } from '@/lib/callback/toast-callback';
 import { withCallbacks } from '@/lib/callback/with-callback';
 import type { ActionState } from '@/lib/types/state';

@@ -9,10 +9,11 @@ export const getCurrentUser = cache(async () => {
   if (!context) {
     return null;
   }
+
   const { data } = await query({
     query: GetCurrentUserDocument,
     context,
-  });
+  }).catch((_) => ({ data: null }));
   return data?.me;
 });
 

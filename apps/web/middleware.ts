@@ -10,12 +10,12 @@ const publicRoutes = ['/login', '/signup', '/'];
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   // 2. Check if the current route is protected or public
   const path = request.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.includes(path);
+  const isProtectedRoute =
+    path.startsWith('/dashboard') || protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
 
   // 3. get the session from the cookie
   const user = await getCurrentUser();
-
   // 4. Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !user) {
     return NextResponse.redirect(new URL('/login', request.nextUrl));

@@ -62,6 +62,13 @@ export async function createAPIKey(
   return { message: data?.message ?? 'API Key create failed', status: 'ERROR' };
 }
 
+/**
+ * updateAPIKey action with graphql mutation
+ * @param id API Key UUID
+ * @param _actionState
+ * @param formData
+ * @returns
+ */
 export async function updateAPIKey(
   id: string,
   _actionState: ActionState,

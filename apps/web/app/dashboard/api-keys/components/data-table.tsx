@@ -538,7 +538,9 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
           </div>
           <DrawerFooter>
             <DrawerClose asChild>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={updatePending}>
+                Submit
+              </Button>
             </DrawerClose>
           </DrawerFooter>
         </form>

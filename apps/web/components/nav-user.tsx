@@ -51,7 +51,9 @@ export function NavUser({
             >
               <Avatar className="h-8 w-8 rounded-lg grayscale">
                 <AvatarImage src={avatar} alt={name} />
-                <AvatarFallback className="rounded-lg">{name}</AvatarFallback>
+                <AvatarFallback className="rounded-lg" delayMs={100}>
+                  {name}
+                </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{name}</span>

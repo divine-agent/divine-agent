@@ -50,6 +50,7 @@ export default function SignupPage() {
       </div>
       <div className="hidden bg-muted lg:flex lg:items-center lg:justify-center">
         <Image
+          priority={true}
           src="/peeking-angel.png"
           width={200}
           height={200}

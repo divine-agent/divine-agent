@@ -1,0 +1,28 @@
+import type { FetchResponse } from '@/types/response';
+import type { Trace } from '@/types/types';
+import { type AugmentedRequest, RESTDataSource } from '@apollo/datasource-rest';
+import type { KeyValueCache } from '@apollo/utils.keyvaluecache';
+
+export class DataParkAPI extends RESTDataSource {
+  override baseURL = process.env.AUTH_SERVICE_URL ?? 'http://localhost:3001/';
+  private token: string;
+
+  constructor(options: { token: string; cache: KeyValueCache }) {
+    super(options);
+    this.token = options.token;
+  }
+
+  override willSendRequest(_path: string, request: AugmentedRequest) {
+    request.headers.authorization = this.token;
+  }
+
+  async getTraces(sessionId: string) {
+    return await this.get<FetchResponse<Trace[]>>(
+      `/api/session/${sessionId}/traces`
+    );
+  }
+
+  async getAllTraces() {
+    return await this.get<FetchResponse<Trace[]>>('/api/trace/');
+  }
+}

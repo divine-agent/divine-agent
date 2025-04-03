@@ -17,6 +17,12 @@ export const resolvers: Resolvers = {
     api_keys: async (_, _args, { dataSources }) => {
       return (await dataSources.authAPI.getAPIKeys()).data;
     },
+    traces: async (_, { session_id }, { dataSources }) => {
+      return (await dataSources.dataparkAPI.getTraces(session_id)).data;
+    },
+    all_traces: async (_, _args, { dataSources }) => {
+      return (await dataSources.dataparkAPI.getAllTraces()).data;
+    },
   },
   Mutation: {
     createAPIKey: async (_, { name }, { dataSources }) => {

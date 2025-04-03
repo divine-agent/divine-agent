@@ -26,6 +26,7 @@ func SetupRoutes(app *fiber.App) {
 
 	// Trace
 	trace := api.Group("/trace")
+	trace.Get("/", jwtware, handler.GetAllTraces)
 	// Span
 	trace.Get("/:id/spans", jwtware, handler.GetSpans)
 	trace.Post("/:id/spans", jwtware, handler.CreateSpans)

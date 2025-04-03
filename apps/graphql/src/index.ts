@@ -4,6 +4,7 @@ import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import gql from 'graphql-tag';
 import { AuthAPI } from './datasources/auth-api';
+import { DataParkAPI } from './datasources/datapark-api';
 import { resolvers } from './resolvers';
 
 const typeDefs = gql(
@@ -19,6 +20,7 @@ async function startApolloServer() {
       return Promise.resolve({
         dataSources: {
           authAPI: new AuthAPI({ token, cache }),
+          dataparkAPI: new DataParkAPI({ token, cache }),
         },
       });
     },

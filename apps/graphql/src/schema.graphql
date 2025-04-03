@@ -6,6 +6,10 @@ type Query {
   user(id: ID!): User!
   "Fetch current user's API keys"
   api_keys: [APIKey!]
+  "Fetch traces by session id"
+  traces(session_id: ID!): [Trace!]
+  "Fetch all traces"
+  all_traces: [Trace!]
 }
 
 "User is a registered user of the application"
@@ -23,6 +27,20 @@ type APIKey {
   api_key: String!
   name: String
   created_at: String!
+}
+
+"Trace is a record to track the execution of a session"
+type Trace {
+  id: ID!
+  name: String
+  start_time: String!
+  end_time: NullTime!
+  session_id: ID!
+}
+
+type NullTime {
+  Time: String!
+  Valid: Boolean!
 }
 
 "Mutation is a collection of mutations that can be made to the API"

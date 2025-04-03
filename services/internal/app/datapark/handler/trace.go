@@ -26,6 +26,29 @@ func checkSessionExist(userID uuid.UUID, sessionID uuid.UUID) error {
 	return db.Where(&model.Session{ID: sessionID, UserID: userID}).Find(&session).Error
 }
 
+func GetAllTraces(c *fiber.Ctx) error {
+	db := database.DB
+	token := c.Locals("user").(*jwt.Token)
+	userID, err := auth.ParseUserId(token)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid user ID", "data": nil})
+	}
+
+	var sessions []model.Session
+	if err := db.Where(&model.Session{UserID: userID}).Find(&sessions).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to get sessions", "data": nil})
+	}
+	var traces []model.Trace
+	for _, session := range sessions {
+		var sessionTraces []model.Trace
+		if err := db.Where(&model.Trace{SessionID: session.ID}).Find(&sessionTraces).Error; err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to get traces", "data": nil})
+		}
+		traces = append(traces, sessionTraces...)
+	}
+	return c.JSON(fiber.Map{"status": "success", "message": "Get all traces", "data": traces})
+}
+
 func GetTraces(c *fiber.Ctx) error {
 	db := database.DB
 

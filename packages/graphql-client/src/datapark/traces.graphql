@@ -1,0 +1,25 @@
+query getTraces($sessionId: ID!) {
+  traces(session_id: $sessionId) {
+    id
+    name
+    start_time
+    end_time {
+      Time
+      Valid
+    }
+    session_id
+  }
+}
+
+query getAllTraces {
+  all_traces {
+    id
+    name
+    start_time
+    end_time {
+      Time
+      Valid
+    }
+    session_id
+  }
+}

@@ -138,15 +138,31 @@ export type MutationResponse = {
   success: Scalars['Boolean']['output'];
 };
 
+export type NullTime = {
+  __typename?: 'NullTime';
+  Time: Scalars['String']['output'];
+  Valid: Scalars['Boolean']['output'];
+};
+
 /** Query is a collection of queries that can be made to the API */
 export type Query = {
   __typename?: 'Query';
+  /** Fetch all traces */
+  all_traces?: Maybe<Array<Trace>>;
   /** Fetch current user's API keys */
   api_keys?: Maybe<Array<ApiKey>>;
   /** Fetch current user */
   me: User;
+  /** Fetch traces by session id */
+  traces?: Maybe<Array<Trace>>;
   /** Fetch a specific user by id */
   user: User;
+};
+
+
+/** Query is a collection of queries that can be made to the API */
+export type QueryTracesArgs = {
+  session_id: Scalars['ID']['input'];
 };
 
 
@@ -161,6 +177,16 @@ export type RevokeApiKeyResponse = MutationResponse & {
   code: Scalars['Int']['output'];
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
+};
+
+/** Trace is a record to track the execution of a session */
+export type Trace = {
+  __typename?: 'Trace';
+  end_time: NullTime;
+  id: Scalars['ID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  session_id: Scalars['ID']['output'];
+  start_time: Scalars['String']['output'];
 };
 
 /** UpdateAPIKeyResponse is a response to the updateAPIKey mutation */

@@ -1,6 +1,5 @@
-import type { APIKeyModel } from '@/types/api-key';
 import type { FetchResponse } from '@/types/response';
-import type { UserModel } from '@/types/user';
+import type { ApiKey, User } from '@/types/types';
 import { type AugmentedRequest, RESTDataSource } from '@apollo/datasource-rest';
 import type { KeyValueCache } from '@apollo/utils.keyvaluecache';
 
@@ -18,21 +17,21 @@ export class AuthAPI extends RESTDataSource {
   }
 
   async createUser(email: string, password: string, username: string) {
-    return await this.post<FetchResponse<UserModel>>('/api/user/', {
+    return await this.post<FetchResponse<User>>('/api/user/', {
       body: { email, password, username },
     });
   }
 
   async getCurrentUser() {
-    return await this.get<FetchResponse<UserModel>>('/api/user/');
+    return await this.get<FetchResponse<User>>('/api/user/');
   }
 
   async getUser(userId: string) {
-    return await this.get<FetchResponse<UserModel>>(`/api/user/${userId}`);
+    return await this.get<FetchResponse<User>>(`/api/user/${userId}`);
   }
 
   async updateUser(userId: string, name: string | undefined) {
-    return await this.patch<FetchResponse<UserModel>>(`/api/user/${userId}`, {
+    return await this.patch<FetchResponse<User>>(`/api/user/${userId}`, {
       body: { name },
     });
   }
@@ -44,22 +43,19 @@ export class AuthAPI extends RESTDataSource {
   }
 
   async getAPIKeys() {
-    return await this.get<FetchResponse<APIKeyModel[]>>('/api/api_key/');
+    return await this.get<FetchResponse<ApiKey[]>>('/api/api_key/');
   }
 
   async createAPIKey(name: string) {
-    return await this.post<FetchResponse<APIKeyModel>>('/api/api_key/', {
+    return await this.post<FetchResponse<ApiKey>>('/api/api_key/', {
       body: { name },
     });
   }
 
   async updateAPIKey(apiKeyId: string, name: string | undefined) {
-    return await this.patch<FetchResponse<APIKeyModel>>(
-      `/api/api_key/${apiKeyId}`,
-      {
-        body: { name },
-      }
-    );
+    return await this.patch<FetchResponse<ApiKey>>(`/api/api_key/${apiKeyId}`, {
+      body: { name },
+    });
   }
 
   async revokeAPIKey(apiKeyId: string) {

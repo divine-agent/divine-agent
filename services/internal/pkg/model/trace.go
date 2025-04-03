@@ -14,6 +14,8 @@ type Trace struct {
 
 	// ID is a UUID4 string
 	ID uuid.UUID `gorm:"primaryKey;not null;type:uuid;default:gen_random_uuid()" json:"id,omitempty"`
+	// Name is the name of the trace
+	Name *string `json:"name,omitempty"`
 	// StartTime is the start time of the trace in Unix Nano
 	StartTime time.Time `json:"start_time"`
 	// EndTime is the end time of the trace in Unix Nano

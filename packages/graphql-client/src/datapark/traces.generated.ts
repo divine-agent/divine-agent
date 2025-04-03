@@ -217,35 +217,18 @@ export type User = {
   username: Scalars['String']['output'];
 };
 
-export type CreateMyApiKeyMutationVariables = Types.Exact<{
-  name?: Types.InputMaybe<Types.Scalars['String']['input']>;
+export type GetTracesQueryVariables = Types.Exact<{
+  sessionId: Types.Scalars['ID']['input'];
 }>;
 
 
-export type CreateMyApiKeyMutation = { __typename?: 'Mutation', createAPIKey: { __typename?: 'CreateAPIKeyResponse', code: number, success: boolean, message: string, data?: { __typename?: 'APIKey', id: string, api_key: string, name?: string | null, created_at: string } | null } };
+export type GetTracesQuery = { __typename?: 'Query', traces?: Array<{ __typename?: 'Trace', id: string, name?: string | null, start_time: string, session_id: string, end_time: { __typename?: 'NullTime', Time: string, Valid: boolean } }> | null };
 
-export type GetMyApiKeysQueryVariables = Types.Exact<{ [key: string]: never; }>;
-
-
-export type GetMyApiKeysQuery = { __typename?: 'Query', api_keys?: Array<{ __typename?: 'APIKey', id: string, name?: string | null, api_key: string, created_at: string }> | null };
-
-export type UpdateMyApiKeyMutationVariables = Types.Exact<{
-  updateApiKeyId: Types.Scalars['ID']['input'];
-  name?: Types.InputMaybe<Types.Scalars['String']['input']>;
-}>;
+export type GetAllTracesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type UpdateMyApiKeyMutation = { __typename?: 'Mutation', updateAPIKey: { __typename?: 'UpdateAPIKeyResponse', code: number, success: boolean, message: string, data?: { __typename?: 'APIKey', name?: string | null } | null } };
-
-export type RevokeMyApiKeyMutationVariables = Types.Exact<{
-  revokeApiKeyId: Types.Scalars['ID']['input'];
-}>;
+export type GetAllTracesQuery = { __typename?: 'Query', all_traces?: Array<{ __typename?: 'Trace', id: string, name?: string | null, start_time: string, session_id: string, end_time: { __typename?: 'NullTime', Time: string, Valid: boolean } }> | null };
 
 
-export type RevokeMyApiKeyMutation = { __typename?: 'Mutation', revokeAPIKey: { __typename?: 'RevokeAPIKeyResponse', code: number, success: boolean, message: string } };
-
-
-export const CreateMyApiKeyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createMyAPIKey"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAPIKey"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"api_key"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}}]}}]}}]}}]} as unknown as DocumentNode<CreateMyApiKeyMutation, CreateMyApiKeyMutationVariables>;
-export const GetMyApiKeysDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getMyAPIKeys"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_keys"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"api_key"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}}]}}]}}]} as unknown as DocumentNode<GetMyApiKeysQuery, GetMyApiKeysQueryVariables>;
-export const UpdateMyApiKeyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateMyAPIKey"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"updateApiKeyId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAPIKey"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"updateApiKeyId"}}},{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateMyApiKeyMutation, UpdateMyApiKeyMutationVariables>;
-export const RevokeMyApiKeyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"revokeMyAPIKey"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"revokeApiKeyId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"revokeAPIKey"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"revokeApiKeyId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<RevokeMyApiKeyMutation, RevokeMyApiKeyMutationVariables>;
+export const GetTracesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getTraces"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"traces"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"session_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"start_time"}},{"kind":"Field","name":{"kind":"Name","value":"end_time"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Time"}},{"kind":"Field","name":{"kind":"Name","value":"Valid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"session_id"}}]}}]}}]} as unknown as DocumentNode<GetTracesQuery, GetTracesQueryVariables>;
+export const GetAllTracesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllTraces"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"all_traces"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"start_time"}},{"kind":"Field","name":{"kind":"Name","value":"end_time"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Time"}},{"kind":"Field","name":{"kind":"Name","value":"Valid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"session_id"}}]}}]}}]} as unknown as DocumentNode<GetAllTracesQuery, GetAllTracesQueryVariables>;

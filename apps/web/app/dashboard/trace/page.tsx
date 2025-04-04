@@ -1,37 +1,35 @@
+import { query } from '@/hooks/apolloClient';
+import { getAuthContext } from '@/lib/server/auth';
+import { GetAllTracesDocument } from '@workspace/graphql-client/datapark/traces.generated';
 import { columns } from './components/columns';
 import { DataTable } from './components/data-table';
 import type { Trace } from './data/schema';
 
-export default function TracePage() {
-  const data: Trace[] = [
-    {
-      id: 'uuid-trace-1111',
-      session_id: 'uuid-session',
-      name: 'otrace1',
-      start_time: '2021-09-01T00:00:00Z',
-      end_time: '2021-09-01T00:00:00Z',
-      status: 'running',
-    },
-    {
-      id: 'uuid-trace-1112',
-      session_id: 'uuid-session',
-      name: 'trace1',
-      start_time: '2021-09-01T00:00:00Z',
-      end_time: '2021-09-01T00:00:00Z',
-      status: 'done',
-    },
-    {
-      id: 'uuid-trace-1113',
-      session_id: 'uuid-session-2222',
-      name: 'trace1',
-      start_time: '2021-09-01T00:00:00Z',
-      end_time: '2021-09-01T00:00:00Z',
-      status: 'canceled',
-    },
-  ];
+async function getAllTraces() {
+  const context = await getAuthContext();
+  if (!context) {
+    return null;
+  }
+  const { data } = await query({
+    query: GetAllTracesDocument,
+    context,
+  });
+  return data?.all_traces;
+}
+
+export default async function TracePage() {
+  const data = (await getAllTraces()) ?? [];
+
   return (
     <DataTable
-      data={Array.from({ length: 10 }, () => data).flat()}
+      data={data.map(
+        (trace) =>
+          ({
+            ...trace,
+            end_time: trace.end_time.Valid ? trace.end_time.Time : undefined,
+            status: trace.end_time.Valid ? 'done' : 'running',
+          }) as Trace
+      )}
       columns={columns}
     />
   );

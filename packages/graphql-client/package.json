@@ -19,6 +19,7 @@
   },
   "exports": {
     "./types.generated.ts": "./src/types.generated.ts",
-    "./auth/*": "./src/auth/*.ts"
+    "./auth/*": "./src/auth/*.ts",
+    "./datapark/*": "./src/datapark/*.ts"
   }
 }

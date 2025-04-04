@@ -1,6 +1,7 @@
 'use client';
 
 import { DataTableColumnHeader } from '@/components/data-table-column-header';
+import { formatDate } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import { cn } from '@workspace/ui/lib/utils';
 import type { z } from 'zod';
@@ -33,14 +34,7 @@ export const columns: ColumnDef<z.infer<typeof apiKeySchema>>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Created At" />
     ),
-    cell: ({ row }) => {
-      const date = new Date(row.original.created_at);
-      return date.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      });
-    },
+    cell: ({ row }) => formatDate(row.original.created_at),
     enableGrouping: false,
   },
   {

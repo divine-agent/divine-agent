@@ -1,6 +1,7 @@
 'use client';
 
 import { DataTableColumnHeader } from '@/components/data-table-column-header';
+import { formatDate } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { z } from 'zod';
 import { statuses } from '../data/data';
@@ -13,7 +14,9 @@ export const columns: ColumnDef<z.infer<typeof traceSchema>>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Trace ID" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue('id')}</div>,
+    cell: ({ row }) => (
+      <div className="w-[80px] truncate">{row.getValue('id')}</div>
+    ),
     enableSorting: false,
     enableHiding: false,
     enableGrouping: false,
@@ -23,7 +26,9 @@ export const columns: ColumnDef<z.infer<typeof traceSchema>>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Session ID" />
     ),
-    cell: ({ row }) => row.original.session_id,
+    cell: ({ row }) => (
+      <div className="w-[80px] truncate">{row.getValue('session_id')}</div>
+    ),
     enableSorting: false,
     enableHiding: false,
   },
@@ -48,7 +53,7 @@ export const columns: ColumnDef<z.infer<typeof traceSchema>>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Start Time" />
     ),
-    cell: ({ row }) => row.original.start_time,
+    cell: ({ row }) => formatDate(row.getValue('start_time')),
     enableGrouping: false,
   },
   {
@@ -56,7 +61,7 @@ export const columns: ColumnDef<z.infer<typeof traceSchema>>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="End Time" />
     ),
-    cell: ({ row }) => row.original.end_time,
+    cell: ({ row }) => formatDate(row.getValue('end_time')),
     enableGrouping: false,
   },
   {

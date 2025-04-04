@@ -4,10 +4,7 @@ import { DataTable } from './components/data-table';
 import type { APIKey } from './data/schema';
 
 export default async function APIKeysPage() {
-  const data = await getAPIKeys();
-  if (!data) {
-    return null;
-  }
+  const data = (await getAPIKeys()) ?? [];
 
   return (
     <DataTable

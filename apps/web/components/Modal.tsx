@@ -19,6 +19,7 @@ import {
 import { useMediaQuery } from '@workspace/ui/hooks/use-media-query';
 import { useRouter } from 'next/navigation';
 import type * as React from 'react';
+import { useState } from 'react';
 
 export function Modal({
   children,
@@ -31,13 +32,17 @@ export function Modal({
 }) {
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const router = useRouter();
-  const handleOpenChange = () => {
-    router.back();
+  const [open, setOpen] = useState(true);
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      setOpen(false);
+      setTimeout(router.back, 200);
+    }
   };
 
   if (isDesktop) {
     return (
-      <Dialog defaultOpen={false} open={true} onOpenChange={handleOpenChange}>
+      <Dialog defaultOpen={false} open={open} onOpenChange={handleOpenChange}>
         <DialogOverlay />
         <DialogContent>
           <DialogHeader>
@@ -51,7 +56,7 @@ export function Modal({
   }
 
   return (
-    <Drawer defaultOpen={false} open={true} onOpenChange={handleOpenChange}>
+    <Drawer defaultOpen={false} open={open} onOpenChange={handleOpenChange}>
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>{title}</DrawerTitle>

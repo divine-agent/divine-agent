@@ -1,9 +1,16 @@
 import { Modal } from '@/components/Modal';
+import { TraceWaterfallChart } from '@/components/trace-chart';
 
-export default function DrawerDialogPage() {
+interface TraceModalPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function TraceModalPage(props: TraceModalPageProps) {
+  const { id } = await props.params;
   return (
     <Modal title="Trace" description="trace">
-      hhhhh
+      {id}
+      <TraceWaterfallChart />
     </Modal>
   );
 }

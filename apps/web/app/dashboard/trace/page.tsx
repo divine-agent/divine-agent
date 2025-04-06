@@ -17,7 +17,7 @@ async function getAllTraces() {
   return data?.all_traces;
 }
 
-export default async function TracePage() {
+export default async function TracesPage() {
   const data = (await getAllTraces()) ?? [];
 
   return (

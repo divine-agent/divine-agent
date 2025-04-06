@@ -1,9 +1,9 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 @source "../app/**/*.{ts,tsx}";
 @source "../components/**/*.{ts,tsx}";
 @source "../../../packages/ui/components/**/*.{ts,tsx}";
 
-@import "tw-animate-css";
 @custom-variant dark (&:is(.dark *));
 
 :root {

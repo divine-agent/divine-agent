@@ -23,8 +23,10 @@ async function signout() {
 
 export default async function DashboardLayout({
   children,
+  modal,
 }: {
   children: ReactNode;
+  modal?: ReactNode;
 }) {
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get('sidebar_state')?.value === 'true';
@@ -45,7 +47,10 @@ export default async function DashboardLayout({
       <AppSidebar variant="inset" user={user} signoutAction={signout} />
       <SidebarInset>
         <SiteHeader />
-        <div className="flex flex-1 flex-col">{children}</div>
+        <div className="flex flex-1 flex-col">
+          {modal}
+          {children}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

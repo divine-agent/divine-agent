@@ -3,10 +3,10 @@
 import { DataTableColumnHeader } from '@/components/data-table-column-header';
 import { formatDate } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
+import Link from 'next/link';
 import type { z } from 'zod';
 import { statuses } from '../data/data';
 import type { traceSchema } from '../data/schema';
-import { DataTableRowActions } from './data-table-row-action';
 
 export const columns: ColumnDef<z.infer<typeof traceSchema>>[] = [
   {
@@ -15,7 +15,9 @@ export const columns: ColumnDef<z.infer<typeof traceSchema>>[] = [
       <DataTableColumnHeader column={column} title="Trace ID" />
     ),
     cell: ({ row }) => (
-      <div className="w-[80px] truncate">{row.getValue('id')}</div>
+      <Link href={`/dashboard/trace/${row.getValue('id')}`} passHref>
+        {row.getValue('id')}
+      </Link>
     ),
     enableSorting: false,
     enableHiding: false,
@@ -90,9 +92,5 @@ export const columns: ColumnDef<z.infer<typeof traceSchema>>[] = [
       return value.includes(row.getValue(id));
     },
     enableGrouping: false,
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];

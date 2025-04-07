@@ -23,6 +23,9 @@ export const resolvers: Resolvers = {
     all_traces: async (_, _args, { dataSources }) => {
       return (await dataSources.dataparkAPI.getAllTraces()).data;
     },
+    spans: async (_, { trace_id }, { dataSources }) => {
+      return (await dataSources.dataparkAPI.getSpans(trace_id)).data;
+    },
   },
   Mutation: {
     createAPIKey: async (_, { name }, { dataSources }) => {

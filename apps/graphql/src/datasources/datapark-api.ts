@@ -1,5 +1,5 @@
 import type { FetchResponse } from '@/types/response';
-import type { Trace } from '@/types/types';
+import type { Span, Trace } from '@/types/types';
 import { type AugmentedRequest, RESTDataSource } from '@apollo/datasource-rest';
 import type { KeyValueCache } from '@apollo/utils.keyvaluecache';
 
@@ -24,5 +24,9 @@ export class DataParkAPI extends RESTDataSource {
 
   async getAllTraces() {
     return await this.get<FetchResponse<Trace[]>>('/api/trace/');
+  }
+
+  async getSpans(traceId: string) {
+    return await this.get<FetchResponse<Span[]>>(`/api/trace/${traceId}/spans`);
   }
 }

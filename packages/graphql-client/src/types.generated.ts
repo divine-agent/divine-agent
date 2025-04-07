@@ -58,6 +58,13 @@ export type DeleteUserResponse = MutationResponse & {
   success: Scalars['Boolean']['output'];
 };
 
+/** KeyValue is a key-value pair */
+export type KeyValue = {
+  __typename?: 'KeyValue';
+  key: Scalars['String']['output'];
+  value: Scalars['String']['output'];
+};
+
 /** Mutation is a collection of mutations that can be made to the API */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -135,6 +142,7 @@ export type MutationResponse = {
   success: Scalars['Boolean']['output'];
 };
 
+/** NullTime is a custom scalar type that represents a time value that can be null */
 export type NullTime = {
   __typename?: 'NullTime';
   Time: Scalars['String']['output'];
@@ -150,10 +158,18 @@ export type Query = {
   api_keys?: Maybe<Array<ApiKey>>;
   /** Fetch current user */
   me: User;
+  /** Fetch all spans by trace id */
+  spans?: Maybe<Array<Span>>;
   /** Fetch traces by session id */
   traces?: Maybe<Array<Trace>>;
   /** Fetch a specific user by id */
   user: User;
+};
+
+
+/** Query is a collection of queries that can be made to the API */
+export type QuerySpansArgs = {
+  trace_id: Scalars['ID']['input'];
 };
 
 
@@ -174,6 +190,20 @@ export type RevokeApiKeyResponse = MutationResponse & {
   code: Scalars['Int']['output'];
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
+};
+
+/** Span is a record of a single unit of work within a trace */
+export type Span = {
+  __typename?: 'Span';
+  duration: Scalars['Int']['output'];
+  end_time: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  kind: Scalars['String']['output'];
+  metadata?: Maybe<Array<KeyValue>>;
+  name: Scalars['String']['output'];
+  parent_id: Scalars['ID']['output'];
+  start_time: Scalars['String']['output'];
+  trace_id: Scalars['ID']['output'];
 };
 
 /** Trace is a record to track the execution of a session */

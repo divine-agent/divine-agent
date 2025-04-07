@@ -61,6 +61,13 @@ export type DeleteUserResponse = MutationResponse & {
   success: Scalars['Boolean']['output'];
 };
 
+/** KeyValue is a key-value pair */
+export type KeyValue = {
+  __typename?: 'KeyValue';
+  key: Scalars['String']['output'];
+  value: Scalars['String']['output'];
+};
+
 /** Mutation is a collection of mutations that can be made to the API */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -138,6 +145,7 @@ export type MutationResponse = {
   success: Scalars['Boolean']['output'];
 };
 
+/** NullTime is a custom scalar type that represents a time value that can be null */
 export type NullTime = {
   __typename?: 'NullTime';
   Time: Scalars['String']['output'];
@@ -153,10 +161,18 @@ export type Query = {
   api_keys?: Maybe<Array<ApiKey>>;
   /** Fetch current user */
   me: User;
+  /** Fetch all spans by trace id */
+  spans?: Maybe<Array<Span>>;
   /** Fetch traces by session id */
   traces?: Maybe<Array<Trace>>;
   /** Fetch a specific user by id */
   user: User;
+};
+
+
+/** Query is a collection of queries that can be made to the API */
+export type QuerySpansArgs = {
+  trace_id: Scalars['ID']['input'];
 };
 
 
@@ -177,6 +193,20 @@ export type RevokeApiKeyResponse = MutationResponse & {
   code: Scalars['Int']['output'];
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
+};
+
+/** Span is a record of a single unit of work within a trace */
+export type Span = {
+  __typename?: 'Span';
+  duration: Scalars['Int']['output'];
+  end_time: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  kind: Scalars['String']['output'];
+  metadata?: Maybe<Array<KeyValue>>;
+  name: Scalars['String']['output'];
+  parent_id: Scalars['ID']['output'];
+  start_time: Scalars['String']['output'];
+  trace_id: Scalars['ID']['output'];
 };
 
 /** Trace is a record to track the execution of a session */
@@ -229,6 +259,14 @@ export type GetAllTracesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 export type GetAllTracesQuery = { __typename?: 'Query', all_traces?: Array<{ __typename?: 'Trace', id: string, name?: string | null, start_time: string, session_id: string, end_time: { __typename?: 'NullTime', Time: string, Valid: boolean } }> | null };
 
+export type GetSpansQueryVariables = Types.Exact<{
+  traceId: Types.Scalars['ID']['input'];
+}>;
+
+
+export type GetSpansQuery = { __typename?: 'Query', spans?: Array<{ __typename?: 'Span', id: string, parent_id: string, trace_id: string, name: string, start_time: string, end_time: string, duration: number, kind: string, metadata?: Array<{ __typename?: 'KeyValue', key: string, value: string }> | null }> | null };
+
 
 export const GetTracesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getTraces"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"traces"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"session_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"start_time"}},{"kind":"Field","name":{"kind":"Name","value":"end_time"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Time"}},{"kind":"Field","name":{"kind":"Name","value":"Valid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"session_id"}}]}}]}}]} as unknown as DocumentNode<GetTracesQuery, GetTracesQueryVariables>;
 export const GetAllTracesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllTraces"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"all_traces"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"start_time"}},{"kind":"Field","name":{"kind":"Name","value":"end_time"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Time"}},{"kind":"Field","name":{"kind":"Name","value":"Valid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"session_id"}}]}}]}}]} as unknown as DocumentNode<GetAllTracesQuery, GetAllTracesQueryVariables>;
+export const GetSpansDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getSpans"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"traceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"spans"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"trace_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"traceId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"parent_id"}},{"kind":"Field","name":{"kind":"Name","value":"trace_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"start_time"}},{"kind":"Field","name":{"kind":"Name","value":"end_time"}},{"kind":"Field","name":{"kind":"Name","value":"duration"}},{"kind":"Field","name":{"kind":"Name","value":"kind"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<GetSpansQuery, GetSpansQueryVariables>;

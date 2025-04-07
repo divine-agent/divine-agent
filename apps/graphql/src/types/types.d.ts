@@ -64,6 +64,13 @@ export type DeleteUserResponse = MutationResponse & {
   success: Scalars['Boolean']['output'];
 };
 
+/** KeyValue is a key-value pair */
+export type KeyValue = {
+  __typename?: 'KeyValue';
+  key: Scalars['String']['output'];
+  value: Scalars['String']['output'];
+};
+
 /** Mutation is a collection of mutations that can be made to the API */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -141,6 +148,7 @@ export type MutationResponse = {
   success: Scalars['Boolean']['output'];
 };
 
+/** NullTime is a custom scalar type that represents a time value that can be null */
 export type NullTime = {
   __typename?: 'NullTime';
   Time: Scalars['String']['output'];
@@ -156,10 +164,18 @@ export type Query = {
   api_keys?: Maybe<Array<ApiKey>>;
   /** Fetch current user */
   me: User;
+  /** Fetch all spans by trace id */
+  spans?: Maybe<Array<Span>>;
   /** Fetch traces by session id */
   traces?: Maybe<Array<Trace>>;
   /** Fetch a specific user by id */
   user: User;
+};
+
+
+/** Query is a collection of queries that can be made to the API */
+export type QuerySpansArgs = {
+  trace_id: Scalars['ID']['input'];
 };
 
 
@@ -180,6 +196,20 @@ export type RevokeApiKeyResponse = MutationResponse & {
   code: Scalars['Int']['output'];
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
+};
+
+/** Span is a record of a single unit of work within a trace */
+export type Span = {
+  __typename?: 'Span';
+  duration: Scalars['Int']['output'];
+  end_time: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  kind: Scalars['String']['output'];
+  metadata?: Maybe<Array<KeyValue>>;
+  name: Scalars['String']['output'];
+  parent_id: Scalars['ID']['output'];
+  start_time: Scalars['String']['output'];
+  trace_id: Scalars['ID']['output'];
 };
 
 /** Trace is a record to track the execution of a session */
@@ -303,11 +333,13 @@ export type ResolversTypes = {
   DeleteUserResponse: ResolverTypeWrapper<DeleteUserResponse>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  KeyValue: ResolverTypeWrapper<KeyValue>;
   Mutation: ResolverTypeWrapper<{}>;
   MutationResponse: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['MutationResponse']>;
   NullTime: ResolverTypeWrapper<NullTime>;
   Query: ResolverTypeWrapper<{}>;
   RevokeAPIKeyResponse: ResolverTypeWrapper<RevokeApiKeyResponse>;
+  Span: ResolverTypeWrapper<Span>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Trace: ResolverTypeWrapper<Trace>;
   UpdateAPIKeyResponse: ResolverTypeWrapper<Omit<UpdateApiKeyResponse, 'data'> & { data?: Maybe<ResolversTypes['APIKey']> }>;
@@ -325,11 +357,13 @@ export type ResolversParentTypes = {
   DeleteUserResponse: DeleteUserResponse;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
+  KeyValue: KeyValue;
   Mutation: {};
   MutationResponse: ResolversInterfaceTypes<ResolversParentTypes>['MutationResponse'];
   NullTime: NullTime;
   Query: {};
   RevokeAPIKeyResponse: RevokeApiKeyResponse;
+  Span: Span;
   String: Scalars['String']['output'];
   Trace: Trace;
   UpdateAPIKeyResponse: Omit<UpdateApiKeyResponse, 'data'> & { data?: Maybe<ResolversParentTypes['APIKey']> };
@@ -376,6 +410,12 @@ export type DeleteUserResponseResolvers<ContextType = DataSourceContext, ParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type KeyValueResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['KeyValue'] = ResolversParentTypes['KeyValue']> = {
+  key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createAPIKey?: Resolver<ResolversTypes['CreateAPIKeyResponse'], ParentType, ContextType, Partial<MutationCreateApiKeyArgs>>;
   createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email' | 'password' | 'username'>>;
@@ -404,6 +444,7 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
   all_traces?: Resolver<Maybe<Array<ResolversTypes['Trace']>>, ParentType, ContextType>;
   api_keys?: Resolver<Maybe<Array<ResolversTypes['APIKey']>>, ParentType, ContextType>;
   me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  spans?: Resolver<Maybe<Array<ResolversTypes['Span']>>, ParentType, ContextType, RequireFields<QuerySpansArgs, 'trace_id'>>;
   traces?: Resolver<Maybe<Array<ResolversTypes['Trace']>>, ParentType, ContextType, RequireFields<QueryTracesArgs, 'session_id'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
 };
@@ -412,6 +453,19 @@ export type RevokeApiKeyResponseResolvers<ContextType = DataSourceContext, Paren
   code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SpanResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Span'] = ResolversParentTypes['Span']> = {
+  duration?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  end_time?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  kind?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  metadata?: Resolver<Maybe<Array<ResolversTypes['KeyValue']>>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  parent_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  start_time?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  trace_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -455,11 +509,13 @@ export type Resolvers<ContextType = DataSourceContext> = {
   CreateTokenResponse?: CreateTokenResponseResolvers<ContextType>;
   CreateUserResponse?: CreateUserResponseResolvers<ContextType>;
   DeleteUserResponse?: DeleteUserResponseResolvers<ContextType>;
+  KeyValue?: KeyValueResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   MutationResponse?: MutationResponseResolvers<ContextType>;
   NullTime?: NullTimeResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RevokeAPIKeyResponse?: RevokeApiKeyResponseResolvers<ContextType>;
+  Span?: SpanResolvers<ContextType>;
   Trace?: TraceResolvers<ContextType>;
   UpdateAPIKeyResponse?: UpdateApiKeyResponseResolvers<ContextType>;
   UpdateUserResponse?: UpdateUserResponseResolvers<ContextType>;

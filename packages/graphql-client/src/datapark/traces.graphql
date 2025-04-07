@@ -23,3 +23,20 @@ query getAllTraces {
     session_id
   }
 }
+
+query getSpans($traceId: ID!) {
+  spans(trace_id: $traceId) {
+    id
+    parent_id
+    trace_id
+    name
+    start_time
+    end_time
+    duration
+    kind
+    metadata {
+      key
+      value
+    }
+  }
+}

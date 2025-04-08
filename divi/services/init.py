@@ -7,7 +7,7 @@ from divi.services.datapark import init as init_datapark
 def init():
     if not divi._auth:
         divi._auth = init_auth(
-            api_key="divi-a8773279-f5e8-4126-8626-0e00d4cf4990"
+            api_key="divi-3ff01c47-05ef-4fe9-ad7b-75cf76685b1e"
         )
     if not divi._core:
         divi._core = init_core(port=3002)

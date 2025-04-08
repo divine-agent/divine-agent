@@ -1,5 +1,5 @@
 import { TraceWaterfallChart } from '@/components/trace-chart';
-import { getSpans } from '@/lib/server/span';
+import { getTraceChartData } from '@/lib/server/span';
 
 interface TracePageProps {
   params: Promise<{ id: string }>;
@@ -7,11 +7,12 @@ interface TracePageProps {
 
 export default async function TracePage(props: TracePageProps) {
   const { id } = await props.params;
-  const data = (await getSpans(id)) || [];
+  const data = await getTraceChartData(id);
+
   return (
     <div>
       {id}
-      <TraceWaterfallChart />
+      <TraceWaterfallChart data={data} />
       {JSON.stringify(data)}
     </div>
   );

@@ -1,5 +1,6 @@
 'use client';
 
+import type { Span } from '@workspace/graphql-client/src/types.generated';
 import {
   Card,
   CardContent,
@@ -17,27 +18,26 @@ import {
 import { TrendingUp } from 'lucide-react';
 import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 
-const chartData = [
-  { month: 'January', desktop: 0, mobile: 1000 },
-  { month: 'February', desktop: 0, mobile: 200 },
-  { month: 'March', desktop: 200, mobile: 600 },
-  { month: 'April', desktop: 0, mobile: 800 },
-  { month: 'May', desktop: 0, mobile: 300 },
-  { month: 'June', desktop: 300, mobile: 700 },
-];
-
 const chartConfig = {
-  desktop: {
-    label: 'Desktop',
+  transparent: {
+    label: 'Transparent',
     color: 'transparent',
   },
-  mobile: {
-    label: 'Mobile',
+  function: {
+    label: 'SPAN_KIND_FUNCTION',
+    color: 'var(--chart-1)',
+  },
+  llm: {
+    label: 'SPAN_KIND_LLM',
     color: 'var(--chart-2)',
   },
 } satisfies ChartConfig;
 
-export function TraceWaterfallChart() {
+interface ExtendedSpan extends Span {
+  relative_start_time: number;
+}
+
+export function TraceWaterfallChart({ data }: { data: ExtendedSpan[] }) {
   return (
     <Card>
       <CardHeader>
@@ -46,34 +46,25 @@ export function TraceWaterfallChart() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart
-            accessibilityLayer
-            data={chartData}
-            layout="vertical"
-            margin={{
-              left: -20,
-            }}
-          >
+          <BarChart accessibilityLayer data={data} layout="vertical">
             <XAxis hide type="number" />
             <YAxis
-              dataKey="month"
+              dataKey="name"
               type="category"
               tickLine={false}
-              tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
-            <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+            <ChartTooltip content={<ChartTooltipContent />} />
             <Bar
-              dataKey="desktop"
+              dataKey="relative_start_time"
               stackId="a"
-              fill="var(--color-desktop)"
+              fill="var(--color-transparent)"
               radius={4}
             />
             <Bar
-              dataKey="mobile"
+              dataKey="duration"
               stackId="a"
-              fill="var(--color-mobile)"
+              fill="var(--color-function)"
               radius={4}
             />
           </BarChart>
@@ -81,10 +72,11 @@ export function TraceWaterfallChart() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          The trace started at {data[0]?.start_time}
+          <TrendingUp className="h-4 w-4" />
         </div>
         <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
+          Showing total spans for the trace: {data[0]?.trace_id}
         </div>
       </CardFooter>
     </Card>

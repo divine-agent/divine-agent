@@ -5,8 +5,8 @@ description = "The Agent Platform for Observability & Evaluation"
 readme = "docs/package_readme.md"
 requires-python = ">=3.11"
 dependencies = [
-    "grpcio>=1.69.0",
-    "protobuf>=5.29.3",
+    "grpcio>=1.71.0",
+    "protobuf>=5.26.1,<6.0.dev0",
     "pyjwt>=2.10.1",
     "requests>=2.32.3",
 ]
@@ -18,7 +18,7 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "cryptography>=44.0.0",
-    "grpcio-tools>=1.69.0",
+    "grpcio-tools>=1.71.0",
     "hatchling>=1.27.0",
     "openai>=1.65.2",
     "pytest>=8.3.4",

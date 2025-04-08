@@ -5,7 +5,7 @@ import warnings
 
 from divi.proto.core.health.v1 import health_service_pb2 as divi_dot_proto_dot_core_dot_health_dot_v1_dot_health__service__pb2
 
-GRPC_GENERATED_VERSION = '1.69.0'
+GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 

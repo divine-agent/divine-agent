@@ -38,6 +38,9 @@ export function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
     ),
     null
   );
+  if (isMobile === undefined) {
+    return null;
+  }
 
   return (
     <Drawer direction={isMobile ? 'bottom' : 'right'}>

@@ -1,11 +1,11 @@
 import { Separator } from '@workspace/ui/components/separator';
 import type React from 'react';
 
-interface APIKeysLayoutProps {
+interface TracesLayoutProps {
   children: React.ReactNode;
 }
 
-export default function APIKeysLayout({ children }: APIKeysLayoutProps) {
+export default function TracesLayout({ children }: TracesLayoutProps) {
   return (
     <div className="space-y-3 py-3">
       <div className="flex items-center justify-between px-6">

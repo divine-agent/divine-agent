@@ -8,7 +8,15 @@ import {
   ChartTooltipContent,
 } from '@workspace/ui/components/chart';
 import { Timer } from 'lucide-react';
-import { Bar, BarChart, Cell, LabelList, XAxis, YAxis } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  Cell,
+  LabelList,
+  Rectangle,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import type {
   NameType,
   ValueType,
@@ -22,7 +30,7 @@ const chartConfig = {
     color: 'var(--chart-2)',
   },
   SPAN_KIND_LLM: {
-    color: 'var(--chart-3)',
+    color: 'var(--chart-1)',
   },
   label: {
     color: 'hsl(var(--background))',
@@ -59,19 +67,9 @@ export function TraceWaterfallChart({ data }: { data: ExtendedSpan[] }) {
   return (
     <ChartContainer config={chartConfig}>
       <BarChart accessibilityLayer data={data} layout="vertical">
-        <XAxis hide type="number" />
-        <YAxis
-          dataKey="name"
-          type="category"
-          tickLine={false}
-          axisLine={false}
-          tickMargin={10}
-          hide
-        />
-        <ChartTooltip
-          content={<ChartTooltipContent indicator="dot" />}
-          formatter={formatter}
-        />
+        <XAxis hide type="number" domain={['dataMin', 'dataMax']} />
+        <YAxis dataKey="name" type="category" hide />
+        <ChartTooltip content={<ChartTooltipContent />} formatter={formatter} />
         <Bar
           dataKey="relative_start_time"
           stackId="a"
@@ -81,8 +79,20 @@ export function TraceWaterfallChart({ data }: { data: ExtendedSpan[] }) {
         <Bar
           dataKey="duration"
           stackId="a"
-          fill="var(--color-function)"
           radius={4}
+          strokeWidth={2}
+          activeIndex={4}
+          activeBar={({ ...props }) => {
+            return (
+              <Rectangle
+                {...props}
+                fillOpacity={0.8}
+                stroke={`var(--color-${props.payload.kind})`}
+                strokeDasharray={4}
+                strokeDashoffset={4}
+              />
+            );
+          }}
         >
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={`var(--color-${entry.kind})`} />

@@ -1,5 +1,5 @@
-import { Modal } from '@/components/Modal';
-import { TraceWaterfallChart } from '@/components/trace-chart';
+import { ResponsiveDrawer } from '@/components/Modal';
+import { TraceBoard } from '@/components/trace-board';
 import { getTraceChartData } from '@/lib/server/span';
 
 interface TraceModalPageProps {
@@ -8,12 +8,11 @@ interface TraceModalPageProps {
 
 export default async function TraceModalPage(props: TraceModalPageProps) {
   const { id } = await props.params;
-  const data = await getTraceChartData(id);
+  const spans = await getTraceChartData(id);
 
   return (
-    <Modal title="Trace" description="trace">
-      {id}
-      <TraceWaterfallChart data={data} />
-    </Modal>
+    <ResponsiveDrawer title="Trace" description="trace">
+      <TraceBoard spans={spans} direction="vertical" />
+    </ResponsiveDrawer>
   );
 }

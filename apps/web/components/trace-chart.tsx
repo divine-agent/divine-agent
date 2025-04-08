@@ -1,6 +1,6 @@
 'use client';
 
-import type { Span } from '@workspace/graphql-client/src/types.generated';
+import type { ExtendedSpan } from '@/lib/types/span';
 import {
   type ChartConfig,
   ChartContainer,
@@ -27,21 +27,24 @@ const chartConfig = {
     color: 'transparent',
   },
   SPAN_KIND_FUNCTION: {
-    color: 'var(--chart-2)',
-  },
-  SPAN_KIND_LLM: {
     color: 'var(--chart-1)',
   },
-  label: {
-    color: 'hsl(var(--background))',
+  SPAN_KIND_LLM: {
+    color: 'var(--chart-2)',
   },
 } satisfies ChartConfig;
 
-interface ExtendedSpan extends Span {
-  relative_start_time: number;
+interface TraceWaterfallChartProps {
+  data: ExtendedSpan[];
+  activeIndex?: number;
+  selectAction: (data: ExtendedSpan, index: number) => void;
 }
 
-export function TraceWaterfallChart({ data }: { data: ExtendedSpan[] }) {
+export function TraceWaterfallChart({
+  data,
+  activeIndex,
+  selectAction,
+}: TraceWaterfallChartProps) {
   /**
    * formatter function for the tooltip
    * @description only show duration
@@ -81,7 +84,8 @@ export function TraceWaterfallChart({ data }: { data: ExtendedSpan[] }) {
           stackId="a"
           radius={4}
           strokeWidth={2}
-          activeIndex={4}
+          onClick={selectAction}
+          activeIndex={activeIndex}
           activeBar={({ ...props }) => {
             return (
               <Rectangle

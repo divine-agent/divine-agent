@@ -21,7 +21,7 @@ import { useRouter } from 'next/navigation';
 import type * as React from 'react';
 import { useState } from 'react';
 
-export function Modal({
+export function ResponsiveModal({
   children,
   title,
   description,
@@ -57,6 +57,42 @@ export function Modal({
 
   return (
     <Drawer defaultOpen={false} open={open} onOpenChange={handleOpenChange}>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>{title}</DrawerTitle>
+          <DrawerDescription>{description}</DrawerDescription>
+        </DrawerHeader>
+        {children}
+      </DrawerContent>
+    </Drawer>
+  );
+}
+
+export function ResponsiveDrawer({
+  children,
+  title,
+  description,
+}: {
+  children: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  const router = useRouter();
+  const [open, setOpen] = useState(true);
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      setOpen(false);
+      setTimeout(router.back, 200);
+    }
+  };
+
+  return (
+    <Drawer
+      defaultOpen={false}
+      open={open}
+      onOpenChange={handleOpenChange}
+      direction="right"
+    >
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>{title}</DrawerTitle>

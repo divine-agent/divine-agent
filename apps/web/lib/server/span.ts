@@ -1,5 +1,6 @@
 import 'server-only';
 import { query } from '@/hooks/apolloClient';
+import type { ExtendedSpan } from '@/lib/types/span';
 import { GetSpansDocument } from '@workspace/graphql-client/src/datapark/traces.generated';
 import type { Span } from '@workspace/graphql-client/src/types.generated';
 import { cache } from 'react';
@@ -26,19 +27,21 @@ export const getSpans = cache(async (traceId: string) => {
  * getTraceChartData action with getSpans
  * @description get spans for a trace and sort them
  */
-export const getTraceChartData = cache(async (traceId: string) => {
-  let spans = await getSpans(traceId);
-  if (!spans) {
-    return [];
+export const getTraceChartData = cache(
+  async (traceId: string): Promise<ExtendedSpan[]> => {
+    let spans = await getSpans(traceId);
+    if (!spans) {
+      return [];
+    }
+    spans = sortSpans(spans);
+    // calculate relative start_time with milliseconds
+    const startTime = new Date(spans[0]?.start_time).getTime();
+    return spans.map((span) => ({
+      ...span,
+      relative_start_time: new Date(span.start_time).getTime() - startTime,
+    }));
   }
-  spans = sortSpans(spans);
-  // calculate relative start_time with milliseconds
-  const startTime = new Date(spans[0]?.start_time).getTime();
-  return spans.map((span) => ({
-    ...span,
-    relative_start_time: new Date(span.start_time).getTime() - startTime,
-  }));
-});
+);
 
 /**
  * Sort spans in a tree structure

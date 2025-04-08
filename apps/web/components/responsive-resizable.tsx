@@ -11,20 +11,22 @@ import type { ReactNode } from 'react';
 interface ResponsiveResizableProps {
   first: ReactNode;
   second: ReactNode;
+  direction?: 'horizontal' | 'vertical';
 }
 
 export function ResponsiveResizable({
   first,
   second,
+  direction,
 }: ResponsiveResizableProps) {
   const isMobile = useIsMobile();
   if (isMobile === undefined) {
     return null;
   }
-  const direction = isMobile ? 'vertical' : 'horizontal';
+  const _direction = direction ?? (isMobile ? 'vertical' : 'horizontal');
 
   return (
-    <ResizablePanelGroup direction={direction}>
+    <ResizablePanelGroup direction={_direction}>
       <ResizablePanel defaultSize={50}>{first}</ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={50}>{second}</ResizablePanel>

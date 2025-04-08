@@ -1,13 +1,32 @@
-import { getTraceChartData } from '@/lib/server/span';
+'use client';
+
+import type { ExtendedSpan } from '@/lib/types/span';
+import { useState } from 'react';
 import { ResponsiveResizable } from './responsive-resizable';
 import { TraceWaterfallChart } from './trace-chart';
 
-export async function TraceBoard({ id }: { id: string }) {
-  const data = await getTraceChartData(id);
+interface TraceBoardProps {
+  spans: ExtendedSpan[];
+  direction?: 'horizontal' | 'vertical';
+}
+
+export function TraceBoard({ spans, direction }: TraceBoardProps) {
+  const [index, setIndex] = useState<number | undefined>(undefined);
+  const selectAction = (_data: ExtendedSpan, index: number) => {
+    setIndex(index);
+  };
+
   return (
     <ResponsiveResizable
-      first={<TraceWaterfallChart data={data} />}
-      second={<span className="font-semibold">Content</span>}
+      first={
+        <TraceWaterfallChart
+          activeIndex={index}
+          data={spans}
+          selectAction={selectAction}
+        />
+      }
+      second={<span className="font-semibold">{spans[index ?? 0].name}</span>}
+      direction={direction}
     />
   );
 }

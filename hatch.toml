@@ -1,9 +1,10 @@
 [version]
 path = "divi/__init__.py"
 
-[build.targets.wheel]
-exclude = ["divi/proto/core/v1/go"]
-artifacts = ["divi/bin"]
+# TODO: uncomment this when core is ready
+# [build.targets.wheel]
+# exclude = ["divi/proto/core/v1/go"]
+# artifacts = ["divi/bin"]
 
-[build.targets.wheel.hooks.custom]
-path = "scripts/hatch_build.py"
+# [build.targets.wheel.hooks.custom]
+# path = "scripts/hatch_build.py"

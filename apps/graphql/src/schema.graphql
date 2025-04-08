@@ -60,7 +60,7 @@ type Span {
   name: String!
   start_time: String!
   end_time: String!
-  duration: Int!
+  duration: Float!
   kind: String!
   metadata: [KeyValue!]
 }

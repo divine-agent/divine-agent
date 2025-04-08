@@ -35,13 +35,13 @@ func GetAllTraces(c *fiber.Ctx) error {
 	}
 
 	var sessions []model.Session
-	if err := db.Where(&model.Session{UserID: userID}).Find(&sessions).Error; err != nil {
+	if err := db.Where(&model.Session{UserID: userID}).Order("created_at DESC").Find(&sessions).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to get sessions", "data": nil})
 	}
 	var traces []model.Trace
 	for _, session := range sessions {
 		var sessionTraces []model.Trace
-		if err := db.Where(&model.Trace{SessionID: session.ID}).Find(&sessionTraces).Error; err != nil {
+		if err := db.Where(&model.Trace{SessionID: session.ID}).Order("start_time DESC").Find(&sessionTraces).Error; err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to get traces", "data": nil})
 		}
 		traces = append(traces, sessionTraces...)
@@ -68,7 +68,7 @@ func GetTraces(c *fiber.Ctx) error {
 	}
 
 	var traces []model.Trace
-	if err := db.Where(&model.Trace{SessionID: sessionID}).Find(&traces).Error; err != nil {
+	if err := db.Where(&model.Trace{SessionID: sessionID}).Order("start_time DESC").Find(&traces).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to get traces", "data": nil})
 	}
 
@@ -148,16 +148,20 @@ func GetSpans(c *fiber.Ctx) error {
 			span     model.Span
 			ID       []byte
 			parentID []byte
+			duration float64
 		)
-		if err := rows.Scan(&ID, &span.TraceID, &parentID, &span.Name, &span.Kind, &span.StartTime, &span.EndTime, &span.Duration, &span.Metadata); err != nil {
+		if err := rows.Scan(&ID, &span.TraceID, &parentID, &span.Name, &span.Kind, &span.StartTime, &span.EndTime, &duration, &span.Metadata); err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to scan spans", "data": nil})
 		}
 
+		// convert ID to hex string
 		span.ID = hex.EncodeToString(ID)
 		// if parentID is not nil, convert to hex string
 		if !bytes.Equal(parentID, make([]byte, len(parentID))) {
 			span.ParentID = hex.EncodeToString(parentID)
 		}
+		// convert duration to milliseconds
+		span.Duration = duration / 1e6
 		spans = append(spans, span)
 	}
 

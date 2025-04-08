@@ -66,7 +66,7 @@ func GetAPIKeys(c *fiber.Ctx) error {
 	}
 
 	// omit digest (hashed api key)
-	if err := db.Where(&model.APIKey{UserID: userID}).Omit("Digest").Order("created_at desc").Find(&apiKeys).Error; err != nil {
+	if err := db.Where(&model.APIKey{UserID: userID}).Omit("Digest").Order("created_at DESC").Find(&apiKeys).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to get api keys", "data": nil})
 	}
 

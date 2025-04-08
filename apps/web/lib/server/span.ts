@@ -37,7 +37,6 @@ export const getTraceChartData = cache(async (traceId: string) => {
   return spans.map((span) => ({
     ...span,
     relative_start_time: new Date(span.start_time).getTime() - startTime,
-    duration: span.duration / 1e6, // convert to milliseconds
   }));
 });
 

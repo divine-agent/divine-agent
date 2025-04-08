@@ -201,7 +201,7 @@ export type RevokeApiKeyResponse = MutationResponse & {
 /** Span is a record of a single unit of work within a trace */
 export type Span = {
   __typename?: 'Span';
-  duration: Scalars['Int']['output'];
+  duration: Scalars['Float']['output'];
   end_time: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   kind: Scalars['String']['output'];
@@ -331,6 +331,7 @@ export type ResolversTypes = {
   CreateTokenResponse: ResolverTypeWrapper<CreateTokenResponse>;
   CreateUserResponse: ResolverTypeWrapper<Omit<CreateUserResponse, 'data'> & { data?: Maybe<ResolversTypes['User']> }>;
   DeleteUserResponse: ResolverTypeWrapper<DeleteUserResponse>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   KeyValue: ResolverTypeWrapper<KeyValue>;
@@ -355,6 +356,7 @@ export type ResolversParentTypes = {
   CreateTokenResponse: CreateTokenResponse;
   CreateUserResponse: Omit<CreateUserResponse, 'data'> & { data?: Maybe<ResolversParentTypes['User']> };
   DeleteUserResponse: DeleteUserResponse;
+  Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   KeyValue: KeyValue;
@@ -457,7 +459,7 @@ export type RevokeApiKeyResponseResolvers<ContextType = DataSourceContext, Paren
 };
 
 export type SpanResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Span'] = ResolversParentTypes['Span']> = {
-  duration?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  duration?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   end_time?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   kind?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

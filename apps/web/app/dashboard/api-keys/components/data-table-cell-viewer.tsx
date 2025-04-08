@@ -87,7 +87,7 @@ export function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
               <Input id="api-key" defaultValue={item.api_key} disabled />
             </div>
             <div className="flex flex-col gap-3">
-              <Label htmlFor="created">Limit</Label>
+              <Label htmlFor="created">Created At</Label>
               <Input id="created" defaultValue={item.created_at} disabled />
             </div>
           </div>

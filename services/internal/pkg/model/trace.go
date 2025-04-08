@@ -39,7 +39,7 @@ type Span struct {
 	StartTime time.Time `json:"start_time"`
 	// EndTime is the end time of the span in Unix Nano
 	EndTime time.Time `json:"end_time"`
-	// Duration is the duration of the span in nanoseconds
+	// Duration is the duration of the span in milliseconds
 	Duration float64 `json:"duration"`
 	// Kind is the kind of the span
 	Kind string `json:"kind"`

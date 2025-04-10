@@ -43,7 +43,7 @@ const data = {
     },
     {
       title: 'Usage',
-      url: '/dashboard/usage',
+      url: '/dashboard/usages',
       icon: IconCurrencyDollar,
     },
     {

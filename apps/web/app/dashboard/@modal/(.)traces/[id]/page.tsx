@@ -1,8 +1,6 @@
 import { ResponsiveDrawer } from '@/components/Modal';
 import { TraceBoard } from '@/components/trace-board';
 import { getTraceChartData } from '@/lib/server/span';
-import { Button } from '@workspace/ui/components/button';
-import { Expand } from 'lucide-react';
 
 interface TraceModalPageProps {
   params: Promise<{ id: string }>;
@@ -13,12 +11,10 @@ export default async function TraceModalPage(props: TraceModalPageProps) {
   const spans = await getTraceChartData(id);
 
   return (
-    <ResponsiveDrawer title="Trace" description="trace">
-      <Button variant="ghost" asChild>
-        <a href={`/dashboard/traces/${id}`}>
-          <Expand />
-        </a>
-      </Button>
+    <ResponsiveDrawer
+      title="Trace"
+      description="Click expand button to view full trace"
+    >
       <TraceBoard spans={spans} direction="vertical" />
     </ResponsiveDrawer>
   );

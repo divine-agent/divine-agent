@@ -1,4 +1,5 @@
 'use client';
+import { Button } from '@workspace/ui/components/button';
 import {
   Dialog,
   DialogContent,
@@ -17,7 +18,8 @@ import {
   DrawerTitle,
 } from '@workspace/ui/components/drawer';
 import { useMediaQuery } from '@workspace/ui/hooks/use-media-query';
-import { useRouter } from 'next/navigation';
+import { Expand } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
 import type * as React from 'react';
 import { useState } from 'react';
 
@@ -78,6 +80,7 @@ export function ResponsiveDrawer({
   description: string;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [open, setOpen] = useState(true);
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -95,8 +98,17 @@ export function ResponsiveDrawer({
     >
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>{title}</DrawerTitle>
-          <DrawerDescription>{description}</DrawerDescription>
+          <DrawerTitle className="flex items-center justify-between">
+            <Button variant="ghost" size="icon" asChild>
+              <a href={pathname}>
+                <Expand />
+              </a>
+            </Button>
+            {title}
+          </DrawerTitle>
+          <DrawerDescription className="text-end">
+            {description}
+          </DrawerDescription>
         </DrawerHeader>
         {children}
       </DrawerContent>

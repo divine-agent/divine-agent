@@ -1,10 +1,17 @@
 from datetime import datetime
 from unittest.mock import MagicMock, patch
 
+import pytest
+from dotenv import load_dotenv
 from openai.types.chat import ChatCompletionMessage
 from openai.types.chat.chat_completion import ChatCompletion, Choice
 
 from divi.decorators import obs_openai, observable
+
+
+@pytest.fixture(autouse=True, scope="session")
+def load_test_env():
+    load_dotenv()
 
 
 @patch("openai.OpenAI")

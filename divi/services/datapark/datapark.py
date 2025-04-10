@@ -1,6 +1,7 @@
-import requests
+from typing import Any, Dict
+
 from google.protobuf.json_format import MessageToDict
-from openai.types.chat.chat_completion import ChatCompletion
+from openai.types.chat import ChatCompletion
 from pydantic import UUID4
 
 import divi
@@ -18,46 +19,36 @@ class DataPark(Service):
         self.token = divi._auth.token
 
     @property
-    def headers(self):
+    def headers(self) -> Dict[str, str]:
         return {"Authorization": f"Bearer {self.token}"}
 
-    def create_session(self, session: SessionSignal):
-        r = requests.post(
-            f"http://{self.target}/api/session/",
-            headers=self.headers,
-            json=session,
-        )
-        if r.status_code != 201:
-            raise ValueError(r.json()["message"])
+    def create_session(self, session: SessionSignal) -> None:
+        self.post("/api/session/", payload=session)
 
-    def upsert_traces(self, session_id: UUID4, traces: list[TraceSignal]):
-        r = requests.post(
-            f"http://{self.target}/api/session/{session_id}/traces",
-            headers=self.headers,
-            json=traces,
-        )
-        if r.status_code != 201:
-            raise ValueError(r.json()["message"])
+    def upsert_traces(
+        self, session_id: UUID4, traces: list[TraceSignal]
+    ) -> None:
+        self.post(f"/api/session/{session_id}/traces", payload=traces)
 
-    def create_spans(self, trace_id: UUID4, spans: ScopeSpans):
-        r = requests.post(
-            f"http://{self.target}/api/trace/{trace_id}/spans",
-            headers=self.headers,
-            json=MessageToDict(spans),
-        )
-        if r.status_code != 201:
-            raise ValueError(r.json()["message"])
+    def create_spans(self, trace_id: UUID4, spans: ScopeSpans) -> None:
+        self.post(f"/api/trace/{trace_id}/spans", payload=MessageToDict(spans))
 
     def create_chat_completion(
-        self, span_id: bytes, completion: ChatCompletion
-    ):
-        r = requests.post(
-            f"http://{self.target}/api/v1/chat/completions",
-            headers=self.headers,
-            json={
-                "span_id": span_id.hex(),
-                "data": completion.model_dump(),
-            },
+        self,
+        span_id: bytes,
+        inputs: Dict[str, Any],
+        completion: ChatCompletion,
+    ) -> None:
+        hex_span_id = span_id.hex()
+        self.post_concurrent(
+            {
+                "/api/v1/chat/completions/input": {
+                    "span_id": hex_span_id,
+                    "data": inputs,
+                },
+                "/api/v1/chat/completions": {
+                    "span_id": hex_span_id,
+                    "data": completion.model_dump(),
+                },
+            }
         )
-        if r.status_code != 201:
-            raise ValueError(r.json()["message"])

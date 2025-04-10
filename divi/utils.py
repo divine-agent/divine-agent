@@ -1,6 +1,34 @@
 import inspect
 import pathlib
-from typing import Callable
+from typing import Any, Callable, Dict
+
+
+def extract_flattened_inputs(
+    func: Callable, *args: Any, **kwargs: Any
+) -> Dict[str, Any]:
+    """
+    Extracts a flat dictionary of parameter names and values from a function call.
+    Handles default values, removes 'self' and 'cls', and flattens **kwargs.
+    """
+    signature = inspect.signature(func)
+    bound_args = signature.bind_partial(*args, **kwargs)
+    bound_args.apply_defaults()
+
+    arguments = dict(bound_args.arguments)
+    arguments.pop("self", None)
+    arguments.pop("cls", None)
+    arguments.pop("args", None)
+
+    for param_name, param in signature.parameters.items():
+        if (
+            param.kind == inspect.Parameter.VAR_KEYWORD
+            and param_name in arguments
+        ):
+            kwarg_dict = arguments.pop(param_name)
+            if isinstance(kwarg_dict, dict):
+                arguments.update(kwarg_dict)
+
+    return arguments
 
 
 def get_server_path() -> str:

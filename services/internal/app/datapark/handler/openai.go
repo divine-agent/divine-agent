@@ -3,9 +3,11 @@ package handler
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/auth"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/database"
+	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/openai/openai-go"
@@ -72,4 +74,65 @@ func GetChatCompletion(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to query chat completion", "data": nil})
 	}
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "message": "Get chat completion", "data": chatCompletion.Data})
+}
+
+func CreateChatCompletionInput(c *fiber.Ctx) error {
+	type ChatCompletionInputReq struct {
+		SpanID string          `json:"span_id"`
+		Data   model.OpenInput `json:"data"`
+	}
+	var chatCompletionInputReq ChatCompletionInputReq
+	if err := c.BodyParser(&chatCompletionInputReq); err != nil {
+		fmt.Println(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Review your request body", "data": nil})
+	}
+
+	// parse user_id
+	token := c.Locals("user").(*jwt.Token)
+	userID, err := auth.ParseUserId(token)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid user ID", "data": nil})
+	}
+
+	// store chat completion input in mongodb
+	client := database.MG
+	ctx := context.Background()
+	collection := client.Database("openai").Collection("chat-completion-inputs")
+	doc := bson.M{
+		"user_id": userID.String(),
+		"span_id": chatCompletionInputReq.SpanID,
+		"data":    chatCompletionInputReq.Data,
+	}
+	_, err = collection.InsertOne(ctx, doc)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to store chat completion input", "data": nil})
+	}
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "message": "Stored chat completion input", "data": nil})
+}
+
+func GetChatCompletionInput(c *fiber.Ctx) error {
+	id := c.Params("id")
+	// parse user_id
+	token := c.Locals("user").(*jwt.Token)
+	userID, err := auth.ParseUserId(token)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid user ID", "data": nil})
+	}
+	// get chat completion input from mongodb
+	client := database.MG
+	ctx := context.Background()
+	collection := client.Database("openai").Collection("chat-completion-inputs")
+
+	type ChatCompletionInputDoc struct {
+		Data model.OpenInput `bson:"data"`
+	}
+	chatCompletionInput := &ChatCompletionInputDoc{}
+	// query chat completion input
+	err = collection.FindOne(ctx, bson.M{"span_id": id, "user_id": userID.String()}).Decode(chatCompletionInput)
+	if errors.Is(err, mongo.ErrNoDocuments) {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "Chat completion input not found", "data": nil})
+	} else if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to query chat completion input", "data": nil})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "message": "Get chat completion input", "data": chatCompletionInput.Data})
 }

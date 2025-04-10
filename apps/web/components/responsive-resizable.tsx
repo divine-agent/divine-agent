@@ -27,7 +27,9 @@ export function ResponsiveResizable({
 
   return (
     <ResizablePanelGroup direction={_direction}>
-      <ResizablePanel defaultSize={50}>{first}</ResizablePanel>
+      <ResizablePanel defaultSize={50} minSize={25}>
+        {first}
+      </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={50}>{second}</ResizablePanel>
     </ResizablePanelGroup>

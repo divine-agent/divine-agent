@@ -23,6 +23,7 @@ from divi.proto.trace.v1.trace_pb2 import ScopeSpans
 from divi.session import SessionExtra
 from divi.session.setup import setup
 from divi.signals.trace import Span
+from divi.utils import extract_flattened_inputs
 
 R = TypeVar("R", covariant=True)
 P = ParamSpec("P")
@@ -84,7 +85,8 @@ def observable(
             # recover parent context
             _SESSION_EXTRA.reset(token)
 
-            # TODO: collect result
+            # TODO: collect inputs and outputs
+            inputs = extract_flattened_inputs(func, *args, **kwargs)
             # create the span if it is the root span
             if divi._datapark and span.trace_id:
                 divi._datapark.create_spans(
@@ -98,9 +100,10 @@ def observable(
                     divi._datapark.upsert_traces(
                         session_id=trace.session_id, traces=[trace.signal]
                     )
+            # create the chat completion if it is a chat completion
             if divi._datapark and isinstance(result, ChatCompletion):
                 divi._datapark.create_chat_completion(
-                    span_id=span.span_id, completion=result
+                    span_id=span.span_id, inputs=inputs, completion=result
                 )
             return result
 

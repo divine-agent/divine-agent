@@ -1,4 +1,5 @@
 import type { Span } from '@workspace/graphql-client/src/types.generated';
+import type { ChatCompletion } from 'openai/resources/index.mjs';
 
 /**
  * ExtendSpan interface
@@ -6,4 +7,5 @@ import type { Span } from '@workspace/graphql-client/src/types.generated';
  */
 export interface ExtendedSpan extends Span {
   relative_start_time: number;
+  data?: ChatCompletion;
 }

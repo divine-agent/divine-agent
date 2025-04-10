@@ -33,6 +33,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "openai": "^4.93.0",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

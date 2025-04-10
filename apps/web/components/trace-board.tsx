@@ -25,7 +25,11 @@ export function TraceBoard({ spans, direction }: TraceBoardProps) {
           selectAction={selectAction}
         />
       }
-      second={<span className="font-semibold">{spans[index ?? 0].name}</span>}
+      second={
+        <span className="font-semibold">
+          {JSON.stringify(spans[index ?? 0])}
+        </span>
+      }
       direction={direction}
     />
   );

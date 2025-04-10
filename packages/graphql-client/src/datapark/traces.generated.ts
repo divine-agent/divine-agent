@@ -68,6 +68,11 @@ export type KeyValue = {
   value: Scalars['String']['output'];
 };
 
+export enum Kind {
+  SpanKindFunction = 'SPAN_KIND_FUNCTION',
+  SpanKindLlm = 'SPAN_KIND_LLM'
+}
+
 /** Mutation is a collection of mutations that can be made to the API */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -198,10 +203,10 @@ export type RevokeApiKeyResponse = MutationResponse & {
 /** Span is a record of a single unit of work within a trace */
 export type Span = {
   __typename?: 'Span';
-  duration: Scalars['Int']['output'];
+  duration: Scalars['Float']['output'];
   end_time: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  kind: Scalars['String']['output'];
+  kind: Kind;
   metadata?: Maybe<Array<KeyValue>>;
   name: Scalars['String']['output'];
   parent_id: Scalars['ID']['output'];
@@ -264,7 +269,7 @@ export type GetSpansQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetSpansQuery = { __typename?: 'Query', spans?: Array<{ __typename?: 'Span', id: string, parent_id: string, trace_id: string, name: string, start_time: string, end_time: string, duration: number, kind: string, metadata?: Array<{ __typename?: 'KeyValue', key: string, value: string }> | null }> | null };
+export type GetSpansQuery = { __typename?: 'Query', spans?: Array<{ __typename?: 'Span', id: string, parent_id: string, trace_id: string, name: string, start_time: string, end_time: string, duration: number, kind: Types.Kind, metadata?: Array<{ __typename?: 'KeyValue', key: string, value: string }> | null }> | null };
 
 
 export const GetTracesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getTraces"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"traces"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"session_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"start_time"}},{"kind":"Field","name":{"kind":"Name","value":"end_time"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Time"}},{"kind":"Field","name":{"kind":"Name","value":"Valid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"session_id"}}]}}]}}]} as unknown as DocumentNode<GetTracesQuery, GetTracesQueryVariables>;

@@ -71,6 +71,11 @@ export type KeyValue = {
   value: Scalars['String']['output'];
 };
 
+export enum Kind {
+  SpanKindFunction = 'SPAN_KIND_FUNCTION',
+  SpanKindLlm = 'SPAN_KIND_LLM'
+}
+
 /** Mutation is a collection of mutations that can be made to the API */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -204,7 +209,7 @@ export type Span = {
   duration: Scalars['Float']['output'];
   end_time: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  kind: Scalars['String']['output'];
+  kind: Kind;
   metadata?: Maybe<Array<KeyValue>>;
   name: Scalars['String']['output'];
   parent_id: Scalars['ID']['output'];
@@ -335,6 +340,7 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   KeyValue: ResolverTypeWrapper<KeyValue>;
+  Kind: Kind;
   Mutation: ResolverTypeWrapper<{}>;
   MutationResponse: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['MutationResponse']>;
   NullTime: ResolverTypeWrapper<NullTime>;
@@ -462,7 +468,7 @@ export type SpanResolvers<ContextType = DataSourceContext, ParentType extends Re
   duration?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   end_time?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  kind?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  kind?: Resolver<ResolversTypes['Kind'], ParentType, ContextType>;
   metadata?: Resolver<Maybe<Array<ResolversTypes['KeyValue']>>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   parent_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;

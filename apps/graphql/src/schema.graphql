@@ -52,6 +52,11 @@ type Trace {
   session_id: ID!
 }
 
+enum Kind {
+  SPAN_KIND_FUNCTION
+  SPAN_KIND_LLM
+}
+
 "Span is a record of a single unit of work within a trace"
 type Span {
   id: ID!
@@ -61,7 +66,7 @@ type Span {
   start_time: String!
   end_time: String!
   duration: Float!
-  kind: String!
+  kind: Kind!
   metadata: [KeyValue!]
 }
 

@@ -68,6 +68,11 @@ export type KeyValue = {
   value: Scalars['String']['output'];
 };
 
+export enum Kind {
+  SpanKindFunction = 'SPAN_KIND_FUNCTION',
+  SpanKindLlm = 'SPAN_KIND_LLM'
+}
+
 /** Mutation is a collection of mutations that can be made to the API */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -198,10 +203,10 @@ export type RevokeApiKeyResponse = MutationResponse & {
 /** Span is a record of a single unit of work within a trace */
 export type Span = {
   __typename?: 'Span';
-  duration: Scalars['Int']['output'];
+  duration: Scalars['Float']['output'];
   end_time: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  kind: Scalars['String']['output'];
+  kind: Kind;
   metadata?: Maybe<Array<KeyValue>>;
   name: Scalars['String']['output'];
   parent_id: Scalars['ID']['output'];

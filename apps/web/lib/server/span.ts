@@ -2,9 +2,10 @@ import 'server-only';
 import { query } from '@/hooks/apolloClient';
 import type { ExtendedSpan } from '@/lib/types/span';
 import { GetSpansDocument } from '@workspace/graphql-client/src/datapark/traces.generated';
-import type { Span } from '@workspace/graphql-client/src/types.generated';
+import { Kind, type Span } from '@workspace/graphql-client/src/types.generated';
 import { cache } from 'react';
 import { getAuthContext } from './auth';
+import { getChatCompletion } from './openai';
 
 /**
  * getSpans action with graphql query
@@ -29,16 +30,29 @@ export const getSpans = cache(async (traceId: string) => {
  */
 export const getTraceChartData = cache(
   async (traceId: string): Promise<ExtendedSpan[]> => {
+    // get spans for a trace
     let spans = await getSpans(traceId);
     if (!spans) {
       return [];
     }
+    // sort spans in a tree structure
     spans = sortSpans(spans);
+    // get chat completion for LLM span
+    const llmSpanIds = spans
+      .filter((span) => span.kind === Kind.SpanKindLlm)
+      .map((s) => s.id);
+    const data = await Promise.all(
+      llmSpanIds.map((id) => getChatCompletion(id))
+    );
     // calculate relative start_time with milliseconds
     const startTime = new Date(spans[0]?.start_time).getTime();
     return spans.map((span) => ({
       ...span,
       relative_start_time: new Date(span.start_time).getTime() - startTime,
+      data:
+        span.kind === Kind.SpanKindLlm
+          ? data[llmSpanIds.indexOf(span.id)]
+          : undefined,
     }));
   }
 );

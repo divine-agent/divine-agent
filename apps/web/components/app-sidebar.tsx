@@ -38,7 +38,7 @@ const data = {
     },
     {
       title: 'Trace',
-      url: '/dashboard/trace',
+      url: '/dashboard/traces',
       icon: IconBinaryTree,
     },
     {

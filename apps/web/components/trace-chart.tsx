@@ -84,7 +84,6 @@ export function TraceWaterfallChart({
           stackId="a"
           radius={4}
           strokeWidth={2}
-          onClick={selectAction}
           activeIndex={activeIndex}
           activeBar={({ ...props }) => {
             return (
@@ -99,7 +98,11 @@ export function TraceWaterfallChart({
           }}
         >
           {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={`var(--color-${entry.kind})`} />
+            <Cell
+              key={`cell-${index}`}
+              fill={`var(--color-${entry.kind})`}
+              onClick={selectAction.bind(null, entry, index)}
+            />
           ))}
           <LabelList
             dataKey="name"

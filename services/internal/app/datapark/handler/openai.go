@@ -79,7 +79,7 @@ func GetChatCompletion(c *fiber.Ctx) error {
 func CreateChatCompletionInput(c *fiber.Ctx) error {
 	type ChatCompletionInputReq struct {
 		SpanID string          `json:"span_id"`
-		Data   model.OpenInput `json:"data"`
+		Data   model.ChatInput `json:"data"`
 	}
 	var chatCompletionInputReq ChatCompletionInputReq
 	if err := c.BodyParser(&chatCompletionInputReq); err != nil {
@@ -124,7 +124,7 @@ func GetChatCompletionInput(c *fiber.Ctx) error {
 	collection := client.Database("openai").Collection("chat-completion-inputs")
 
 	type ChatCompletionInputDoc struct {
-		Data model.OpenInput `bson:"data"`
+		Data model.ChatInput `bson:"data"`
 	}
 	chatCompletionInput := &ChatCompletionInputDoc{}
 	// query chat completion input

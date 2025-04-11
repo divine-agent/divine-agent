@@ -1,6 +1,6 @@
 package model
 
-type OpenInput struct {
+type ChatInput struct {
 	// Model is the model name
 	Model string `json:"model,required"`
 	// Messages is the list of messages

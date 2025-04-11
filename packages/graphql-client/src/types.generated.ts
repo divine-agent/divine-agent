@@ -23,6 +23,19 @@ export type ApiKey = {
   name?: Maybe<Scalars['String']['output']>;
 };
 
+/** OpenInput is the input for the OpenAI API */
+export type ChatInput = {
+  __typename?: 'ChatInput';
+  logprobs?: Maybe<Scalars['Boolean']['output']>;
+  messages?: Maybe<Array<MessageInput>>;
+  model: Scalars['String']['output'];
+  n?: Maybe<Scalars['Int']['output']>;
+  stream?: Maybe<Scalars['Boolean']['output']>;
+  temperature?: Maybe<Scalars['Float']['output']>;
+  top_logprobs?: Maybe<Scalars['Int']['output']>;
+  top_p?: Maybe<Scalars['Float']['output']>;
+};
+
 /** CreateAPIKeyResponse is a response to the createAPIKey mutation */
 export type CreateApiKeyResponse = MutationResponse & {
   __typename?: 'CreateAPIKeyResponse';
@@ -69,6 +82,14 @@ export enum Kind {
   SpanKindFunction = 'SPAN_KIND_FUNCTION',
   SpanKindLlm = 'SPAN_KIND_LLM'
 }
+
+/** MessageInput is a message sent to the OpenAI API */
+export type MessageInput = {
+  __typename?: 'MessageInput';
+  content: Scalars['String']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  role: Scalars['String']['output'];
+};
 
 /** Mutation is a collection of mutations that can be made to the API */
 export type Mutation = {
@@ -161,6 +182,8 @@ export type Query = {
   all_traces?: Maybe<Array<Trace>>;
   /** Fetch current user's API keys */
   api_keys?: Maybe<Array<ApiKey>>;
+  /** Fetch openai input by span id */
+  chat_input?: Maybe<ChatInput>;
   /** Fetch current user */
   me: User;
   /** Fetch all spans by trace id */
@@ -169,6 +192,12 @@ export type Query = {
   traces?: Maybe<Array<Trace>>;
   /** Fetch a specific user by id */
   user: User;
+};
+
+
+/** Query is a collection of queries that can be made to the API */
+export type QueryChat_InputArgs = {
+  span_id: Scalars['ID']['input'];
 };
 
 

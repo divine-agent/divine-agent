@@ -1,4 +1,5 @@
-from typing import Any, Dict
+from typing import Any, Dict, TYPE_CHECKING
+from typing_extensions import Mapping
 
 from google.protobuf.json_format import MessageToDict
 from openai.types.chat import ChatCompletion
@@ -9,6 +10,7 @@ from divi.proto.trace.v1.trace_pb2 import ScopeSpans
 from divi.services.service import Service
 from divi.session.session import SessionSignal
 from divi.signals.trace.trace import TraceSignal
+from openai import NotGiven
 
 
 class DataPark(Service):
@@ -21,6 +23,17 @@ class DataPark(Service):
     @property
     def headers(self) -> Dict[str, str]:
         return {"Authorization": f"Bearer {self.token}"}
+
+    @staticmethod
+    def strip_not_given(obj: object | None) -> object:
+        """Remove all top-level keys where their values are instances of `NotGiven`"""
+        if obj is None:
+            return None
+
+        if not isinstance(obj, Mapping):
+            return obj
+
+        return {key: value for key, value in obj.items() if not isinstance(value, NotGiven)}
 
     def create_session(self, session: SessionSignal) -> None:
         self.post("/api/session/", payload=session)
@@ -44,7 +57,7 @@ class DataPark(Service):
             {
                 "/api/v1/chat/completions/input": {
                     "span_id": hex_span_id,
-                    "data": inputs,
+                    "data": self.strip_not_given(inputs),
                 },
                 "/api/v1/chat/completions": {
                     "span_id": hex_span_id,

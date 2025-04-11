@@ -1,0 +1,16 @@
+query getChatInput($spanId: ID!) {
+  chat_input(span_id: $spanId) {
+    model
+    messages {
+      role
+      content
+      name
+    }
+    temperature
+    top_p
+    n
+    stream
+    logprobs
+    top_logprobs
+  }
+}

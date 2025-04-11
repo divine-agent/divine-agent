@@ -29,6 +29,19 @@ export type ApiKey = {
   name?: Maybe<Scalars['String']['output']>;
 };
 
+/** OpenInput is the input for the OpenAI API */
+export type ChatInput = {
+  __typename?: 'ChatInput';
+  logprobs?: Maybe<Scalars['Boolean']['output']>;
+  messages?: Maybe<Array<MessageInput>>;
+  model: Scalars['String']['output'];
+  n?: Maybe<Scalars['Int']['output']>;
+  stream?: Maybe<Scalars['Boolean']['output']>;
+  temperature?: Maybe<Scalars['Float']['output']>;
+  top_logprobs?: Maybe<Scalars['Int']['output']>;
+  top_p?: Maybe<Scalars['Float']['output']>;
+};
+
 /** CreateAPIKeyResponse is a response to the createAPIKey mutation */
 export type CreateApiKeyResponse = MutationResponse & {
   __typename?: 'CreateAPIKeyResponse';
@@ -75,6 +88,14 @@ export enum Kind {
   SpanKindFunction = 'SPAN_KIND_FUNCTION',
   SpanKindLlm = 'SPAN_KIND_LLM'
 }
+
+/** MessageInput is a message sent to the OpenAI API */
+export type MessageInput = {
+  __typename?: 'MessageInput';
+  content: Scalars['String']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  role: Scalars['String']['output'];
+};
 
 /** Mutation is a collection of mutations that can be made to the API */
 export type Mutation = {
@@ -167,6 +188,8 @@ export type Query = {
   all_traces?: Maybe<Array<Trace>>;
   /** Fetch current user's API keys */
   api_keys?: Maybe<Array<ApiKey>>;
+  /** Fetch openai input by span id */
+  chat_input?: Maybe<ChatInput>;
   /** Fetch current user */
   me: User;
   /** Fetch all spans by trace id */
@@ -175,6 +198,12 @@ export type Query = {
   traces?: Maybe<Array<Trace>>;
   /** Fetch a specific user by id */
   user: User;
+};
+
+
+/** Query is a collection of queries that can be made to the API */
+export type QueryChat_InputArgs = {
+  span_id: Scalars['ID']['input'];
 };
 
 
@@ -332,6 +361,7 @@ export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = 
 export type ResolversTypes = {
   APIKey: ResolverTypeWrapper<APIKeyModel>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  ChatInput: ResolverTypeWrapper<ChatInput>;
   CreateAPIKeyResponse: ResolverTypeWrapper<Omit<CreateApiKeyResponse, 'data'> & { data?: Maybe<ResolversTypes['APIKey']> }>;
   CreateTokenResponse: ResolverTypeWrapper<CreateTokenResponse>;
   CreateUserResponse: ResolverTypeWrapper<Omit<CreateUserResponse, 'data'> & { data?: Maybe<ResolversTypes['User']> }>;
@@ -341,6 +371,7 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   KeyValue: ResolverTypeWrapper<KeyValue>;
   Kind: Kind;
+  MessageInput: ResolverTypeWrapper<MessageInput>;
   Mutation: ResolverTypeWrapper<{}>;
   MutationResponse: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['MutationResponse']>;
   NullTime: ResolverTypeWrapper<NullTime>;
@@ -358,6 +389,7 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   APIKey: APIKeyModel;
   Boolean: Scalars['Boolean']['output'];
+  ChatInput: ChatInput;
   CreateAPIKeyResponse: Omit<CreateApiKeyResponse, 'data'> & { data?: Maybe<ResolversParentTypes['APIKey']> };
   CreateTokenResponse: CreateTokenResponse;
   CreateUserResponse: Omit<CreateUserResponse, 'data'> & { data?: Maybe<ResolversParentTypes['User']> };
@@ -366,6 +398,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   KeyValue: KeyValue;
+  MessageInput: MessageInput;
   Mutation: {};
   MutationResponse: ResolversInterfaceTypes<ResolversParentTypes>['MutationResponse'];
   NullTime: NullTime;
@@ -384,6 +417,18 @@ export type ApiKeyResolvers<ContextType = DataSourceContext, ParentType extends 
   created_at?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChatInputResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['ChatInput'] = ResolversParentTypes['ChatInput']> = {
+  logprobs?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  messages?: Resolver<Maybe<Array<ResolversTypes['MessageInput']>>, ParentType, ContextType>;
+  model?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  n?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  stream?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  temperature?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  top_logprobs?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  top_p?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -424,6 +469,13 @@ export type KeyValueResolvers<ContextType = DataSourceContext, ParentType extend
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type MessageInputResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['MessageInput'] = ResolversParentTypes['MessageInput']> = {
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  role?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createAPIKey?: Resolver<ResolversTypes['CreateAPIKeyResponse'], ParentType, ContextType, Partial<MutationCreateApiKeyArgs>>;
   createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email' | 'password' | 'username'>>;
@@ -451,6 +503,7 @@ export type NullTimeResolvers<ContextType = DataSourceContext, ParentType extend
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   all_traces?: Resolver<Maybe<Array<ResolversTypes['Trace']>>, ParentType, ContextType>;
   api_keys?: Resolver<Maybe<Array<ResolversTypes['APIKey']>>, ParentType, ContextType>;
+  chat_input?: Resolver<Maybe<ResolversTypes['ChatInput']>, ParentType, ContextType, RequireFields<QueryChat_InputArgs, 'span_id'>>;
   me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   spans?: Resolver<Maybe<Array<ResolversTypes['Span']>>, ParentType, ContextType, RequireFields<QuerySpansArgs, 'trace_id'>>;
   traces?: Resolver<Maybe<Array<ResolversTypes['Trace']>>, ParentType, ContextType, RequireFields<QueryTracesArgs, 'session_id'>>;
@@ -513,11 +566,13 @@ export type UserResolvers<ContextType = DataSourceContext, ParentType extends Re
 
 export type Resolvers<ContextType = DataSourceContext> = {
   APIKey?: ApiKeyResolvers<ContextType>;
+  ChatInput?: ChatInputResolvers<ContextType>;
   CreateAPIKeyResponse?: CreateApiKeyResponseResolvers<ContextType>;
   CreateTokenResponse?: CreateTokenResponseResolvers<ContextType>;
   CreateUserResponse?: CreateUserResponseResolvers<ContextType>;
   DeleteUserResponse?: DeleteUserResponseResolvers<ContextType>;
   KeyValue?: KeyValueResolvers<ContextType>;
+  MessageInput?: MessageInputResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   MutationResponse?: MutationResponseResolvers<ContextType>;
   NullTime?: NullTimeResolvers<ContextType>;

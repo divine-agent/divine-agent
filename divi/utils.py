@@ -17,7 +17,6 @@ def extract_flattened_inputs(
     arguments = dict(bound_args.arguments)
     arguments.pop("self", None)
     arguments.pop("cls", None)
-    arguments.pop("args", None)
 
     for param_name, param in signature.parameters.items():
         if (

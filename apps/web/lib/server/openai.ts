@@ -21,7 +21,7 @@ export const getChatCompletion = cache(async (spanId: string) => {
   if (!response.ok) {
     throw new Error('Failed to fetch chat completion');
   }
-  return response.json() as Promise<ChatCompletion>;
+  return response.json().then((res) => res.data) as Promise<ChatCompletion>;
 });
 
 export const getChatInput = cache(async (spanId: string) => {

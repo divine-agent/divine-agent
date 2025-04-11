@@ -2,6 +2,7 @@
 
 import type { ExtendedSpan } from '@/lib/types/span';
 import { useState } from 'react';
+import { Span } from './Span';
 import { ResponsiveResizable } from './responsive-resizable';
 import { TraceWaterfallChart } from './trace-chart';
 
@@ -25,11 +26,7 @@ export function TraceBoard({ spans, direction }: TraceBoardProps) {
           selectAction={selectAction}
         />
       }
-      second={
-        <span className="font-semibold">
-          {JSON.stringify(spans[index ?? 0])}
-        </span>
-      }
+      second={<Span span={spans[index ?? 0]} />}
       direction={direction}
     />
   );

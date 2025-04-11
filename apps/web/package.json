@@ -21,6 +21,7 @@
     "@tanstack/react-table": "^8.21.2",
     "@workspace/graphql-client": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "highlight.js": "^11.11.1",
     "lucide-react": "catalog:",
     "next": "catalog:",
     "next-themes": "^0.4.6",
@@ -33,11 +34,12 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "openai": "^4.93.0",
+    "@types/highlightjs": "^9.12.6",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@workspace/typescript-config": "workspace:*",
+    "openai": "^4.93.0",
     "typescript": "catalog:"
   }
 }

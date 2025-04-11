@@ -5,7 +5,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@workspace/ui/components/accordion';
+import { Badge } from '@workspace/ui/components/badge';
 import { Card, CardContent } from '@workspace/ui/components/card';
+import { Timer } from 'lucide-react';
 import Highlighter from './Highter';
 
 interface SpanProps {
@@ -16,16 +18,50 @@ export function Span({ span }: SpanProps) {
   const messages = span.input?.messages ?? [];
   const choices = span.completion?.choices ?? [];
   return (
-    <Accordion type="multiple" defaultValue={['properties', 'Input', 'Output']}>
-      <AccordionItem className="px-4" value="properties">
-        <AccordionTrigger className="hover:no-underline">
-          Properties
-        </AccordionTrigger>
-        <AccordionContent>{span.name}</AccordionContent>
-      </AccordionItem>
-      <AccordionJsonCards name="Input" datas={messages} />
-      <AccordionJsonCards name="Output" datas={choices} />
-    </Accordion>
+    <>
+      <GeneralInfo span={span} />
+      <Accordion
+        type="multiple"
+        defaultValue={['properties', 'Input', 'Output']}
+      >
+        <AccordionProperties span={span} />
+        <AccordionJsonCards name="Input" datas={messages} />
+        <AccordionJsonCards name="Output" datas={choices} />
+      </Accordion>
+    </>
+  );
+}
+
+function GeneralInfo({ span }: SpanProps) {
+  return (
+    <div className="flex flex-col gap-3 border-b p-4">
+      <div className="flex items-center justify-between text-text-primary">
+        <span className="font-medium">
+          <span>{span.name}</span>
+        </span>
+      </div>
+      <div className="flex gap-3">
+        <Badge variant="secondary">{span.kind}</Badge>
+        <Badge variant="outline">
+          <Timer />
+          {span.duration} ms
+        </Badge>
+      </div>
+    </div>
+  );
+}
+
+function AccordionProperties({ span }: SpanProps) {
+  // TODO select the properties to show
+  return (
+    <AccordionItem className="px-4" value="properties">
+      <AccordionTrigger className="hover:no-underline">
+        Properties
+      </AccordionTrigger>
+      <AccordionContent>
+        {span.completion?.usage?.total_tokens}
+      </AccordionContent>
+    </AccordionItem>
   );
 }
 

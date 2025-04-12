@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from '@workspace/ui/components/card';
 import { Timer } from 'lucide-react';
+import type * as React from 'react';
 import Highlighter from './Highter';
 
 interface SpanProps {
@@ -116,14 +117,6 @@ function PropertyCard({
       </CardHeader>
       <CardContent className="flex flex-col gap-2">{children}</CardContent>
     </Card>
-  );
-}
-
-function PropertyTitle({ title }: { title: string }) {
-  return (
-    <div className="flex items-center justify-between">
-      <span className="font-medium">{title}</span>
-    </div>
   );
 }
 

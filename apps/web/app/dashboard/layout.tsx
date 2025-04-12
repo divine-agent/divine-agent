@@ -38,6 +38,7 @@ export default async function DashboardLayout({
   return (
     <SidebarProvider
       defaultOpen={defaultOpen}
+      className="max-h-screen"
       style={
         {
           '--sidebar-width': 'calc(var(--spacing) * 58)',
@@ -47,10 +48,8 @@ export default async function DashboardLayout({
       <AppSidebar variant="inset" user={user} signoutAction={signout} />
       <SidebarInset>
         <SiteHeader />
-        <div className="flex flex-1 flex-col">
-          {modal}
-          {children}
-        </div>
+        {modal}
+        {children}
       </SidebarInset>
     </SidebarProvider>
   );

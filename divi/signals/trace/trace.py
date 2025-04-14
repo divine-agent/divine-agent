@@ -102,7 +102,6 @@ class Span:
             trace_id=self.trace_id.bytes if self.trace_id else None,
             parent_span_id=self.parent_span_id,
         )
-        print(self.kind)
         signal.metadata.extend(
             KeyValue(key=k, value=v)
             for k, v in (self.metadata or dict()).items()

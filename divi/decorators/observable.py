@@ -85,26 +85,30 @@ def observable(
             # recover parent context
             _SESSION_EXTRA.reset(token)
 
-            # TODO: collect inputs and outputs
-            inputs = extract_flattened_inputs(func, *args, **kwargs)
-            # create the span if it is the root span
-            if divi._datapark and span.trace_id:
-                divi._datapark.create_spans(
-                    span.trace_id, ScopeSpans(spans=[span.signal])
-                )
-            # end the trace if it is the root span
-            if divi._datapark and not span.parent_span_id:
-                trace = session_extra.get("trace")
-                if trace:
+            trace = session_extra.get("trace")
+            if trace:
+                # TODO: collect inputs and outputs
+                inputs = extract_flattened_inputs(func, *args, **kwargs)
+                # create the span if it is the root span
+                if divi._datapark and span.trace_id:
+                    divi._datapark.create_spans(
+                        span.trace_id, ScopeSpans(spans=[span.signal])
+                    )
+                # end the trace if it is the root span
+                if divi._datapark and not span.parent_span_id:
                     trace.end()
                     divi._datapark.upsert_traces(
                         session_id=trace.session_id, traces=[trace.signal]
                     )
-            # create the chat completion if it is a chat completion
-            if divi._datapark and isinstance(result, ChatCompletion):
-                divi._datapark.create_chat_completion(
-                    span_id=span.span_id, inputs=inputs, completion=result
-                )
+                # create the chat completion if it is a chat completion
+                if divi._datapark and isinstance(result, ChatCompletion):
+                    divi._datapark.create_chat_completion(
+                        span_id=span.span_id,
+                        trace_id=trace.trace_id,
+                        inputs=inputs,
+                        completion=result,
+                    )
+
             return result
 
         @functools.wraps(func)

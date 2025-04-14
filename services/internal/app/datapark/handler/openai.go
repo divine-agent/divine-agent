@@ -4,12 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/auth"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/database"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"github.com/openai/openai-go"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -17,8 +19,9 @@ import (
 
 func CreateChatCompletion(c *fiber.Ctx) error {
 	type ChatCompletionReq struct {
-		SpanID string                `json:"span_id"`
-		Data   openai.ChatCompletion `json:"data"`
+		SpanID  string                `json:"span_id"`
+		TraceID uuid.UUID             `json:"trace_id"`
+		Data    openai.ChatCompletion `json:"data"`
 	}
 	var chatCompletionReq ChatCompletionReq
 	if err := c.BodyParser(&chatCompletionReq); err != nil {
@@ -46,6 +49,49 @@ func CreateChatCompletion(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to store chat completion", "data": nil})
 	}
+
+	// store usage in clickhouse
+	conn := *database.CH
+	ctx = context.Background()
+	err = conn.Exec(ctx, `
+		CREATE TABLE IF NOT EXISTS usages (
+			span_id String,
+			trace_id UUID,
+			user_id UUID,
+			model String,
+			input_tokens UInt64,
+			output_tokens UInt64,
+			total_tokens UInt64,
+			created DateTime DEFAULT now()
+		) ENGINE = MergeTree()
+		PARTITION BY toYYYYMMDD(created)
+		ORDER BY (user_id, trace_id, span_id, created, model)
+		PRIMARY KEY (user_id, trace_id, span_id);
+	`)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create table", "data": nil})
+	}
+
+	// Insert data into the table
+	usage := model.Usage{
+		Model:        chatCompletionReq.Data.Model,
+		InputTokens:  uint64(chatCompletionReq.Data.Usage.PromptTokens),
+		OutputTokens: uint64(chatCompletionReq.Data.Usage.CompletionTokens),
+		TotalTokens:  uint64(chatCompletionReq.Data.Usage.TotalTokens),
+		SpanID:       chatCompletionReq.SpanID,
+		TraceID:      chatCompletionReq.TraceID,
+		UserID:       userID,
+		Created:      time.Unix(chatCompletionReq.Data.Created, 0),
+	}
+	err = conn.Exec(ctx, `
+		INSERT INTO usages (trace_id, span_id, user_id, model, input_tokens, output_tokens, total_tokens, created)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+	`, usage.TraceID, usage.SpanID, usage.UserID, usage.Model, usage.InputTokens, usage.OutputTokens, usage.TotalTokens, usage.Created)
+	if err != nil {
+		fmt.Println(err)
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to store usage", "data": nil})
+	}
+
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "message": "Stored chat completion", "data": nil})
 }
 

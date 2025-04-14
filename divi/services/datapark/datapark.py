@@ -1,16 +1,16 @@
-from typing import Any, Dict, TYPE_CHECKING
-from typing_extensions import Mapping
+from typing import Any, Dict
 
 from google.protobuf.json_format import MessageToDict
+from openai import NotGiven
 from openai.types.chat import ChatCompletion
 from pydantic import UUID4
+from typing_extensions import Mapping
 
 import divi
 from divi.proto.trace.v1.trace_pb2 import ScopeSpans
 from divi.services.service import Service
 from divi.session.session import SessionSignal
 from divi.signals.trace.trace import TraceSignal
-from openai import NotGiven
 
 
 class DataPark(Service):
@@ -33,7 +33,11 @@ class DataPark(Service):
         if not isinstance(obj, Mapping):
             return obj
 
-        return {key: value for key, value in obj.items() if not isinstance(value, NotGiven)}
+        return {
+            key: value
+            for key, value in obj.items()
+            if not isinstance(value, NotGiven)
+        }
 
     def create_session(self, session: SessionSignal) -> None:
         self.post("/api/session/", payload=session)
@@ -49,6 +53,7 @@ class DataPark(Service):
     def create_chat_completion(
         self,
         span_id: bytes,
+        trace_id: UUID4,
         inputs: Dict[str, Any],
         completion: ChatCompletion,
     ) -> None:
@@ -61,6 +66,7 @@ class DataPark(Service):
                 },
                 "/api/v1/chat/completions": {
                     "span_id": hex_span_id,
+                    "trace_id": str(trace_id),
                     "data": completion.model_dump(),
                 },
             }

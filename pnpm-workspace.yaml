@@ -11,6 +11,8 @@ catalog:
   react-dom: ^19.0.0
   lucide-react: ^0.475.0
   sonner: ^2.0.2
+  react-day-picker: ^9.6.6
+  date-fns: ^4.1.0
 
   # devDependencies
   typescript: ^5.7.3

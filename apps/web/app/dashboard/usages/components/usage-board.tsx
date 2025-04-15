@@ -3,12 +3,15 @@
 import { ChartAreaInteractive } from '@/components/chart-area-interactive';
 import { DatePicker } from '@/components/date-picker';
 import { SectionCards } from '@/components/section-cards';
+import { startOfMonth } from 'date-fns';
 import { useState } from 'react';
 import type { DateRange } from 'react-day-picker';
 
 export function UsageBoard() {
+  const today = new Date();
   const [range, setRange] = useState<DateRange | undefined>({
-    from: new Date(),
+    from: startOfMonth(today),
+    to: today,
   });
 
   return (

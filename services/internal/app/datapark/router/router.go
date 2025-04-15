@@ -35,6 +35,10 @@ func SetupRoutes(app *fiber.App) {
 	metric := api.Group("/metric")
 	metric.Post("/", jwtware, handler.CreateMetrics)
 
+	// Usage
+	usage := api.Group("/usage")
+	usage.Get("/completions", jwtware, handler.GetCompletionUsage)
+
 	// OpenAI Input / Output
 	v1 := api.Group("/v1")
 	// Chat Completions

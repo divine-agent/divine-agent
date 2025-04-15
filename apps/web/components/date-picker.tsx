@@ -2,7 +2,7 @@
 
 import { format, startOfMonth, startOfWeek, subDays } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
-import * as React from 'react';
+import type * as React from 'react';
 import type { DateRange } from 'react-day-picker';
 
 import { Calendar } from '@/components/calendar';
@@ -14,15 +14,16 @@ import {
 } from '@workspace/ui/components/popover';
 import { cn } from '@workspace/ui/lib/utils';
 
-export function DatePicker({
-  className,
-}: React.HTMLAttributes<HTMLDivElement>) {
-  const today = new Date();
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: today,
-    to: today,
-  });
+interface DatePickerProps {
+  range: DateRange | undefined;
+  setRangeAction: (range: DateRange) => void;
+}
 
+export function DatePicker({
+  range,
+  setRangeAction,
+  className,
+}: React.HTMLAttributes<HTMLDivElement> & DatePickerProps) {
   return (
     <div className={cn('grid gap-2', className)}>
       <Popover>
@@ -32,18 +33,18 @@ export function DatePicker({
             variant={'outline'}
             className={cn(
               'w-fit justify-start text-left font-normal',
-              !date && 'text-muted-foreground'
+              !range && 'text-muted-foreground'
             )}
           >
             <CalendarIcon />
-            {date?.from ? (
-              date.to ? (
+            {range?.from ? (
+              range.to ? (
                 <>
-                  {format(date.from, 'LLL dd, y')} -{' '}
-                  {format(date.to, 'LLL dd, y')}
+                  {format(range.from, 'LLL dd, y')} -{' '}
+                  {format(range.to, 'LLL dd, y')}
                 </>
               ) : (
-                format(date.from, 'LLL dd, y')
+                format(range.from, 'LLL dd, y')
               )
             ) : (
               <span>Pick a date</span>
@@ -51,14 +52,15 @@ export function DatePicker({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="flex w-auto p-0" align="start">
-          <DateRangePresets setDateAction={setDate} />
+          <DateRangePresets setRangeAction={setRangeAction} />
           <Calendar
             autoFocus
             mode="range"
-            defaultMonth={date?.from}
-            selected={date}
-            onSelect={setDate}
+            defaultMonth={range?.from}
+            selected={range}
+            onSelect={setRangeAction}
             numberOfMonths={2}
+            required
           />
         </PopoverContent>
       </Popover>
@@ -67,9 +69,9 @@ export function DatePicker({
 }
 
 function DateRangePresets({
-  setDateAction,
+  setRangeAction,
 }: {
-  setDateAction: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
+  setRangeAction: (date: DateRange) => void;
 }) {
   const today = new Date();
   const presets = [
@@ -89,7 +91,7 @@ function DateRangePresets({
         <Button
           key={preset.name}
           variant="ghost"
-          onClick={() => setDateAction({ from: preset.from, to: preset.to })}
+          onClick={() => setRangeAction({ from: preset.from, to: preset.to })}
         >
           {preset.name}
         </Button>

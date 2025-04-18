@@ -77,6 +77,12 @@ export type DeleteUserResponse = MutationResponse & {
   success: Scalars['Boolean']['output'];
 };
 
+/** GroupingKey is an enum that represents the key used to group usage results */
+export enum GroupingKey {
+  Date = 'date',
+  Model = 'model'
+}
+
 /** KeyValue is a key-value pair */
 export type KeyValue = {
   __typename?: 'KeyValue';
@@ -84,6 +90,7 @@ export type KeyValue = {
   value: Scalars['String']['output'];
 };
 
+/** Kind is an enum that represents the type of span */
 export enum Kind {
   SpanKindFunction = 'SPAN_KIND_FUNCTION',
   SpanKindLlm = 'SPAN_KIND_LLM'
@@ -190,6 +197,8 @@ export type Query = {
   api_keys?: Maybe<Array<ApiKey>>;
   /** Fetch openai input by span id */
   chat_input?: Maybe<ChatInput>;
+  /** Fetch completion usages */
+  completion_usage?: Maybe<Array<UsageResult>>;
   /** Fetch current user */
   me: User;
   /** Fetch all spans by trace id */
@@ -204,6 +213,14 @@ export type Query = {
 /** Query is a collection of queries that can be made to the API */
 export type QueryChat_InputArgs = {
   span_id: Scalars['ID']['input'];
+};
+
+
+/** Query is a collection of queries that can be made to the API */
+export type QueryCompletion_UsageArgs = {
+  end_time?: InputMaybe<Scalars['Int']['input']>;
+  group_by?: InputMaybe<GroupingKey>;
+  start_time: Scalars['Int']['input'];
 };
 
 
@@ -272,6 +289,16 @@ export type UpdateUserResponse = MutationResponse & {
   data?: Maybe<User>;
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
+};
+
+/** UsageResult is the result of a usage query */
+export type UsageResult = {
+  __typename?: 'UsageResult';
+  date?: Maybe<Scalars['Int']['output']>;
+  input_tokens: Scalars['Int']['output'];
+  model?: Maybe<Scalars['String']['output']>;
+  output_tokens: Scalars['Int']['output'];
+  total_tokens: Scalars['Int']['output'];
 };
 
 /** User is a registered user of the application */
@@ -367,6 +394,7 @@ export type ResolversTypes = {
   CreateUserResponse: ResolverTypeWrapper<Omit<CreateUserResponse, 'data'> & { data?: Maybe<ResolversTypes['User']> }>;
   DeleteUserResponse: ResolverTypeWrapper<DeleteUserResponse>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
+  GroupingKey: GroupingKey;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   KeyValue: ResolverTypeWrapper<KeyValue>;
@@ -382,6 +410,7 @@ export type ResolversTypes = {
   Trace: ResolverTypeWrapper<Trace>;
   UpdateAPIKeyResponse: ResolverTypeWrapper<Omit<UpdateApiKeyResponse, 'data'> & { data?: Maybe<ResolversTypes['APIKey']> }>;
   UpdateUserResponse: ResolverTypeWrapper<Omit<UpdateUserResponse, 'data'> & { data?: Maybe<ResolversTypes['User']> }>;
+  UsageResult: ResolverTypeWrapper<UsageResult>;
   User: ResolverTypeWrapper<UserModel>;
 };
 
@@ -409,6 +438,7 @@ export type ResolversParentTypes = {
   Trace: Trace;
   UpdateAPIKeyResponse: Omit<UpdateApiKeyResponse, 'data'> & { data?: Maybe<ResolversParentTypes['APIKey']> };
   UpdateUserResponse: Omit<UpdateUserResponse, 'data'> & { data?: Maybe<ResolversParentTypes['User']> };
+  UsageResult: UsageResult;
   User: UserModel;
 };
 
@@ -504,6 +534,7 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
   all_traces?: Resolver<Maybe<Array<ResolversTypes['Trace']>>, ParentType, ContextType>;
   api_keys?: Resolver<Maybe<Array<ResolversTypes['APIKey']>>, ParentType, ContextType>;
   chat_input?: Resolver<Maybe<ResolversTypes['ChatInput']>, ParentType, ContextType, RequireFields<QueryChat_InputArgs, 'span_id'>>;
+  completion_usage?: Resolver<Maybe<Array<ResolversTypes['UsageResult']>>, ParentType, ContextType, RequireFields<QueryCompletion_UsageArgs, 'start_time'>>;
   me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   spans?: Resolver<Maybe<Array<ResolversTypes['Span']>>, ParentType, ContextType, RequireFields<QuerySpansArgs, 'trace_id'>>;
   traces?: Resolver<Maybe<Array<ResolversTypes['Trace']>>, ParentType, ContextType, RequireFields<QueryTracesArgs, 'session_id'>>;
@@ -555,6 +586,15 @@ export type UpdateUserResponseResolvers<ContextType = DataSourceContext, ParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UsageResultResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['UsageResult'] = ResolversParentTypes['UsageResult']> = {
+  date?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  input_tokens?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  model?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  output_tokens?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  total_tokens?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   api_keys?: Resolver<Maybe<Array<ResolversTypes['APIKey']>>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -582,6 +622,7 @@ export type Resolvers<ContextType = DataSourceContext> = {
   Trace?: TraceResolvers<ContextType>;
   UpdateAPIKeyResponse?: UpdateApiKeyResponseResolvers<ContextType>;
   UpdateUserResponse?: UpdateUserResponseResolvers<ContextType>;
+  UsageResult?: UsageResultResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 

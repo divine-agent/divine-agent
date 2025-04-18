@@ -74,6 +74,12 @@ export type DeleteUserResponse = MutationResponse & {
   success: Scalars['Boolean']['output'];
 };
 
+/** GroupingKey is an enum that represents the key used to group usage results */
+export enum GroupingKey {
+  Date = 'date',
+  Model = 'model'
+}
+
 /** KeyValue is a key-value pair */
 export type KeyValue = {
   __typename?: 'KeyValue';
@@ -81,6 +87,7 @@ export type KeyValue = {
   value: Scalars['String']['output'];
 };
 
+/** Kind is an enum that represents the type of span */
 export enum Kind {
   SpanKindFunction = 'SPAN_KIND_FUNCTION',
   SpanKindLlm = 'SPAN_KIND_LLM'
@@ -187,6 +194,8 @@ export type Query = {
   api_keys?: Maybe<Array<ApiKey>>;
   /** Fetch openai input by span id */
   chat_input?: Maybe<ChatInput>;
+  /** Fetch completion usages */
+  completion_usage?: Maybe<Array<UsageResult>>;
   /** Fetch current user */
   me: User;
   /** Fetch all spans by trace id */
@@ -201,6 +210,14 @@ export type Query = {
 /** Query is a collection of queries that can be made to the API */
 export type QueryChat_InputArgs = {
   span_id: Scalars['ID']['input'];
+};
+
+
+/** Query is a collection of queries that can be made to the API */
+export type QueryCompletion_UsageArgs = {
+  end_time?: InputMaybe<Scalars['Int']['input']>;
+  group_by?: InputMaybe<GroupingKey>;
+  start_time: Scalars['Int']['input'];
 };
 
 
@@ -269,6 +286,16 @@ export type UpdateUserResponse = MutationResponse & {
   data?: Maybe<User>;
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
+};
+
+/** UsageResult is the result of a usage query */
+export type UsageResult = {
+  __typename?: 'UsageResult';
+  date?: Maybe<Scalars['Int']['output']>;
+  input_tokens: Scalars['Int']['output'];
+  model?: Maybe<Scalars['String']['output']>;
+  output_tokens: Scalars['Int']['output'];
+  total_tokens: Scalars['Int']['output'];
 };
 
 /** User is a registered user of the application */

@@ -29,6 +29,19 @@ export const resolvers: Resolvers = {
     chat_input: async (_, { span_id }, { dataSources }) => {
       return (await dataSources.dataparkAPI.getChatInput(span_id)).data;
     },
+    completion_usage: async (
+      _,
+      { start_time, end_time, group_by },
+      { dataSources }
+    ) => {
+      return (
+        await dataSources.dataparkAPI.getCompletionUsage(
+          start_time,
+          end_time ?? undefined,
+          group_by ?? undefined
+        )
+      ).data;
+    },
   },
   Mutation: {
     createAPIKey: async (_, { name }, { dataSources }) => {

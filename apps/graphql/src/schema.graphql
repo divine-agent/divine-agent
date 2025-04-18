@@ -14,6 +14,18 @@ type Query {
   spans(trace_id: ID!): [Span!]
   "Fetch openai input by span id"
   chat_input(span_id: ID!): ChatInput
+  "Fetch completion usages"
+  completion_usage(
+    start_time: Int!
+    end_time: Int
+    group_by: GroupingKey
+  ): [UsageResult!]
+}
+
+"GroupingKey is an enum that represents the key used to group usage results"
+enum GroupingKey {
+  date
+  model
 }
 
 "NullTime is a custom scalar type that represents a time value that can be null"
@@ -54,6 +66,7 @@ type Trace {
   session_id: ID!
 }
 
+"Kind is an enum that represents the type of span"
 enum Kind {
   SPAN_KIND_FUNCTION
   SPAN_KIND_LLM
@@ -89,6 +102,15 @@ type MessageInput {
   role: String!
   content: String!
   name: String
+}
+
+"UsageResult is the result of a usage query"
+type UsageResult {
+  input_tokens: Int!
+  output_tokens: Int!
+  total_tokens: Int!
+  model: String
+  date: Int
 }
 
 "Mutation is a collection of mutations that can be made to the API"

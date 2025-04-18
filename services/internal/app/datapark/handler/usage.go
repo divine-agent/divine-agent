@@ -23,6 +23,8 @@ func GetCompletionUsage(c *fiber.Ctx) error {
 		})
 	}
 
+	fmt.Println(usageQuery)
+
 	// Parse user_id from JWT token
 	token := c.Locals("user").(*jwt.Token)
 	userID, err := auth.ParseUserId(token)

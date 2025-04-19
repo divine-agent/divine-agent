@@ -1,5 +1,6 @@
+import { getCompletionUsage } from './actions';
 import { UsageBoard } from './components/usage-board';
 
 export default function Page() {
-  return <UsageBoard />;
+  return <UsageBoard getCompletionUsageAction={getCompletionUsage} />;
 }

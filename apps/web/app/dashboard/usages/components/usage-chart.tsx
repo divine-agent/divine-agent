@@ -1,27 +1,26 @@
 'use client';
+
 import type { UsageResult } from '@workspace/graphql-client/src/types.generated';
-import { ChartContainer, ChartLegend } from '@workspace/ui/components/chart';
-import type { ChartConfig } from '@workspace/ui/components/chart';
 import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+  ChartContainer,
+  ChartLegend,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@workspace/ui/components/chart';
+import type { ChartConfig } from '@workspace/ui/components/chart';
+import { CartesianGrid, Line, LineChart, XAxis } from 'recharts';
 
 const chartConfig = {
   input_tokens: {
-    label: 'Input Tokens',
+    // label: 'Input Tokens',
     color: 'var(--chart-1)',
   },
   output_tokens: {
-    label: 'Output Tokens',
+    // label: 'Output Tokens',
     color: 'var(--chart-2)',
   },
   total_tokens: {
-    label: 'Total Tokens',
+    // label: 'Total Tokens',
     color: 'var(--chart-3)',
   },
 } satisfies ChartConfig;
@@ -38,10 +37,14 @@ export function UsageLineChart({ data }: UsageLineChartProps) {
     >
       <LineChart data={data}>
         <CartesianGrid vertical={false} />
-        <XAxis dataKey="date" />
-        <YAxis />
-        <Tooltip />
+        <XAxis dataKey="formatted_date" />
+        <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend />
+        <Line
+          dataKey="total_tokens"
+          type="monotone"
+          stroke="var(--color-total_tokens)"
+        />
         <Line
           dataKey="input_tokens"
           type="monotone"
@@ -51,11 +54,6 @@ export function UsageLineChart({ data }: UsageLineChartProps) {
           dataKey="output_tokens"
           type="monotone"
           stroke="var(--color-output_tokens)"
-        />
-        <Line
-          dataKey="total_tokens"
-          type="monotone"
-          stroke="var(--color-total_tokens)"
         />
       </LineChart>
     </ChartContainer>

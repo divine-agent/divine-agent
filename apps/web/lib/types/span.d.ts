@@ -3,7 +3,7 @@ import type { ChatInput } from '@workspace/graphql-client/src/types.generated';
 import type { ChatCompletion } from 'openai/resources/index.mjs';
 
 /**
- * ExtendSpan interface
+ * ExtendedSpan interface
  * @description Extend the Span interface to include relative_start_time
  */
 export interface ExtendedSpan extends Span {

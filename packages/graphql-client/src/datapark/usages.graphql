@@ -8,10 +8,10 @@ query getCompletionUsage(
     end_time: $endTime
     group_by: $groupBy
   ) {
+    date
+    model
     input_tokens
     output_tokens
     total_tokens
-    model
-    date
   }
 }

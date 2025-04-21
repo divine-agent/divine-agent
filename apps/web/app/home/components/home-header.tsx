@@ -19,8 +19,8 @@ export default function HomeHeader() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 z-40 w-full bg-background">
-      <div className="container relative mx-auto flex min-h-20 flex-row items-center gap-4 lg:grid lg:grid-cols-3">
+    <header className="fixed top-0 left-0 z-40 w-full bg-sidebar/50 backdrop-blur-md">
+      <div className="container relative mx-auto flex min-h-16 flex-row items-center gap-4 lg:grid lg:grid-cols-3">
         <div className="hidden flex-row items-center justify-start gap-4 lg:flex">
           <NavigationMenu className="flex items-start justify-start">
             <NavigationMenuList className="flex flex-row justify-start gap-4">

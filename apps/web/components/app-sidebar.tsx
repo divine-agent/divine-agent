@@ -82,7 +82,7 @@ export function AppSidebar({
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <Link href="/">
+              <Link href="/home">
                 <span className="text-xl">😇</span>
                 <span className="font-semibold text-base">Divine Agent</span>
               </Link>

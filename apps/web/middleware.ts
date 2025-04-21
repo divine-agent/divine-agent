@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     user &&
     !request.nextUrl.pathname.startsWith('/dashboard')
   ) {
-    return NextResponse.redirect(new URL('/dashboard', request.nextUrl));
+    return NextResponse.redirect(new URL('/dashboard/traces', request.nextUrl));
   }
 
   // 6. Refresh cookies if request method is GET

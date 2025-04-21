@@ -31,11 +31,11 @@ const data = {
     avatar: '/thinking-angel.png',
   },
   navMain: [
-    {
-      title: 'Overview',
-      url: '/dashboard',
-      icon: IconDashboard,
-    },
+    // {
+    //   title: 'Overview',
+    //   url: '/dashboard',
+    //   icon: IconDashboard,
+    // },
     {
       title: 'Trace',
       url: '/dashboard/traces',

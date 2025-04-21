@@ -23,8 +23,6 @@ func GetCompletionUsage(c *fiber.Ctx) error {
 		})
 	}
 
-	fmt.Println(usageQuery)
-
 	// Parse user_id from JWT token
 	token := c.Locals("user").(*jwt.Token)
 	userID, err := auth.ParseUserId(token)
@@ -74,7 +72,6 @@ func GetCompletionUsage(c *fiber.Ctx) error {
 		query += `GROUP BY date`
 	}
 
-	fmt.Println(query)
 	// Execute the query with the provided parameters
 	rows, err := conn.Query(ctx, query, userID, usageQuery.StartTime, usageQuery.EndTime)
 	if err != nil {
@@ -96,7 +93,6 @@ func GetCompletionUsage(c *fiber.Ctx) error {
 
 		// Scan row into variables based on GroupByModel or GroupByDate
 		if usageQuery.GroupBy != nil && *usageQuery.GroupBy == model.GroupByModel {
-			fmt.Println("model: ", err)
 			// Group by model
 			if err := rows.Scan(&_model, &result.InputTokens, &result.OutputTokens, &result.TotalTokens); err != nil {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

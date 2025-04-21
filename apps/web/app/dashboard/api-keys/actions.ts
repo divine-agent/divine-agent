@@ -13,12 +13,13 @@ import {
 import { GetMyApiKeysDocument } from '@workspace/graphql-client/src/auth/api-keys.generated';
 import type { ApiKey } from '@workspace/graphql-client/src/types.generated';
 import { revalidatePath } from 'next/cache';
+import { cache } from 'react';
 
 /**
  * getAPIKeys action with graphql query
  * @description get current user's API keys
  */
-export async function getAPIKeys() {
+export const getAPIKeys = cache(async () => {
   const context = await getAuthContext();
   if (!context) {
     return null;
@@ -28,7 +29,7 @@ export async function getAPIKeys() {
     context,
   });
   return data?.api_keys;
-}
+});
 
 /**
  * createAPIKey action with graphql mutation

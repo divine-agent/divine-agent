@@ -22,21 +22,21 @@ import { Label, Pie, PieChart } from 'recharts';
 
 const chartConfig = {
   input_tokens: {
-    // label: 'Input Tokens',
+    label: 'Input Tokens',
     color: 'var(--chart-1)',
   },
   output_tokens: {
-    // label: 'Output Tokens',
+    label: 'Output Tokens',
     color: 'var(--chart-2)',
   },
   total_tokens: {
-    // label: 'Total Tokens',
+    label: 'Total Tokens',
     color: 'var(--chart-3)',
   },
 } satisfies ChartConfig;
 
 interface UsageChartProps {
-  data: ExtendedUsageResult[];
+  data: ExtendedUsageResult[] | undefined;
 }
 
 export function UsageLineChartCard({ data }: UsageChartProps) {
@@ -105,7 +105,7 @@ interface Tokens {
 }
 
 interface UsagePieChartProps {
-  data: UsageResult[];
+  data: UsageResult[] | undefined;
 }
 
 export function UsagePieChartCard({ data }: UsagePieChartProps) {
@@ -137,12 +137,12 @@ function UsagePieChart({
   dataKey,
 }: UsagePieChartProps & { dataKey: keyof Tokens }) {
   const chartColorsLength = 3;
-  const chartData = data.map((item, index) => ({
+  const chartData = data?.map((item, index) => ({
     ...item,
     fill: `var(--chart-${(index % chartColorsLength) + 1})`,
   }));
   const pieChartConfig = Object.fromEntries(
-    chartData.map((item) => [
+    (chartData ?? []).map((item) => [
       item.model,
       {
         color: item.fill,
@@ -151,7 +151,7 @@ function UsagePieChart({
   ) satisfies ChartConfig;
 
   const totalTokens = useMemo(() => {
-    return data.reduce((acc, curr) => acc + curr[dataKey], 0);
+    return data?.reduce((acc, curr) => acc + curr[dataKey], 0);
   }, [data, dataKey]);
 
   return (
@@ -186,7 +186,7 @@ function UsagePieChart({
                       y={viewBox.cy}
                       className="fill-foreground font-bold text-3xl"
                     >
-                      {totalTokens.toLocaleString()}
+                      {totalTokens?.toLocaleString()}
                     </tspan>
                     <tspan
                       x={viewBox.cx}

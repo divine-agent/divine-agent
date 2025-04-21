@@ -6,12 +6,14 @@ import {
   GroupingKey,
   type UsageResult,
 } from '@workspace/graphql-client/src/types.generated';
-import { startOfMonth } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { UsageLineChartCard, UsagePieChartCard } from './usage-chart';
 
 interface UsageBoardProps {
+  initialRange: DateRange;
+  initialUsages?: ExtendedUsageResult[];
+  initialUsagesGroupByModel?: UsageResult[];
   getFullCompletionUsageAction: (
     startTime: Date,
     endTime: Date | undefined,
@@ -25,20 +27,20 @@ interface UsageBoardProps {
 }
 
 export function UsageBoard({
+  initialRange,
+  initialUsages,
+  initialUsagesGroupByModel,
   getCompletionUsageAction,
   getFullCompletionUsageAction,
 }: UsageBoardProps) {
   const today = new Date();
-
-  const [range, setRange] = useState<DateRange>({
-    from: startOfMonth(today),
-    to: today,
-  });
-
-  const [usages, setUsages] = useState<ExtendedUsageResult[]>([]);
-  const [usagesGroupByModel, setUsagesGroupByModel] = useState<UsageResult[]>(
-    []
+  const [range, setRange] = useState<DateRange>(initialRange);
+  const [usages, setUsages] = useState<ExtendedUsageResult[] | undefined>(
+    initialUsages
   );
+  const [usagesGroupByModel, setUsagesGroupByModel] = useState<
+    UsageResult[] | undefined
+  >(initialUsagesGroupByModel);
 
   const fetchUsages = async (start: Date, end: Date) => {
     const usages = await getFullCompletionUsageAction(
@@ -54,11 +56,6 @@ export function UsageBoard({
     );
     setUsagesGroupByModel(grouped ?? []);
   };
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: fetchUsages is not a dependency
-  useEffect(() => {
-    fetchUsages(startOfMonth(today), today);
-  }, []);
 
   const setRangeAction = async (range: DateRange) => {
     const startTime = range.from ?? today;

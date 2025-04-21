@@ -1,4 +1,4 @@
-import { TraceBoard } from '@/components/trace-board';
+import { TraceBoard } from './components/trace-board';
 import { getTraceChartData } from '@/lib/server/span';
 
 interface TracePageProps {

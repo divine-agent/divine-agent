@@ -77,7 +77,6 @@ export function UsageLineChart({ data }: UsageChartProps) {
           tickMargin={8}
         />
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-        <ChartLegend />
         <Line
           dataKey="total_tokens"
           type="monotone"

@@ -16,7 +16,7 @@ import {
 } from '@workspace/ui/components/card';
 import { Timer } from 'lucide-react';
 import type * as React from 'react';
-import Highlighter from './Highter';
+import Highlighter from '@/components/Highter';
 
 interface SpanProps {
   span: ExtendedSpan;

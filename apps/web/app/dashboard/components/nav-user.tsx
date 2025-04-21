@@ -4,7 +4,6 @@ import {
   IconUserCircle,
 } from '@tabler/icons-react';
 import type { User } from '@workspace/graphql-client/src/types.generated';
-
 import {
   Avatar,
   AvatarFallback,

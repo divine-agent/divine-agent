@@ -1,6 +1,6 @@
 import { SiGithub } from '@icons-pack/react-simple-icons';
 import { SidebarTrigger } from '@workspace/ui/components/sidebar';
-import { ModeSwitcher } from './mode-switcher';
+import { ModeSwitcher } from '@/components/mode-switcher';
 
 export function SiteHeader() {
   return (

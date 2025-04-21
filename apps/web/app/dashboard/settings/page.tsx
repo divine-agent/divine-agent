@@ -1,4 +1,4 @@
-import { ProfileForm } from '@/components/profile-form';
+import { ProfileForm } from './components/profile-form';
 import { getCurrentUser } from '@/lib/server/auth';
 import { Separator } from '@workspace/ui/components/separator';
 

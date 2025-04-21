@@ -1,4 +1,4 @@
-import { AccountForm } from '@/components/account-form';
+import { AccountForm } from './components/account-form';
 import { getClient } from '@/hooks/apolloClient';
 import { getCurrentUser } from '@/lib/server/auth';
 import { getAuthContext } from '@/lib/server/auth';

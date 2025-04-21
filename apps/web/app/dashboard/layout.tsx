@@ -1,5 +1,5 @@
-import { AppSidebar } from '@/components/app-sidebar';
-import { SiteHeader } from '@/components/site-header';
+import { AppSidebar } from './components/app-sidebar';
+import { SiteHeader } from './components/site-header';
 import { getCurrentUser } from '@/lib/server/auth';
 import { deleteSessionTokenCookie } from '@/lib/server/cookies';
 import {

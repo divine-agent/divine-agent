@@ -1,4 +1,4 @@
-import { AppearanceForm } from '@/components/appearance-form';
+import { AppearanceForm } from './components/appearance-form';
 import { Separator } from '@workspace/ui/components/separator';
 
 export default function SettingsAppearancePage() {

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-
-import { SidebarNav } from '@/components/sidebar-nav';
+import { SidebarNav } from './components/sidebar-nav';
 import { Separator } from '@workspace/ui/components/separator';
 import type React from 'react';
 

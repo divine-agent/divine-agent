@@ -1,4 +1,4 @@
-import { LoginForm } from '@/components/login-form';
+import { LoginForm } from './components/login-form';
 import { getClient } from '@/hooks/apolloClient';
 import { setSessionTokenCookie } from '@/lib/server/cookies';
 import { LoginDocument } from '@workspace/graphql-client/src/auth/login.generated';

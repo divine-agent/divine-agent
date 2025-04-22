@@ -15,7 +15,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@workspace/ui/components/chart';
-import { ChartLegend } from '@workspace/ui/components/chart';
 import { useMemo } from 'react';
 import { CartesianGrid, Line, LineChart, XAxis } from 'recharts';
 import { Label, Pie, PieChart } from 'recharts';

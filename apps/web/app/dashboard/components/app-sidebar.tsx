@@ -1,13 +1,9 @@
 'use client';
 
-import { NavMain } from './nav-main';
-import { NavSecondary } from './nav-secondary';
-import { NavUser } from './nav-user';
 import {
   IconBinaryTree,
   IconBook,
   IconCurrencyDollar,
-  IconDashboard,
   IconKey,
   IconSettings,
 } from '@tabler/icons-react';
@@ -23,6 +19,9 @@ import {
 } from '@workspace/ui/components/sidebar';
 import Link from 'next/link';
 import type * as React from 'react';
+import { NavMain } from './nav-main';
+import { NavSecondary } from './nav-secondary';
+import { NavUser } from './nav-user';
 
 const data = {
   user: {

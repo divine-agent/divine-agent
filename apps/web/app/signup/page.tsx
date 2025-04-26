@@ -1,4 +1,3 @@
-import { SignupForm } from './components/signup-form';
 import { getClient } from '@/hooks/apolloClient';
 import {
   SignupDocument,
@@ -6,6 +5,7 @@ import {
 } from '@workspace/graphql-client/src/auth/user.generated';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
+import { SignupForm } from './components/signup-form';
 
 /**
  * Signup action with graphql mutation to create user

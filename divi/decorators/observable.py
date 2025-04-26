@@ -85,56 +85,31 @@ def observable(
             # recover parent context
             _SESSION_EXTRA.reset(token)
 
+            # get the trace to collect data
             trace = session_extra.get("trace")
-            if trace:
-                # TODO: collect inputs and outputs
-                inputs = extract_flattened_inputs(func, *args, **kwargs)
-                # create the span if it is the root span
-                if divi._datapark and span.trace_id:
-                    divi._datapark.create_spans(
-                        span.trace_id, ScopeSpans(spans=[span.signal])
-                    )
-                # end the trace if it is the root span
-                if divi._datapark and not span.parent_span_id:
-                    trace.end()
-                    divi._datapark.upsert_traces(
-                        session_id=trace.session_id, traces=[trace.signal]
-                    )
-                # create the chat completion if it is a chat completion
-                if divi._datapark and isinstance(result, ChatCompletion):
-                    divi._datapark.create_chat_completion(
-                        span_id=span.span_id,
-                        trace_id=trace.trace_id,
-                        inputs=inputs,
-                        completion=result,
-                    )
+            if not trace:
+                raise ValueError("Trace not found in session_extra")
+            # TODO: collect inputs and outputs for SPAN_KIND_FUNCTION
+            inputs = extract_flattened_inputs(func, *args, **kwargs)
+            # create the span if it is the root span
+            if divi._datapark and span.trace_id:
+                divi._datapark.create_spans(
+                    span.trace_id, ScopeSpans(spans=[span.signal])
+                )
+            # end the trace if it is the root span
+            if divi._datapark and not span.parent_span_id:
+                trace.end()
+            # create the chat completion if it is a chat completion
+            if divi._datapark and isinstance(result, ChatCompletion):
+                divi._datapark.create_chat_completion(
+                    span_id=span.span_id,
+                    trace_id=trace.trace_id,
+                    inputs=inputs,
+                    completion=result,
+                )
 
             return result
 
-        @functools.wraps(func)
-        def generator_wrapper(
-            *args, session_extra: Optional[SessionExtra] = None, **kwargs
-        ):
-            span = Span(
-                kind=kind, name=name or func.__name__, metadata=metadata
-            )
-            session_extra = setup(span, _SESSION_EXTRA.get() or session_extra)
-            # set current context
-            token = _SESSION_EXTRA.set(session_extra)
-            # execute the function
-            results: List[Any] = []
-            span.start()
-            for item in func(*args, **kwargs):
-                results.append(item)
-                yield item
-            span.end()
-
-            # recover parent context
-            _SESSION_EXTRA.reset(token)
-            # TODO: collect results
-
-        if inspect.isgeneratorfunction(func):
-            return generator_wrapper
         return wrapper
 
     # Function Decorator

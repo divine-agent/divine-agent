@@ -9,13 +9,13 @@ class SessionExtra(TypedDict, total=False):
 
     session_name: Optional[str]
     """Name of the session"""
-    trace: Optional[Trace]
-    """Trace ID UUID4"""
+    trace: Trace
+    """Trace in session"""
     parent_span_id: Optional[bytes]
     """Parent Span ID fixed string(8)"""
 
 
-class SessionSignal(TypedDict, total=False):
+class SessionSignal(TypedDict):
     """Session request"""
 
     id: str

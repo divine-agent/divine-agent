@@ -7,6 +7,7 @@ from uuid import uuid4
 from pydantic import UUID4
 from typing_extensions import TypedDict
 
+import divi
 from divi.proto.common.v1.common_pb2 import KeyValue
 from divi.proto.trace.v1.trace_pb2 import Span as SpanProto
 
@@ -29,14 +30,18 @@ class TraceSignal(TypedDict, total=False):
     """Start time in iso format"""
     end_time: NullTime
     """End time in iso format"""
+    name: Optional[str]
 
 
 class Trace:
-    def __init__(self, session_id: UUID4):
+    def __init__(self, session_id: UUID4, name: Optional[str] = None):
         self.trace_id: UUID4 = uuid4()
         self.start_time: str | None = None
         self.end_time: str | None = None
+        self.name: Optional[str] = name
         self.session_id: UUID4 = session_id
+
+        self.start()
 
     @property
     def signal(self) -> TraceSignal:
@@ -45,6 +50,7 @@ class Trace:
         signal = TraceSignal(
             id=str(self.trace_id),
             start_time=self.start_time,
+            name=self.name,
         )
         if self.end_time is not None:
             signal["end_time"] = NullTime(
@@ -60,12 +66,21 @@ class Trace:
     def start(self):
         """Start the trace by recording the current time in nanoseconds."""
         self.start_time = datetime.now(UTC).isoformat()
+        self.upsert_trace()
 
     def end(self):
         """End the trace by recording the end time in nanoseconds."""
         if self.start_time is None:
             raise ValueError("Span must be started before ending.")
         self.end_time = datetime.now(UTC).isoformat()
+        self.upsert_trace()
+
+    def upsert_trace(self):
+        """Upsert trace with datapark."""
+        if divi._datapark:
+            divi._datapark.upsert_traces(
+                session_id=self.session_id, traces=[self.signal]
+            )
 
 
 class Span:
@@ -130,21 +145,7 @@ class Span:
             raise ValueError("Span must be started before ending.")
         self.end_time_unix_nano = time.time_ns()
 
-    def _as_root(self, trace_id: UUID4):
-        """Set the span as a root span."""
-        self.trace_id = trace_id
-        print("as root")
-        print(f"name: {self.name}")
-        print(f"trace_id: {self.trace_id}")
-        print(f"span_id: {self.span_id}")
-
-    def _add_parent(self, trace_id: UUID4, parent_id: bytes):
-        """Set the parent span ID."""
+    def _add_node(self, trace_id: UUID4, parent_id: Optional[bytes] = None):
+        """Add node for obs tree."""
         self.trace_id = trace_id
         self.parent_span_id = parent_id
-
-        print("add parent")
-        print(f"name: {self.name}")
-        print(f"trace_id: {trace_id}")
-        print(f"span_id: {self.span_id}")
-        print(f"parent_span_id: {parent_id}")

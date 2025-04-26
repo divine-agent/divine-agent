@@ -12,5 +12,5 @@ _core: Optional[Core] = None
 _auth: Optional[Auth] = None
 _datapark: Optional[DataPark] = None
 
-__version__ = "0.0.1.dev22"
+__version__ = "0.0.1.dev23"
 __all__ = ["proto", "obs_openai", "observable"]

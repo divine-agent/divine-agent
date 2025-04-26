@@ -18,7 +18,6 @@ def _get_observable_create(create: Callable) -> Callable:
         return decorator(create)(*args, stream=stream, **kwargs)
 
     # TODO Async Observable Create
-    print("Is async", is_async(create))
     return observable_create if not is_async(create) else create
 
 

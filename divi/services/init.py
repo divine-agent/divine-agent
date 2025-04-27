@@ -1,6 +1,7 @@
 import divi
 from divi.services.auth import init as init_auth
-from divi.services.core import init as init_core
+
+# from divi.services.core import init as init_core
 from divi.services.datapark import init as init_datapark
 
 

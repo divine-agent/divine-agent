@@ -1,11 +1,9 @@
 import contextvars
 import functools
-import inspect
 from typing import (
     Any,
     Callable,
     Generic,
-    List,
     Mapping,
     Optional,
     ParamSpec,
@@ -19,6 +17,8 @@ from typing import (
 from openai.types.chat import ChatCompletion
 
 import divi
+from divi.evaluation.evaluate import evaluate_scores
+from divi.evaluation.scores import Score
 from divi.proto.trace.v1.trace_pb2 import ScopeSpans
 from divi.session import SessionExtra
 from divi.session.setup import setup
@@ -54,6 +54,7 @@ def observable(
     kind: str = "function",
     *,
     name: Optional[str] = None,
+    scores: Optional[list[Score]] = None,
     metadata: Optional[Mapping[str, Any]] = None,
 ) -> Callable[[Callable[P, R]], WithSessionExtra[P, R]]: ...
 
@@ -66,6 +67,7 @@ def observable(
     kind = kwargs.pop("kind", "function")
     name = kwargs.pop("name", None)
     metadata = kwargs.pop("metadata", None)
+    scores: list[Score] = kwargs.pop("scores", None)
 
     def decorator(func):
         @functools.wraps(func)
@@ -88,7 +90,7 @@ def observable(
             # get the trace to collect data
             trace = session_extra.get("trace")
             if not trace:
-                raise ValueError("Trace not found in session_extra")
+                raise ValueError("Trace not found in session context.")
             # TODO: collect inputs and outputs for SPAN_KIND_FUNCTION
             inputs = extract_flattened_inputs(func, *args, **kwargs)
             # create the span if it is the root span
@@ -107,6 +109,9 @@ def observable(
                     inputs=inputs,
                     completion=result,
                 )
+                # evaluate the scores if they are provided
+                if scores is not None and scores.__len__() > 0:
+                    evaluate_scores(inputs, outputs=result, scores=scores)
 
             return result
 

@@ -1,4 +1,5 @@
 from typing_extensions import Optional
+
 import divi
 from divi.services import init as init_services
 from divi.session import Session, SessionExtra
@@ -6,7 +7,7 @@ from divi.signals.trace import Span
 from divi.signals.trace.trace import Trace
 
 
-def init_session(name: Optional[str]=None) -> Session:
+def init_session(name: Optional[str] = None) -> Session:
     """init initializes the services and the Run"""
     init_services()
     session = Session(name=name)
@@ -29,7 +30,9 @@ def setup(
 
     # init the session if not already initialized
     if not divi._session:
-        divi._session = init_session(name=session_extra.get('session_name') or span.name)
+        divi._session = init_session(
+            name=session_extra.get("session_name") or span.name
+        )
 
     # setup trace
     trace = session_extra.get("trace") or Trace(divi._session.id, span.name)

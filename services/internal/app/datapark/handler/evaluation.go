@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"encoding/hex"
 	"fmt"
 	"time"
 
@@ -52,7 +53,7 @@ func CreateScores(c *fiber.Ctx) error {
 	ctx = context.Background()
 	err = conn.Exec(ctx, `
 		CREATE TABLE IF NOT EXISTS scores (
-			span_id String,
+			span_id FixedString(8),
 			trace_id UUID,
 			user_id UUID,
 			name LowCardinality(String),
@@ -61,8 +62,8 @@ func CreateScores(c *fiber.Ctx) error {
 			created DateTime DEFAULT now()
 		) ENGINE = MergeTree()
 		PARTITION BY toYYYYMM(created)
-		ORDER BY (span_id, name)
-		PRIMARY KEY (span_id, name)
+		ORDER BY (trace_id, span_id, name)
+		PRIMARY KEY (trace_id, span_id, name)
 	`)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create scores table", "data": nil})
@@ -72,9 +73,14 @@ func CreateScores(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to prepare batch", "data": nil})
 	}
+
+	spanID, err := hex.DecodeString(createScoresReq.SpanID)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid span ID", "data": nil})
+	}
 	for _, score := range createScoresReq.Data {
 		if err := batch.Append(
-			createScoresReq.SpanID,
+			spanID,
 			createScoresReq.TraceID,
 			userID,
 			score.Name,
@@ -92,4 +98,47 @@ func CreateScores(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "message": "Stored evaluation scores", "data": nil})
+}
+
+func GetScores(c *fiber.Ctx) error {
+	db := database.DB
+	conn := *database.CH
+	traceID, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid trace ID", "data": nil})
+	}
+	token := c.Locals("user").(*jwt.Token)
+	userID, err := auth.ParseUserId(token)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid user ID", "data": nil})
+	}
+
+	var trace model.Trace
+	if err := db.Where(&model.Trace{ID: traceID}).Find(&trace).Error; err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "No trace found with ID", "data": nil})
+	}
+	if err := checkSessionExist(userID, trace.SessionID); err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "No session found with ID", "data": nil})
+	}
+
+	var scores []model.EvaluationScore
+	rows, err := conn.Query(context.Background(), `SELECT span_id, name, score, representative_reasoning FROM scores WHERE trace_id = ?`, traceID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to query scores", "data": nil})
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var (
+			score  model.EvaluationScore
+			spanID []byte
+		)
+		if err := rows.Scan(&spanID, &score.Name, &score.Score, &score.RepresentativeReasoning); err != nil {
+			fmt.Println(err)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to scan scores", "data": nil})
+		}
+		score.SpanID = hex.EncodeToString(spanID)
+		scores = append(scores, score)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "message": "Fetched scores", "data": scores})
 }

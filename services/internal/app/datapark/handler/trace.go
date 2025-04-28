@@ -115,7 +115,7 @@ func UpsertTrace(c *fiber.Ctx) error {
 func GetSpans(c *fiber.Ctx) error {
 	db := database.DB
 	conn := *database.CH
-	traceId, err := uuid.Parse(c.Params("id"))
+	traceID, err := uuid.Parse(c.Params("id"))
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid trace ID", "data": nil})
 	}
@@ -129,7 +129,7 @@ func GetSpans(c *fiber.Ctx) error {
 	// if not, return error
 	// trace -> session -> user
 	var trace model.Trace
-	if err := db.Where(&model.Trace{ID: traceId}).Find(&trace).Error; err != nil {
+	if err := db.Where(&model.Trace{ID: traceID}).Find(&trace).Error; err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "No trace found with ID", "data": nil})
 	}
 	if err := checkSessionExist(userID, trace.SessionID); err != nil {
@@ -138,7 +138,7 @@ func GetSpans(c *fiber.Ctx) error {
 
 	// query spans with trace id from clickhouse
 	var spans []model.Span
-	rows, err := conn.Query(context.Background(), "SELECT * FROM spans WHERE trace_id = ?", traceId)
+	rows, err := conn.Query(context.Background(), "SELECT * FROM spans WHERE trace_id = ?", traceID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to query spans", "data": nil})
 	}

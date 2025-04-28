@@ -30,6 +30,7 @@ func SetupRoutes(app *fiber.App) {
 	// Span
 	trace.Get("/:id/spans", jwtware, handler.GetSpans)
 	trace.Post("/:id/spans", jwtware, handler.CreateSpans)
+	trace.Get("/:id/scores", jwtware, handler.GetScores)
 
 	// Metric
 	metric := api.Group("/metric")

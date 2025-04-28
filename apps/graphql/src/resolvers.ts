@@ -26,6 +26,9 @@ export const resolvers: Resolvers = {
     spans: async (_, { trace_id }, { dataSources }) => {
       return (await dataSources.dataparkAPI.getSpans(trace_id)).data;
     },
+    scores: async (_, { trace_id }, { dataSources }) => {
+      return (await dataSources.dataparkAPI.getScores(trace_id)).data;
+    },
     chat_input: async (_, { span_id }, { dataSources }) => {
       return (await dataSources.dataparkAPI.getChatInput(span_id)).data;
     },

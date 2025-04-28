@@ -201,6 +201,8 @@ export type Query = {
   completion_usage?: Maybe<Array<UsageResult>>;
   /** Fetch current user */
   me: User;
+  /** Fetch all scores by trace id */
+  scores?: Maybe<Array<Score>>;
   /** Fetch all spans by trace id */
   spans?: Maybe<Array<Span>>;
   /** Fetch traces by session id */
@@ -221,6 +223,12 @@ export type QueryCompletion_UsageArgs = {
   end_time?: InputMaybe<Scalars['Int']['input']>;
   group_by?: InputMaybe<GroupingKey>;
   start_time: Scalars['Int']['input'];
+};
+
+
+/** Query is a collection of queries that can be made to the API */
+export type QueryScoresArgs = {
+  trace_id: Scalars['ID']['input'];
 };
 
 
@@ -247,6 +255,15 @@ export type RevokeApiKeyResponse = MutationResponse & {
   code: Scalars['Int']['output'];
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
+};
+
+/** Score is a record of a score for a trace */
+export type Score = {
+  __typename?: 'Score';
+  name: Scalars['String']['output'];
+  representative_reasoning: Scalars['String']['output'];
+  score: Scalars['Float']['output'];
+  span_id: Scalars['ID']['output'];
 };
 
 /** Span is a record of a single unit of work within a trace */
@@ -405,6 +422,7 @@ export type ResolversTypes = {
   NullTime: ResolverTypeWrapper<NullTime>;
   Query: ResolverTypeWrapper<{}>;
   RevokeAPIKeyResponse: ResolverTypeWrapper<RevokeApiKeyResponse>;
+  Score: ResolverTypeWrapper<Score>;
   Span: ResolverTypeWrapper<Span>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Trace: ResolverTypeWrapper<Trace>;
@@ -433,6 +451,7 @@ export type ResolversParentTypes = {
   NullTime: NullTime;
   Query: {};
   RevokeAPIKeyResponse: RevokeApiKeyResponse;
+  Score: Score;
   Span: Span;
   String: Scalars['String']['output'];
   Trace: Trace;
@@ -536,6 +555,7 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
   chat_input?: Resolver<Maybe<ResolversTypes['ChatInput']>, ParentType, ContextType, RequireFields<QueryChat_InputArgs, 'span_id'>>;
   completion_usage?: Resolver<Maybe<Array<ResolversTypes['UsageResult']>>, ParentType, ContextType, RequireFields<QueryCompletion_UsageArgs, 'start_time'>>;
   me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  scores?: Resolver<Maybe<Array<ResolversTypes['Score']>>, ParentType, ContextType, RequireFields<QueryScoresArgs, 'trace_id'>>;
   spans?: Resolver<Maybe<Array<ResolversTypes['Span']>>, ParentType, ContextType, RequireFields<QuerySpansArgs, 'trace_id'>>;
   traces?: Resolver<Maybe<Array<ResolversTypes['Trace']>>, ParentType, ContextType, RequireFields<QueryTracesArgs, 'session_id'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
@@ -545,6 +565,14 @@ export type RevokeApiKeyResponseResolvers<ContextType = DataSourceContext, Paren
   code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ScoreResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Score'] = ResolversParentTypes['Score']> = {
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  representative_reasoning?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  score?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  span_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -618,6 +646,7 @@ export type Resolvers<ContextType = DataSourceContext> = {
   NullTime?: NullTimeResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RevokeAPIKeyResponse?: RevokeApiKeyResponseResolvers<ContextType>;
+  Score?: ScoreResolvers<ContextType>;
   Span?: SpanResolvers<ContextType>;
   Trace?: TraceResolvers<ContextType>;
   UpdateAPIKeyResponse?: UpdateApiKeyResponseResolvers<ContextType>;

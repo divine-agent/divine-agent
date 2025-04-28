@@ -20,6 +20,8 @@ type Query {
     end_time: Int
     group_by: GroupingKey
   ): [UsageResult!]
+  "Fetch all scores by trace id"
+  scores(trace_id: ID!): [Score!]
 }
 
 "GroupingKey is an enum that represents the key used to group usage results"
@@ -111,6 +113,14 @@ type UsageResult {
   total_tokens: Int!
   model: String
   date: Int
+}
+
+"Score is a record of a score for a trace"
+type Score {
+  span_id: ID!
+  name: String!
+  score: Float!
+  representative_reasoning: String!
 }
 
 "Mutation is a collection of mutations that can be made to the API"

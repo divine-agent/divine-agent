@@ -1,5 +1,5 @@
 import type { FetchResponse } from '@/types/response';
-import type { ChatInput, Span, Trace, UsageResult } from '@/types/types';
+import type { ChatInput, Score, Span, Trace, UsageResult } from '@/types/types';
 import { type AugmentedRequest, RESTDataSource } from '@apollo/datasource-rest';
 import type { KeyValueCache } from '@apollo/utils.keyvaluecache';
 
@@ -28,6 +28,12 @@ export class DataParkAPI extends RESTDataSource {
 
   async getSpans(traceId: string) {
     return await this.get<FetchResponse<Span[]>>(`/api/trace/${traceId}/spans`);
+  }
+
+  async getScores(traceId: string) {
+    return await this.get<FetchResponse<Score[]>>(
+      `/api/trace/${traceId}/scores`
+    );
   }
 
   async getChatInput(spanId: string) {

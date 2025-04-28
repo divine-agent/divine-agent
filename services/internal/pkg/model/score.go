@@ -5,6 +5,8 @@ type EvaluationScore struct {
 	Score                   float32            `json:"score"`
 	RepresentativeReasoning string             `json:"representative_reasoning"`
 	AllEvaluations          []EvaluationResult `json:"all_evaluations"`
+
+	SpanID string `json:"span_id"`
 }
 
 type EvaluationResult struct {

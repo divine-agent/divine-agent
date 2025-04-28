@@ -195,6 +195,8 @@ export type Query = {
   completion_usage?: Maybe<Array<UsageResult>>;
   /** Fetch current user */
   me: User;
+  /** Fetch all scores by trace id */
+  scores?: Maybe<Array<Score>>;
   /** Fetch all spans by trace id */
   spans?: Maybe<Array<Span>>;
   /** Fetch traces by session id */
@@ -215,6 +217,12 @@ export type QueryCompletion_UsageArgs = {
   end_time?: InputMaybe<Scalars['Int']['input']>;
   group_by?: InputMaybe<GroupingKey>;
   start_time: Scalars['Int']['input'];
+};
+
+
+/** Query is a collection of queries that can be made to the API */
+export type QueryScoresArgs = {
+  trace_id: Scalars['ID']['input'];
 };
 
 
@@ -241,6 +249,15 @@ export type RevokeApiKeyResponse = MutationResponse & {
   code: Scalars['Int']['output'];
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
+};
+
+/** Score is a record of a score for a trace */
+export type Score = {
+  __typename?: 'Score';
+  name: Scalars['String']['output'];
+  representative_reasoning: Scalars['String']['output'];
+  score: Scalars['Float']['output'];
+  span_id: Scalars['ID']['output'];
 };
 
 /** Span is a record of a single unit of work within a trace */

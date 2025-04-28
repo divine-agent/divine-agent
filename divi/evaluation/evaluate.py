@@ -7,7 +7,7 @@ from typing_extensions import List
 
 import divi
 from divi.evaluation import Evaluator
-from divi.evaluation.evaluator import EvaluatorConfig
+from divi.evaluation.evaluator import EvaluationScore, EvaluatorConfig
 from divi.evaluation.scores import Score
 
 OPENAI_API_KEY = "OPENAI_API_KEY"
@@ -33,7 +33,7 @@ def evaluate_scores(
     outputs: ChatCompletion,
     scores: List[Score],
     config: Optional[EvaluatorConfig] = None,
-):
+) -> List[EvaluationScore]:
     if not divi._evaluator:
         divi._evaluator = init_evaluator(config)
 
@@ -53,5 +53,4 @@ def evaluate_scores(
         "\n".join(f"{m['role']}: {m['content']}" for m in conversations), scores
     )
 
-    # TODO: collect all evaluation scores and link them to span
-    print(evaluation_scores)
+    return evaluation_scores

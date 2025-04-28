@@ -48,4 +48,6 @@ func SetupRoutes(app *fiber.App) {
 	// Output
 	v1.Post("/chat/completions", jwtware, handler.CreateChatCompletion)
 	v1.Get("/chat/completions/:id", jwtware, handler.GetChatCompletion)
+	// Evaluation
+	v1.Post("/chat/completions/scores", jwtware, handler.CreateScores)
 }

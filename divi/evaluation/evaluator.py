@@ -65,7 +65,10 @@ class Evaluator:
             temperature=self.config.temperature,
             response_format=EvaluationResult,
         )
-        return response.choices[0].message.parsed
+        result = response.choices[0].message.parsed
+        if result is not None:
+            result.name = score
+        return result
 
     async def _async_evaluate_once(
         self, conversation: str, score: Score
@@ -77,7 +80,10 @@ class Evaluator:
             temperature=self.config.temperature,
             response_format=EvaluationResult,
         )
-        return response.choices[0].message.parsed
+        result = response.choices[0].message.parsed
+        if result is not None:
+            result.name = score
+        return result
 
     def _aggregate_result(
         self, name: Score, evaluations: List[EvaluationResult]

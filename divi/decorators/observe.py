@@ -111,7 +111,15 @@ def observable(
                 )
                 # evaluate the scores if they are provided
                 if scores is not None and scores.__len__() > 0:
-                    evaluate_scores(inputs, outputs=result, scores=scores)
+                    evaluation_scores = evaluate_scores(
+                        inputs, outputs=result, scores=scores
+                    )
+                    # store the scores in the datapark
+                    divi._datapark.create_scores(
+                        span_id=span.span_id,
+                        trace_id=trace.trace_id,
+                        scores=evaluation_scores,
+                    )
 
             return result
 

@@ -9,6 +9,7 @@ import (
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/auth"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/database"
 	"github.com/Kaikaikaifang/divine-agent/services/internal/pkg/model"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
@@ -64,9 +65,9 @@ func CreateChatCompletion(c *fiber.Ctx) error {
 			total_tokens UInt64,
 			created DateTime DEFAULT now()
 		) ENGINE = MergeTree()
-		PARTITION BY toYYYYMMDD(created)
-		ORDER BY (user_id, trace_id, span_id, created, model)
-		PRIMARY KEY (user_id, trace_id, span_id);
+		PARTITION BY toYYYYMM(created)
+		ORDER BY (user_id, created, model)
+		PRIMARY KEY (user_id, created, model)
 	`)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create table", "data": nil})

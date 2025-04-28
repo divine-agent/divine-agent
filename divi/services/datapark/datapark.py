@@ -4,9 +4,10 @@ from google.protobuf.json_format import MessageToDict
 from openai import NotGiven
 from openai.types.chat import ChatCompletion
 from pydantic import UUID4
-from typing_extensions import Mapping
+from typing_extensions import List, Mapping
 
 import divi
+from divi.evaluation.evaluator import EvaluationScore
 from divi.proto.trace.v1.trace_pb2 import ScopeSpans
 from divi.services.service import Service
 from divi.session.session import SessionSignal
@@ -58,6 +59,8 @@ class DataPark(Service):
         completion: ChatCompletion,
     ) -> None:
         hex_span_id = span_id.hex()
+        str_trace_id = str(trace_id)
+
         self.post_concurrent(
             {
                 "/api/v1/chat/completions/input": {
@@ -66,8 +69,23 @@ class DataPark(Service):
                 },
                 "/api/v1/chat/completions": {
                     "span_id": hex_span_id,
-                    "trace_id": str(trace_id),
+                    "trace_id": str_trace_id,
                     "data": completion.model_dump(),
                 },
             }
+        )
+
+    def create_scores(
+        self,
+        span_id: bytes,
+        trace_id: UUID4,
+        scores: List[EvaluationScore],
+    ) -> None:
+        self.post(
+            "/api/v1/chat/completions/scores",
+            payload={
+                "span_id": span_id.hex(),
+                "trace_id": str(trace_id),
+                "data": [score.model_dump() for score in scores],
+            },
         )

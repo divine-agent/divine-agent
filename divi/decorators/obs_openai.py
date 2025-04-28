@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, TypeVar, Union
 
 from typing_extensions import Optional
 
-from divi.decorators.observable import observable
+from divi.decorators.observe import observable
 from divi.evaluation.scores import Score
 from divi.utils import is_async
 

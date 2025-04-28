@@ -9,6 +9,7 @@ from typing_extensions import TypedDict
 
 import divi
 from divi.proto.common.v1.common_pb2 import KeyValue
+from divi.proto.trace.v1.trace_pb2 import ScopeSpans
 from divi.proto.trace.v1.trace_pb2 import Span as SpanProto
 
 
@@ -138,14 +139,23 @@ class Span:
     def start(self):
         """Start the span by recording the current time in nanoseconds."""
         self.start_time_unix_nano = time.time_ns()
+        self.upsert_span()
 
     def end(self):
         """End the span by recording the end time in nanoseconds."""
         if self.start_time_unix_nano is None:
             raise ValueError("Span must be started before ending.")
         self.end_time_unix_nano = time.time_ns()
+        self.upsert_span()
 
     def _add_node(self, trace_id: UUID4, parent_id: Optional[bytes] = None):
         """Add node for obs tree."""
         self.trace_id = trace_id
         self.parent_span_id = parent_id
+
+    def upsert_span(self):
+        """Upsert span with datapark."""
+        if divi._datapark and self.trace_id:
+            divi._datapark.create_spans(
+                self.trace_id, ScopeSpans(spans=[self.signal])
+            )

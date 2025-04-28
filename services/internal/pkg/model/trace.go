@@ -38,9 +38,9 @@ type Span struct {
 	// StartTime is the start time of the span in Unix Nano
 	StartTime time.Time `json:"start_time"`
 	// EndTime is the end time of the span in Unix Nano
-	EndTime time.Time `json:"end_time"`
+	EndTime sql.NullTime `json:"end_time"`
 	// Duration is the duration of the span in milliseconds
-	Duration float64 `json:"duration"`
+	Duration *float64 `json:"duration,omitempty"`
 	// Kind is the kind of the span
 	Kind string `json:"kind"`
 	// Metadata is a map of key-value pairs

@@ -31,12 +31,15 @@ query getSpans($traceId: ID!) {
     trace_id
     name
     start_time
-    end_time
     duration
     kind
     metadata {
       key
       value
+    }
+    end_time {
+      Time
+      Valid
     }
   }
 }

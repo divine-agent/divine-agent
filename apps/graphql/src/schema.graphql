@@ -81,8 +81,8 @@ type Span {
   trace_id: ID!
   name: String!
   start_time: String!
-  end_time: String!
-  duration: Float!
+  end_time: NullTime!
+  duration: Float
   kind: Kind!
   metadata: [KeyValue!]
 }

@@ -266,8 +266,8 @@ export type Score = {
 /** Span is a record of a single unit of work within a trace */
 export type Span = {
   __typename?: 'Span';
-  duration: Scalars['Float']['output'];
-  end_time: Scalars['String']['output'];
+  duration?: Maybe<Scalars['Float']['output']>;
+  end_time: NullTime;
   id: Scalars['ID']['output'];
   kind: Kind;
   metadata?: Maybe<Array<KeyValue>>;

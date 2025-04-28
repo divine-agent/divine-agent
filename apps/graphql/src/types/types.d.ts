@@ -269,8 +269,8 @@ export type Score = {
 /** Span is a record of a single unit of work within a trace */
 export type Span = {
   __typename?: 'Span';
-  duration: Scalars['Float']['output'];
-  end_time: Scalars['String']['output'];
+  duration?: Maybe<Scalars['Float']['output']>;
+  end_time: NullTime;
   id: Scalars['ID']['output'];
   kind: Kind;
   metadata?: Maybe<Array<KeyValue>>;
@@ -577,8 +577,8 @@ export type ScoreResolvers<ContextType = DataSourceContext, ParentType extends R
 };
 
 export type SpanResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Span'] = ResolversParentTypes['Span']> = {
-  duration?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  end_time?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  duration?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  end_time?: Resolver<ResolversTypes['NullTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   kind?: Resolver<ResolversTypes['Kind'], ParentType, ContextType>;
   metadata?: Resolver<Maybe<Array<ResolversTypes['KeyValue']>>, ParentType, ContextType>;

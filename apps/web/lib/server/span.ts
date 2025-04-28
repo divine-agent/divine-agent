@@ -39,7 +39,7 @@ export const getTraceChartData = cache(
     spans = sortSpans(spans);
     // get chat input and completion for LLM span
     const llmSpanIds = spans
-      .filter((span) => span.kind === Kind.SpanKindLlm)
+      .filter((span) => span.kind === Kind.SpanKindLlm && span.end_time.Valid)
       .map((s) => s.id);
     const chats = await Promise.all(llmSpanIds.map((id) => getChat(id)));
     const chatsMap = new Map<string, Chat>(
@@ -54,6 +54,9 @@ export const getTraceChartData = cache(
         relative_start_time: new Date(span.start_time).getTime() - startTime,
         input: chat?.input,
         completion: chat?.completion,
+        duration: span.end_time.Valid
+          ? span.duration
+          : Date.now() - new Date(span.start_time).getTime(),
       };
     });
   }

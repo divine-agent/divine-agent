@@ -1,3 +1,4 @@
+import Highlighter from '@/components/Highter';
 import type { ExtendedSpan } from '@/lib/types/span';
 import { formatDate } from '@/lib/utils';
 import {
@@ -16,7 +17,6 @@ import {
 } from '@workspace/ui/components/card';
 import { Timer } from 'lucide-react';
 import type * as React from 'react';
-import Highlighter from '@/components/Highter';
 
 interface SpanProps {
   span: ExtendedSpan;
@@ -60,7 +60,7 @@ function GeneralInfo({ span }: SpanProps) {
 function AccordionProperties({ span }: SpanProps) {
   // TODO select the properties to show
   const startTime = formatDate(span.start_time);
-  const endTime = formatDate(span.end_time);
+  const endTime = span.end_time.Valid ? formatDate(span.end_time.Time) : 'N/A';
   const usage = span.completion?.usage;
   // input should pop messages
   const { messages, ...inputs } = span.input ?? {};

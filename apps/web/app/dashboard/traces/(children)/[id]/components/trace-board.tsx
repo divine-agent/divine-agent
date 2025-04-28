@@ -16,6 +16,11 @@ export function TraceBoard({ spans, direction }: TraceBoardProps) {
   const selectAction = (_data: ExtendedSpan, index: number) => {
     setIndex(index);
   };
+  if (!spans || spans.length === 0) {
+    return (
+      <div className="flex h-full items-center justify-center">No data</div>
+    );
+  }
 
   return (
     <ResponsiveResizable

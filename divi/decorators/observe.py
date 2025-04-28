@@ -19,7 +19,6 @@ from openai.types.chat import ChatCompletion
 import divi
 from divi.evaluation.evaluate import evaluate_scores
 from divi.evaluation.scores import Score
-from divi.proto.trace.v1.trace_pb2 import ScopeSpans
 from divi.session import SessionExtra
 from divi.session.setup import setup
 from divi.signals.trace import Span
@@ -93,11 +92,7 @@ def observable(
                 raise ValueError("Trace not found in session context.")
             # TODO: collect inputs and outputs for SPAN_KIND_FUNCTION
             inputs = extract_flattened_inputs(func, *args, **kwargs)
-            # create the span if it is the root span
-            if divi._datapark and span.trace_id:
-                divi._datapark.create_spans(
-                    span.trace_id, ScopeSpans(spans=[span.signal])
-                )
+
             # end the trace if it is the root span
             if divi._datapark and not span.parent_span_id:
                 trace.end()

@@ -3,6 +3,7 @@ package handler
 import (
 	"bytes"
 	"context"
+	"database/sql"
 	"encoding/hex"
 	"fmt"
 	"time"
@@ -138,8 +139,23 @@ func GetSpans(c *fiber.Ctx) error {
 
 	// query spans with trace id from clickhouse
 	var spans []model.Span
-	rows, err := conn.Query(context.Background(), "SELECT * FROM spans WHERE trace_id = ?", traceID)
+	rows, err := conn.Query(context.Background(), `
+		SELECT
+		    span_id,
+		    trace_id,
+		    parent_span_id,
+		    name,
+		    kind,
+		    start_time,
+		    argMax(end_time, update_time) AS end_time,
+		    argMax(duration, update_time) AS duration,
+		    argMax(metadata, update_time) AS metadata
+		FROM spans
+		WHERE trace_id = ?
+		GROUP BY span_id, trace_id, parent_span_id, name, kind, start_time
+	`, traceID)
 	if err != nil {
+		fmt.Println(err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to query spans", "data": nil})
 	}
 	defer rows.Close()
@@ -148,9 +164,11 @@ func GetSpans(c *fiber.Ctx) error {
 			span     model.Span
 			ID       []byte
 			parentID []byte
-			duration float64
+			duration *float64
+			endTime  *time.Time
 		)
-		if err := rows.Scan(&ID, &span.TraceID, &parentID, &span.Name, &span.Kind, &span.StartTime, &span.EndTime, &duration, &span.Metadata); err != nil {
+		if err := rows.Scan(&ID, &span.TraceID, &parentID, &span.Name, &span.Kind, &span.StartTime, &endTime, &duration, &span.Metadata); err != nil {
+			fmt.Println(err)
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to scan spans", "data": nil})
 		}
 
@@ -161,7 +179,17 @@ func GetSpans(c *fiber.Ctx) error {
 			span.ParentID = hex.EncodeToString(parentID)
 		}
 		// convert duration to milliseconds
-		span.Duration = duration / 1e6
+		if duration != nil {
+			_duration := *duration / 1e6
+			span.Duration = &(_duration)
+		}
+		// convert end_time to nullTime
+		if endTime != nil {
+			span.EndTime = sql.NullTime{
+				Valid: true,
+				Time:  *endTime,
+			}
+		}
 		spans = append(spans, span)
 	}
 
@@ -207,15 +235,17 @@ func CreateSpans(c *fiber.Ctx) error {
 		    name VARCHAR(255),
 		    kind Enum8('SPAN_KIND_FUNCTION'=0, 'SPAN_KIND_LLM'=1),
 		    start_time DateTime64(9),
-		    end_time DateTime64(9),
-		    duration Float64,
-		    metadata Map(String, String)
-		) ENGINE = MergeTree()
+		    end_time Nullable(DateTime64(9)),
+		    duration Nullable(Float64),
+		    metadata Map(String, String),
+			update_time DateTime DEFAULT now()
+	    ) ENGINE = ReplacingMergeTree(update_time)
 		PARTITION BY toYYYYMM(start_time)
 		ORDER BY (trace_id, span_id, start_time)
 		PRIMARY KEY (trace_id, span_id);
 	`)
 	if err != nil {
+		fmt.Println(err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create table", "data": nil})
 	}
 
@@ -224,6 +254,18 @@ func CreateSpans(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to prepare batch", "data": nil})
 	}
 	for _, span := range spans.Spans {
+		var (
+			endTime  any
+			duration any
+		)
+		if span.EndTimeUnixNano != 0 {
+			endTime = unixNanoToTime(span.EndTimeUnixNano)
+			duration = span.EndTimeUnixNano - span.StartTimeUnixNano
+		} else {
+			endTime = nil
+			duration = nil
+		}
+
 		err := batch.Append(
 			span.SpanId,
 			traceId,
@@ -231,9 +273,10 @@ func CreateSpans(c *fiber.Ctx) error {
 			span.Name,
 			span.Kind,
 			unixNanoToTime(span.StartTimeUnixNano),
-			unixNanoToTime(span.EndTimeUnixNano),
-			span.EndTimeUnixNano-span.StartTimeUnixNano,
+			endTime,
+			duration,
 			keyValueToMap(span.Metadata),
+			time.Now(),
 		)
 		if err != nil {
 			fmt.Println(err)

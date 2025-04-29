@@ -1,14 +1,18 @@
-import copy
 import os
-from typing import Any, Dict, Optional
+from typing import Optional
 
-from openai.types.chat import ChatCompletion
+from openai.types.chat import (
+    ChatCompletion,
+    ChatCompletionMessageParam,
+)
 from typing_extensions import List
 
 import divi
+from divi.decorators.observe import observe
 from divi.evaluation import Evaluator
-from divi.evaluation.evaluator import EvaluationScore, EvaluatorConfig
+from divi.evaluation.evaluator import EvaluatorConfig
 from divi.evaluation.scores import Score
+from divi.signals.span import Kind, Span
 
 OPENAI_API_KEY = "OPENAI_API_KEY"
 OPENAI_BASE_URL = "OPENAI_BASE_URL"
@@ -29,28 +33,29 @@ def init_evaluator(config: Optional[EvaluatorConfig] = None):
 
 
 def evaluate_scores(
-    inputs: Dict[str, Any],
-    outputs: ChatCompletion,
-    scores: List[Score],
+    messages: Optional[List[ChatCompletionMessageParam]],
+    outputs: Optional[ChatCompletion],
+    scores: Optional[List[Score]],
     config: Optional[EvaluatorConfig] = None,
-) -> List[EvaluationScore]:
+):
+    if messages is None or scores is None or scores.__len__() == 0:
+        return
     if not divi._evaluator:
         divi._evaluator = init_evaluator(config)
 
-    # create conversation with result and inputs
-    input_messages = inputs.get("messages", None)
-    if input_messages is None:
-        raise ValueError("No messages found in inputs")
-    output_message = outputs.choices[0].message
-    if output_message is None:
-        raise ValueError("No message found in outputs")
+    if isinstance(outputs, ChatCompletion):
+        output_message = outputs.choices[0].message
+        messages.append(
+            {"role": output_message.role, "content": output_message.content}
+        )
 
-    conversations = copy.deepcopy(input_messages)
-    conversations.append(
-        {"role": output_message.role, "content": output_message.content}
-    )
-    evaluation_scores = divi._evaluator.evaluate(
-        "\n".join(f"{m['role']}: {m['content']}" for m in conversations), scores
-    )
-
-    return evaluation_scores
+        evaluation_span = Span(kind=Kind.evaluation, name="Evaluation")
+        observe(
+            func=divi._evaluator.evaluate,
+            span=evaluation_span,
+            conversation="\n".join(
+                f"{m.get('role', 'unknown')}: {m.get('content')}"
+                for m in messages
+            ),
+            scores=scores,
+        )

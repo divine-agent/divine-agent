@@ -72,6 +72,7 @@ type Trace {
 enum Kind {
   SPAN_KIND_FUNCTION
   SPAN_KIND_LLM
+  SPAN_KIND_EVALUATION
 }
 
 "Span is a record of a single unit of work within a trace"

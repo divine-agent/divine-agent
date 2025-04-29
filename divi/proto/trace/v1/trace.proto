@@ -31,6 +31,9 @@ message Span {
 
         // LLM represents a llm api call.
         SPAN_KIND_LLM = 1;
+
+        // EVALUATION represents an evaluation.
+        SPAN_KIND_EVALUATION = 2;
     }
 
     // The kind of the span.

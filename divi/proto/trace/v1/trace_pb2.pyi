@@ -19,8 +19,10 @@ class Span(_message.Message):
         __slots__ = ()
         SPAN_KIND_FUNCTION: _ClassVar[Span.SpanKind]
         SPAN_KIND_LLM: _ClassVar[Span.SpanKind]
+        SPAN_KIND_EVALUATION: _ClassVar[Span.SpanKind]
     SPAN_KIND_FUNCTION: Span.SpanKind
     SPAN_KIND_LLM: Span.SpanKind
+    SPAN_KIND_EVALUATION: Span.SpanKind
     TRACE_ID_FIELD_NUMBER: _ClassVar[int]
     SPAN_ID_FIELD_NUMBER: _ClassVar[int]
     PARENT_SPAN_ID_FIELD_NUMBER: _ClassVar[int]

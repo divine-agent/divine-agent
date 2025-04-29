@@ -4,8 +4,9 @@ from typing import TYPE_CHECKING, TypeVar, Union
 
 from typing_extensions import Optional
 
-from divi.decorators.observe import observable
+from divi.decorators.observable import observable
 from divi.evaluation.scores import Score
+from divi.signals.span import Kind
 from divi.utils import is_async
 
 if TYPE_CHECKING:
@@ -21,7 +22,7 @@ def _get_observable_create(
 ) -> Callable:
     @functools.wraps(create)
     def observable_create(*args, stream: bool = False, **kwargs):
-        decorator = observable(kind="llm", name=name, scores=scores)
+        decorator = observable(kind=Kind.llm, name=name, scores=scores)
         return decorator(create)(*args, stream=stream, **kwargs)
 
     # TODO Async Observable Create

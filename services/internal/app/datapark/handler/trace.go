@@ -233,7 +233,7 @@ func CreateSpans(c *fiber.Ctx) error {
 		    trace_id UUID,
 		    parent_span_id FixedString(8),
 		    name VARCHAR(255),
-		    kind Enum8('SPAN_KIND_FUNCTION'=0, 'SPAN_KIND_LLM'=1),
+		    kind Enum8('SPAN_KIND_FUNCTION'=0, 'SPAN_KIND_LLM'=1, 'SPAN_KIND_EVALUATION'=2),
 		    start_time DateTime64(9),
 		    end_time Nullable(DateTime64(9)),
 		    duration Nullable(Float64),

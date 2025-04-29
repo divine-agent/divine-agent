@@ -1,7 +1,7 @@
 from typing import Optional, TypedDict
 from uuid import uuid4
 
-from divi.signals.trace.trace import Trace
+from divi.signals.trace import Trace
 
 
 class SessionExtra(TypedDict, total=False):

@@ -11,7 +11,7 @@ from divi.evaluation.evaluator import EvaluationScore
 from divi.proto.trace.v1.trace_pb2 import ScopeSpans
 from divi.services.service import Service
 from divi.session.session import SessionSignal
-from divi.signals.trace.trace import TraceSignal
+from divi.signals.trace import TraceSignal
 
 
 class DataPark(Service):

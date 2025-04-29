@@ -3,8 +3,8 @@ from typing_extensions import Optional
 import divi
 from divi.services import init as init_services
 from divi.session import Session, SessionExtra
-from divi.signals.trace import Span
-from divi.signals.trace.trace import Trace
+from divi.signals.span import Span
+from divi.signals.trace import Trace
 
 
 def init_session(name: Optional[str] = None) -> Session:

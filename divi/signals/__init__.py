@@ -1,3 +1,3 @@
-from .trace import Span
+from .span import Kind
 
-__all__ = ["Span"]
+__all__ = ["Kind"]

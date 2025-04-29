@@ -32,6 +32,9 @@ const chartConfig = {
   SPAN_KIND_LLM: {
     color: 'var(--chart-2)',
   },
+  SPAN_KIND_EVALUATION: {
+    color: 'var(--chart-3)',
+  },
 } satisfies ChartConfig;
 
 interface TraceWaterfallChartProps {

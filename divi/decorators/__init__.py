@@ -1,4 +1,4 @@
 from .obs_openai import obs_openai
-from .observe import observable
+from .observable import observable
 
 __all__ = ["observable", "obs_openai"]

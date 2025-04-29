@@ -8,7 +8,7 @@ import type {
   GroupingKey,
   UsageResult,
 } from '@workspace/graphql-client/src/types.generated';
-import { eachDayOfInterval, getUnixTime } from 'date-fns';
+import { addDays, eachDayOfInterval, getUnixTime, startOfDay } from 'date-fns';
 import { cache } from 'react';
 
 export const getCompletionUsage = cache(
@@ -25,7 +25,9 @@ export const getCompletionUsage = cache(
       query: GetCompletionUsageDocument,
       variables: {
         startTime: getUnixTime(startTime),
-        endTime: getUnixTime(endTime ?? new Date()),
+        endTime: getUnixTime(
+          endTime ? addDays(startOfDay(endTime), 1) : new Date()
+        ),
         groupBy,
       },
       context,

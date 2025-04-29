@@ -1,6 +1,7 @@
 import Highlighter from '@/components/Highter';
 import type { ExtendedSpan } from '@/lib/types/span';
 import { formatDate } from '@/lib/utils';
+import type { Score } from '@workspace/graphql-client/src/types.generated';
 import {
   Accordion,
   AccordionContent,
@@ -30,11 +31,12 @@ export function Span({ span }: SpanProps) {
       <GeneralInfo span={span} />
       <Accordion
         type="multiple"
-        defaultValue={['properties', 'Input', 'Output']}
+        defaultValue={['properties', 'Input', 'Output', 'scores']}
       >
         <AccordionProperties span={span} />
         <AccordionJsonCards name="Input" datas={messages} />
         <AccordionJsonCards name="Output" datas={choices} />
+        <AccordionScores scores={span.scores ?? []} />
       </Accordion>
     </>
   );
@@ -54,6 +56,31 @@ function GeneralInfo({ span }: SpanProps) {
         </Badge>
       </div>
     </div>
+  );
+}
+
+function AccordionScores({ scores }: { scores: Score[] }) {
+  return (
+    <AccordionItem value="scores" className="px-4">
+      <AccordionTrigger className="hover:no-underline">Scores</AccordionTrigger>
+      <AccordionContent className="flex flex-col gap-3">
+        {scores.map((score) => (
+          <PropertyCard
+            title={score.name
+              .split('_')
+              .map((n) => n.charAt(0).toUpperCase() + n.slice(1).toLowerCase())
+              .join(' ')}
+            key={score.name}
+          >
+            <PropertyItem label="score" value={score.score} />
+            <PropertyItem
+              label="explanation"
+              value={score.representative_reasoning}
+            />
+          </PropertyCard>
+        ))}
+      </AccordionContent>
+    </AccordionItem>
   );
 }
 
@@ -128,9 +155,9 @@ function PropertyItem({
   value: string | number | boolean | null;
 }) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-start justify-between gap-4">
       <span className="text-sm">{label}</span>
-      <span className="truncate font-light text-sm">{String(value)}</span>
+      <span className="break-words font-light text-sm">{String(value)}</span>
     </div>
   );
 }

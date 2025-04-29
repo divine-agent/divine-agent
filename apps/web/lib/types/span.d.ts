@@ -1,4 +1,7 @@
-import type { Span } from '@workspace/graphql-client/src/types.generated';
+import type {
+  Score,
+  Span,
+} from '@workspace/graphql-client/src/types.generated';
 import type { ChatInput } from '@workspace/graphql-client/src/types.generated';
 import type { ChatCompletion } from 'openai/resources/index.mjs';
 
@@ -10,6 +13,7 @@ export interface ExtendedSpan extends Span {
   relative_start_time: number;
   input?: ChatInput;
   completion?: ChatCompletion;
+  scores?: Score[];
 }
 
 /**

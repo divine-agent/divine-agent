@@ -2,9 +2,14 @@ import 'server-only';
 import { query } from '@/hooks/apolloClient';
 import type { Chat, ExtendedSpan } from '@/lib/types/span';
 import { GetSpansDocument } from '@workspace/graphql-client/src/datapark/traces.generated';
-import { Kind, type Span } from '@workspace/graphql-client/src/types.generated';
+import {
+  Kind,
+  type Score,
+  type Span,
+} from '@workspace/graphql-client/src/types.generated';
 import { cache } from 'react';
 import { getAuthContext } from './auth';
+import { getScores } from './evaluation';
 import { getChat } from './openai';
 
 /**
@@ -31,7 +36,10 @@ export const getSpans = cache(async (traceId: string) => {
 export const getTraceChartData = cache(
   async (traceId: string): Promise<ExtendedSpan[]> => {
     // get spans for a trace
-    let spans = await getSpans(traceId);
+    let [spans, scores] = await Promise.all([
+      getSpans(traceId),
+      getScores(traceId),
+    ]);
     if (!spans) {
       return [];
     }
@@ -45,6 +53,17 @@ export const getTraceChartData = cache(
     const chatsMap = new Map<string, Chat>(
       chats.map((chat) => [chat.span_id, chat])
     );
+    const scoresMap = new Map<string, Score[]>();
+    // group scores by span_id
+    if (scores) {
+      for (const score of scores) {
+        const spanId = score.span_id;
+        if (!scoresMap.has(spanId)) {
+          scoresMap.set(spanId, []);
+        }
+        scoresMap.get(spanId)?.push(score);
+      }
+    }
     // calculate relative start_time with milliseconds
     const startTime = new Date(spans[0]?.start_time).getTime();
     return spans.map((span) => {
@@ -57,6 +76,7 @@ export const getTraceChartData = cache(
         duration: span.end_time.Valid
           ? span.duration
           : Date.now() - new Date(span.start_time).getTime(),
+        scores: span.kind === Kind.SpanKindLlm ? scoresMap.get(span.id) : [],
       };
     });
   }

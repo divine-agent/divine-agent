@@ -1,0 +1,8 @@
+query getScores($traceId: ID!) {
+  scores(trace_id: $traceId) {
+    span_id
+    name
+    score
+    representative_reasoning
+  }
+}

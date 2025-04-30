@@ -44,15 +44,15 @@ def evaluate_scores(
         divi._evaluator = init_evaluator(config)
 
     if isinstance(outputs, ChatCompletion):
-        output_message = outputs.choices[0].message
-        messages.append(
-            {"role": output_message.role, "content": output_message.content}
-        )
+        output_message = outputs.choices[0].message.content
+        if not output_message:
+            return
 
         evaluation_span = Span(kind=Kind.evaluation, name="Evaluation")
         observe(
             func=divi._evaluator.evaluate,
             span=evaluation_span,
+            target=output_message,
             conversation="\n".join(
                 f"{m.get('role', 'unknown')}: {m.get('content')}"
                 for m in messages

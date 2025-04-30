@@ -50,15 +50,17 @@ class Evaluator:
         )
 
     @staticmethod
-    def generate_prompt(conversation: str, score: Score) -> str:
+    def generate_prompt(target: str, conversation: str, score: Score) -> str:
         return PROMPT_TEMPLATE.format(
-            requirements=PRESET_PROMPT[score.value], conversation=conversation
+            requirements=PRESET_PROMPT[score.value],
+            target=target,
+            conversation=conversation,
         )
 
     def _sync_evaluate_once(
-        self, conversation: str, score: Score
+        self, target: str, conversation: str, score: Score
     ) -> Optional[EvaluationResult]:
-        prompt = self.generate_prompt(conversation, score)
+        prompt = self.generate_prompt(target, conversation, score)
         response = self.sync_client.beta.chat.completions.parse(
             model=self.config.model,
             messages=[{"role": "user", "content": prompt}],
@@ -71,9 +73,9 @@ class Evaluator:
         return result
 
     async def _async_evaluate_once(
-        self, conversation: str, score: Score
+        self, target: str, conversation: str, score: Score
     ) -> Optional[EvaluationResult]:
-        prompt = self.generate_prompt(conversation, score)
+        prompt = self.generate_prompt(target, conversation, score)
         response = await self.async_client.beta.chat.completions.parse(
             model=self.config.model,
             messages=[{"role": "user", "content": prompt}],
@@ -121,13 +123,15 @@ class Evaluator:
         return aggregated_results
 
     def evaluate_sync(
-        self, conversation: str, scores: list[Score], n_rounds: int
+        self, target: str, conversation: str, scores: list[Score], n_rounds: int
     ) -> List[EvaluationScore]:
         with concurrent.futures.ThreadPoolExecutor(
             max_workers=self.config.max_concurrency
         ) as executor:
             futures = [
-                executor.submit(self._sync_evaluate_once, conversation, score)
+                executor.submit(
+                    self._sync_evaluate_once, target, conversation, score
+                )
                 for _ in range(n_rounds)
                 for score in scores
             ]
@@ -139,13 +143,15 @@ class Evaluator:
         )
 
     async def evaluate_async(
-        self, conversation: str, scores: list[Score], n_rounds: int
+        self, target: str, conversation: str, scores: list[Score], n_rounds: int
     ) -> List[EvaluationScore]:
         semaphore = asyncio.Semaphore(self.config.max_concurrency)
 
         async def sem_task(score):
             async with semaphore:
-                return await self._async_evaluate_once(conversation, score)
+                return await self._async_evaluate_once(
+                    target, conversation, score
+                )
 
         tasks = [sem_task(score) for _ in range(n_rounds) for score in scores]
         evaluations = await asyncio.gather(*tasks)
@@ -155,6 +161,7 @@ class Evaluator:
 
     def evaluate(
         self,
+        target: str,
         conversation: str,
         scores: list[Score],
         n_rounds: int = 5,
@@ -162,6 +169,6 @@ class Evaluator:
     ) -> List[EvaluationScore]:
         if mode == "async":
             return asyncio.run(
-                self.evaluate_async(conversation, scores, n_rounds)
+                self.evaluate_async(target, conversation, scores, n_rounds)
             )
-        return self.evaluate_sync(conversation, scores, n_rounds)
+        return self.evaluate_sync(target, conversation, scores, n_rounds)

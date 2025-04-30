@@ -1,14 +1,19 @@
 PROMPT_TEMPLATE = (
-    "Your evaluation task is: {requirements}\n\n"
+    "The *requirements* of the evaluation task is: {requirements}\n\n"
+    "Below is the *context* of the conversation (for reference only):\n"
+    "{conversation}\n\n"
+    "Now, in view of both the requirements and the context, evaluate the assistant’s response:\n"
+    "{target}\n\n"
     "Please perform step-by-step reasoning to reach your judgment.\n\n"
     "Strictly output your answer in the following JSON format:\n"
-    '{{"judgment": bool, "reasoning": "string"}}\n\n'
-    "Do not output anything else.\n\n"
-    "Here is the conversation to evaluate:\n"
-    "{conversation}"
+    "{{\n"
+    '  "judgment": bool,        # true if the response meets all requirements\n'
+    '  "reasoning": "string"    # concise explanation, hitting only the key points\n'
+    "}}\n"
+    "Do not output anything else."
 )
 
 PRESET_PROMPT = {
-    "task_completion": "Evaluate whether the model's output completely fulfills the user's task requirements.",
-    "instruction_adherence": "Evaluate whether the model's output strictly follows the user's instructions without omissions, deviations, or hallucinations.",
+    "task_completion": "Assess whether the assistant response fulfills the user's task requirements.",
+    "instruction_adherence": "Assess whether the assistant response strictly follows every instruction given by the user, without omissions, deviations, or hallucinations.",
 }

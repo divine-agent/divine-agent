@@ -37,7 +37,10 @@ func CreateScores(c *fiber.Ctx) error {
 	client := database.MG
 	ctx := context.Background()
 	collection := client.Database("evaluation").Collection("evaluation-results")
-
+	// set the span_id to every evaluation result
+	for i := range createScoresReq.Data {
+		createScoresReq.Data[i].SpanID = createScoresReq.SpanID
+	}
 	doc := bson.M{
 		"span_id": createScoresReq.SpanID,
 		"user_id": userID.String(),

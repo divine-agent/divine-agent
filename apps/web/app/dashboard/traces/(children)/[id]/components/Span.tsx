@@ -30,6 +30,7 @@ import { Timer } from 'lucide-react';
 import type * as React from 'react';
 import { useState } from 'react';
 import Markdown from 'react-markdown';
+import rehypeHighlight from 'rehype-highlight';
 import remarkBreaks from 'remark-breaks';
 import remarkGfm from 'remark-gfm';
 
@@ -248,7 +249,10 @@ function AccordionMarkdownCards({ name, datas }: AccordionCardsProps<Message>) {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Markdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+              <Markdown
+                remarkPlugins={[remarkGfm, remarkBreaks]}
+                rehypePlugins={[rehypeHighlight]}
+              >
                 {data.content}
               </Markdown>
             </CardContent>

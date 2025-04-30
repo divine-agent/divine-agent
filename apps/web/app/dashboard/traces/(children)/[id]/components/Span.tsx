@@ -19,19 +19,60 @@ import {
   CardHeader,
   CardTitle,
 } from '@workspace/ui/components/card';
+import { Switch } from '@workspace/ui/components/switch';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@workspace/ui/components/tooltip';
 import { Timer } from 'lucide-react';
 import type * as React from 'react';
+import { useState } from 'react';
+import Markdown from 'react-markdown';
+import remarkBreaks from 'remark-breaks';
+import remarkGfm from 'remark-gfm';
 
 interface SpanProps {
   span: ExtendedSpan;
 }
 
 export function Span({ span }: SpanProps) {
+  const [showJson, setShowJson] = useState<boolean>(true);
   const messages = span.input?.messages ?? [];
   const choices = span.completion?.choices ?? [];
+  const AccordionCards = showJson ? AccordionJsonCards : AccordionMarkdownCards;
   return (
-    <>
-      <GeneralInfo span={span} />
+    <div className="relative">
+      <div className="flex flex-col gap-3 border-b p-4">
+        <div className="flex items-center justify-between text-text-primary">
+          <span className="font-medium">{span.name}</span>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="fixed right-8">
+                  <Switch
+                    checked={showJson}
+                    onClick={() => setShowJson((prev) => !prev)}
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Json / Markdown</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+        <div className="flex gap-3">
+          <Badge variant="secondary">{span.kind}</Badge>
+          {span.duration && (
+            <Badge variant="outline">
+              <Timer />
+              {formatDurationMs(span.duration)}
+            </Badge>
+          )}
+        </div>
+      </div>
       <Accordion
         type="multiple"
         defaultValue={['properties', 'Input', 'Output', 'scores']}
@@ -39,33 +80,23 @@ export function Span({ span }: SpanProps) {
         <AccordionProperties span={span} />
         {span.kind === Kind.SpanKindLlm && (
           <>
-            <AccordionJsonCards name="Input" datas={messages} />
-            <AccordionJsonCards name="Output" datas={choices} />
+            <AccordionCards
+              name="Input"
+              datas={messages.map((m) => ({
+                role: m.role,
+                content: m.content,
+              }))}
+            />
+            <AccordionCards
+              name="Output"
+              datas={choices.map((c) => c.message)}
+            />
           </>
         )}
         {span.kind === Kind.SpanKindEvaluation && (
           <AccordionScores scores={span.scores ?? []} />
         )}
       </Accordion>
-    </>
-  );
-}
-
-function GeneralInfo({ span }: SpanProps) {
-  return (
-    <div className="flex flex-col gap-3 border-b p-4">
-      <div className="flex items-center justify-between text-text-primary">
-        <span className="font-medium">{span.name}</span>
-      </div>
-      <div className="flex gap-3">
-        <Badge variant="secondary">{span.kind}</Badge>
-        {span.duration && (
-          <Badge variant="outline">
-            <Timer />
-            {formatDurationMs(span.duration)}
-          </Badge>
-        )}
-      </div>
     </div>
   );
 }
@@ -190,6 +221,36 @@ function AccordionJsonCards<T>({ name, datas }: AccordionCardsProps<T>) {
                 content={JSON.stringify(data, null, 2)}
                 language="json"
               />
+            </CardContent>
+          </Card>
+        ))}
+      </AccordionContent>
+    </AccordionItem>
+  );
+}
+
+interface Message {
+  role: string;
+  content: string | null;
+}
+
+function AccordionMarkdownCards({ name, datas }: AccordionCardsProps<Message>) {
+  return (
+    <AccordionItem value={name} className="px-4">
+      <AccordionTrigger className="hover:no-underline">{name}</AccordionTrigger>
+      <AccordionContent className="flex flex-col gap-3">
+        {datas.map((data, index) => (
+          <Card key={index}>
+            <CardHeader>
+              <CardTitle>
+                {data.role.charAt(0).toUpperCase() +
+                  data.role.slice(1).toLowerCase()}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Markdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                {data.content}
+              </Markdown>
             </CardContent>
           </Card>
         ))}

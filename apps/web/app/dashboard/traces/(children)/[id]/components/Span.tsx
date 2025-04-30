@@ -241,7 +241,7 @@ function AccordionMarkdownCards({ name, datas }: AccordionCardsProps<Message>) {
       <AccordionTrigger className="hover:no-underline">{name}</AccordionTrigger>
       <AccordionContent className="flex flex-col gap-3">
         {datas.map((data, index) => (
-          <Card key={index}>
+          <Card key={index} className="@container/card">
             <CardHeader>
               <CardTitle>
                 {data.role.charAt(0).toUpperCase() +

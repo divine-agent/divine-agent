@@ -110,7 +110,7 @@ export function TraceWaterfallChart({
           <LabelList
             dataKey="name"
             position="insideLeft"
-            className="fill-background"
+            className="fill-card"
           />
         </Bar>
       </BarChart>

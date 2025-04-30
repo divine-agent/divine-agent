@@ -89,6 +89,7 @@ export type KeyValue = {
 
 /** Kind is an enum that represents the type of span */
 export enum Kind {
+  SpanKindEvaluation = 'SPAN_KIND_EVALUATION',
   SpanKindFunction = 'SPAN_KIND_FUNCTION',
   SpanKindLlm = 'SPAN_KIND_LLM'
 }

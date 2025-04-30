@@ -76,7 +76,8 @@ export const getTraceChartData = cache(
         duration: span.end_time.Valid
           ? span.duration
           : Date.now() - new Date(span.start_time).getTime(),
-        scores: span.kind === Kind.SpanKindLlm ? scoresMap.get(span.id) : [],
+        scores:
+          span.kind === Kind.SpanKindEvaluation ? scoresMap.get(span.id) : [],
       };
     });
   }

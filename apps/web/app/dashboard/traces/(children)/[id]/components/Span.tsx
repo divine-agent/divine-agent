@@ -1,7 +1,10 @@
 import Highlighter from '@/components/Highter';
 import type { ExtendedSpan } from '@/lib/types/span';
 import { formatDate } from '@/lib/utils';
-import type { Score } from '@workspace/graphql-client/src/types.generated';
+import {
+  Kind,
+  type Score,
+} from '@workspace/graphql-client/src/types.generated';
 import {
   Accordion,
   AccordionContent,
@@ -34,9 +37,15 @@ export function Span({ span }: SpanProps) {
         defaultValue={['properties', 'Input', 'Output', 'scores']}
       >
         <AccordionProperties span={span} />
-        <AccordionJsonCards name="Input" datas={messages} />
-        <AccordionJsonCards name="Output" datas={choices} />
-        <AccordionScores scores={span.scores ?? []} />
+        {span.kind === Kind.SpanKindLlm && (
+          <>
+            <AccordionJsonCards name="Input" datas={messages} />
+            <AccordionJsonCards name="Output" datas={choices} />
+          </>
+        )}
+        {span.kind === Kind.SpanKindEvaluation && (
+          <AccordionScores scores={span.scores ?? []} />
+        )}
       </Accordion>
     </>
   );

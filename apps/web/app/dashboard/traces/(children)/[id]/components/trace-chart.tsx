@@ -1,6 +1,7 @@
 'use client';
 
 import type { ExtendedSpan } from '@/lib/types/span';
+import { formatDurationMs } from '@/lib/utils';
 import {
   type ChartConfig,
   ChartContainer,
@@ -62,8 +63,7 @@ export function TraceWaterfallChart({
           <Timer size={12} />
           Duration
           <div className="ml-auto flex items-baseline gap-0.5 font-medium font-mono text-foreground tabular-nums">
-            {value}
-            <span className="font-normal text-muted-foreground">ms</span>
+            {formatDurationMs(value as number)}
           </div>
         </div>
       );
@@ -110,7 +110,8 @@ export function TraceWaterfallChart({
           <LabelList
             dataKey="name"
             position="insideLeft"
-            className="fill-card"
+            offset={8}
+            className="fill-foreground"
           />
         </Bar>
       </BarChart>

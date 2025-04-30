@@ -1,6 +1,6 @@
 import Highlighter from '@/components/Highter';
 import type { ExtendedSpan } from '@/lib/types/span';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatDurationMs } from '@/lib/utils';
 import {
   Kind,
   type Score,
@@ -59,10 +59,12 @@ function GeneralInfo({ span }: SpanProps) {
       </div>
       <div className="flex gap-3">
         <Badge variant="secondary">{span.kind}</Badge>
-        <Badge variant="outline">
-          <Timer />
-          {span.duration} ms
-        </Badge>
+        {span.duration && (
+          <Badge variant="outline">
+            <Timer />
+            {formatDurationMs(span.duration)}
+          </Badge>
+        )}
       </div>
     </div>
   );

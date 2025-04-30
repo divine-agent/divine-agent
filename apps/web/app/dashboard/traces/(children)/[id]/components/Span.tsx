@@ -39,7 +39,7 @@ interface SpanProps {
 }
 
 export function Span({ span }: SpanProps) {
-  const [showJson, setShowJson] = useState<boolean>(true);
+  const [showJson, setShowJson] = useState<boolean>(false);
   const messages = span.input?.messages ?? [];
   const choices = span.completion?.choices ?? [];
   const AccordionCards = showJson ? AccordionJsonCards : AccordionMarkdownCards;
@@ -59,7 +59,7 @@ export function Span({ span }: SpanProps) {
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Json / Markdown</p>
+                <p>Markdown / Json</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

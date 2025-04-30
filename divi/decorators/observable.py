@@ -39,7 +39,7 @@ def observable(func: Callable[P, R]) -> WithSessionExtra[P, R]: ...
 
 @overload
 def observable(
-    kind: str = "function",
+    kind: Kind = Kind.function,
     *,
     name: Optional[str] = None,
     scores: Optional[list[Score]] = None,

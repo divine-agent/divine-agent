@@ -31,7 +31,7 @@ def _get_observable_create(
 
 def obs_openai(
     client: C,
-    name: Optional[str] = "Chat Bot",
+    name: Optional[str] = "Agent",
     scores: Optional[list[Score]] = None,
 ) -> C:
     """Make OpenAI client observable."""

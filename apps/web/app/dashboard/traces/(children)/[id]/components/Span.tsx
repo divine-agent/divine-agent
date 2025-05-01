@@ -216,7 +216,7 @@ function AccordionJsonCards<T>({ name, datas }: AccordionCardsProps<T>) {
       <AccordionTrigger className="hover:no-underline">{name}</AccordionTrigger>
       <AccordionContent className="flex flex-col gap-3">
         {datas.map((data, index) => (
-          <Card key={index}>
+          <Card key={index} className="@container/card">
             <CardContent>
               <Highlighter
                 content={JSON.stringify(data, null, 2)}

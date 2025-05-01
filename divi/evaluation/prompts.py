@@ -1,10 +1,10 @@
 PROMPT_TEMPLATE = (
-    "The *requirements* of the evaluation task is: {requirements}\n\n"
+    "The *requirements* of the evaluation task are: {requirements}\n\n"
     "Below is the *context* of the conversation (for reference only):\n"
     "{conversation}\n\n"
     "Now, in view of both the requirements and the context, evaluate the assistant’s response:\n"
     "{target}\n\n"
-    "Please perform step-by-step reasoning to reach your judgment.\n\n"
+    "Please reason step by step to reach your judgment.\n\n"
     "Strictly output your answer in the following JSON format:\n"
     "{{\n"
     '  "judgment": bool,        # true if the response meets all requirements\n'

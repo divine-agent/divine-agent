@@ -1,8 +1,8 @@
+import pathlib
 import re
 import shutil
-import pathlib
-import sysconfig
 import subprocess
+import sysconfig
 
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 

@@ -10,6 +10,8 @@
 | auth | Authenticate users | 3000 |
 | datapark | Manage the data in the database | 3001 |
 
+> The core is in the trial stage and has not been used in production.
+
 ## Thanks
 
 1. [fiber recipes](https://github.com/gofiber/recipes/tree/master/auth-docker-postgres-jwt)

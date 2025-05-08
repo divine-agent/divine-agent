@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """Generate a RS256 key pair for JWT signing and verification."""
 
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
 import base64
 
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 
 # Generate a private key using RSA 2048
 private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)

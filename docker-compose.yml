@@ -61,6 +61,38 @@ services:
       ACCESS_TOKEN_PUBLIC_KEY: ${ACCESS_TOKEN_PUBLIC_KEY}
       ACCESS_TOKEN_PRIVATE_KEY: ${ACCESS_TOKEN_PRIVATE_KEY}
 
+  divi-datapark:
+    image: kaikaikaifang/divi-datapark:latest
+    build:
+      context: ./services
+      dockerfile: ./cmd/datapark/Dockerfile
+    container_name: divi-datapark
+    ports:
+      - "3001:3001"
+    networks:
+      - public-network
+      - private-network
+    depends_on:
+      - divi-postgres
+      - divi-mongo
+      - divi-clickhouse
+    restart: always
+    environment:
+      POSTGRES_HOST: divi-postgres
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      MONGO_HOST: divi-mongo
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      CLICKHOUSE_HOST: divi-clickhouse
+      CLICKHOUSE_PORT: ${CLICKHOUSE_PORT}
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB}
+
   divi-graphql:
     image: kaikaikaifang/divi-graphql:latest
     build:

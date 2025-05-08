@@ -2,6 +2,6 @@
   "name": "@service/auth",
   "scripts": {
     "build": "go build -o bin/auth auth.go",
-    "dev": "air --build.cmd 'go build -o bin/auth auth.go' --build.bin './bin/auth'"
+    "dev": "go run auth.go"
   }
 }

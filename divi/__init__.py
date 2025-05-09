@@ -14,5 +14,5 @@ _auth: Optional[Auth] = None
 _datapark: Optional[DataPark] = None
 _evaluator: Optional[Evaluator] = None
 
-__version__ = "0.0.1.dev47"
+__version__ = "0.0.1.dev48"
 __all__ = ["obs_openai", "observable", "Score", "Kind"]

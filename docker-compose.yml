@@ -61,6 +61,7 @@ services:
       ACCESS_TOKEN_PUBLIC_KEY: ${ACCESS_TOKEN_PUBLIC_KEY}
       ACCESS_TOKEN_PRIVATE_KEY: ${ACCESS_TOKEN_PRIVATE_KEY}
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.divi-auth.rule=Host(`${DIVI_AUTH_HOST}`)"
       - "traefik.http.routers.divi-auth.entrypoints=web"
       - "traefik.http.services.divi-auth.loadbalancer.server.port=3000"
@@ -98,6 +99,7 @@ services:
       CLICKHOUSE_DB: ${CLICKHOUSE_DB}
       ACCESS_TOKEN_PUBLIC_KEY: ${ACCESS_TOKEN_PUBLIC_KEY}
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.divi-datapark.rule=Host(`${DIVI_DATAPARK_HOST}`)"
       - "traefik.http.routers.divi-datapark.entrypoints=web"
       - "traefik.http.services.divi-datapark.loadbalancer.server.port=3001"
@@ -119,6 +121,7 @@ services:
       AUTH_SERVICE_URL: http://divi-auth:3000/
       DATAPARK_SERVICE_URL: http://divi-datapark:3001/
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.divi-graphql.rule=Host(`${DIVI_GRAPHQL_HOST}`)"
       - "traefik.http.routers.divi-graphql.entrypoints=web"
       - "traefik.http.services.divi-graphql.loadbalancer.server.port=4000"
@@ -130,6 +133,7 @@ services:
       - --api.insecure=true
       - --providers.docker=true
       - --entrypoints.web.address=:80
+      - --providers.docker.exposedByDefault=false
     ports:
       - "80:80"
       - "8080:8080"

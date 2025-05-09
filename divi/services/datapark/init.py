@@ -9,9 +9,13 @@ DIVI_DATAPARK_PORT = "DIVI_DATAPARK_PORT"
 
 
 def init_datapark(
-    host: Optional[str] = "localhost", port: Optional[int] = 3001
+    host: Optional[str] = None, port: Optional[int] = None
 ) -> DataPark:
-    host = host if host else os.getenv(DIVI_DATAPARK_HOST, "localhost")
-    port = port if port else int(os.getenv(DIVI_DATAPARK_PORT, 3001))
+    host = (
+        host
+        if host
+        else os.getenv(DIVI_DATAPARK_HOST, "datapark.divine-agent.com")
+    )
+    port = port if port else int(os.getenv(DIVI_DATAPARK_PORT, 80))
 
     return DataPark(host=host, port=port)

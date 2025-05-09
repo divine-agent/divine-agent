@@ -9,22 +9,32 @@
   },
   "favicon": "/favicon.ico",
   "navigation": {
-    "groups": [
+    "languages": [
       {
-        "group": "Get Started",
-        "pages": ["introduction"]
+        "language": "en",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": ["en/introduction"]
+          },
+          {
+            "group": "Tutorials",
+            "pages": ["en/tutorials/self-refine"]
+          }
+        ]
       },
       {
-        "group": "Tutorials",
-        "pages": ["tutorials/openai"]
-      },
-      {
-        "group": "Concepts",
-        "pages": ["concepts/session"]
-      },
-      {
-        "group": "Development",
-        "pages": ["development/roadmap"]
+        "language": "zh",
+        "groups": [
+          {
+            "group": "快速开始",
+            "pages": ["zh/introduction"]
+          },
+          {
+            "group": "使用案例",
+            "pages": ["zh/tutorials/self-refine"]
+          }
+        ]
       }
     ],
     "global": {

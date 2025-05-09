@@ -21,6 +21,7 @@
     "@tabler/icons-react": "^3.31.0",
     "@tanstack/react-table": "^8.21.3",
     "@vercel/analytics": "^1.5.0",
+    "@vercel/speed-insights": "^1.2.0",
     "@workspace/graphql-client": "workspace:*",
     "@workspace/ui": "workspace:*",
     "date-fns": "catalog:",

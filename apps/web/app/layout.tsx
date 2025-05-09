@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import '@workspace/ui/globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev';
+import { Analytics } from '@vercel/analytics/next';
 import { Toaster } from '@workspace/ui/components/sonner';
 
 if (process.env.NODE_ENV !== 'production') {
@@ -31,6 +32,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Analytics />
           <Toaster />
         </ThemeProvider>
       </body>

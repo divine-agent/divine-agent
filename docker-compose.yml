@@ -123,9 +123,9 @@ services:
       - "traefik.http.routers.divi-graphql.entrypoints=web"
       - "traefik.http.services.divi-graphql.loadbalancer.server.port=4000"
 
-  reverse-proxy:
+  divi-gateway:
     image: traefik:v3.4
-    container_name: reverse-proxy
+    container_name: divi-gateway
     command:
       - --api.insecure=true
       - --providers.docker=true

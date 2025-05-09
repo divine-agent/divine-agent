@@ -30,6 +30,6 @@ COPY --from=installer /app/bin/datapark ./bin/datapark
 RUN addgroup --system --gid 1001 divi
 RUN adduser --system --uid 1001 divi
 USER divi
-EXPOSE 3000
+EXPOSE 3001
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["./bin/datapark"]

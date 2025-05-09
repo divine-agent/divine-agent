@@ -9,7 +9,7 @@ from divi.services.core import Core
 from divi.utils import get_server_path
 
 
-def init(host="localhost", port=50051) -> Core:
+def init_core(host="localhost", port=50051) -> Core:
     core = Core(host=host, port=port)
     _start_server(core)
     return core
@@ -68,7 +68,3 @@ def _is_port_open(host, port):
     except Exception as e:
         print(f"Error checking port: {e}")
         return False
-
-
-if __name__ == "__main__":
-    init()

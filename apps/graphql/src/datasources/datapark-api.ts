@@ -4,7 +4,8 @@ import { type AugmentedRequest, RESTDataSource } from '@apollo/datasource-rest';
 import type { KeyValueCache } from '@apollo/utils.keyvaluecache';
 
 export class DataParkAPI extends RESTDataSource {
-  override baseURL = process.env.AUTH_SERVICE_URL ?? 'http://localhost:3001/';
+  override baseURL =
+    process.env.DATAPARK_SERVICE_URL ?? 'http://localhost:3001/';
   private token: string;
 
   constructor(options: { token: string; cache: KeyValueCache }) {

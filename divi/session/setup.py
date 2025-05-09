@@ -1,7 +1,7 @@
 from typing_extensions import Optional
 
 import divi
-from divi.services import init as init_services
+from divi.services import init_services
 from divi.session import Session, SessionExtra
 from divi.signals.span import Span
 from divi.signals.trace import Trace

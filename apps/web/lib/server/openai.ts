@@ -11,8 +11,9 @@ export const getChatCompletion = cache(async (spanId: string) => {
   if (!context) {
     return null;
   }
+  const base_url = process.env.DATAPARK_SERVICE_URL ?? 'http://localhost:3001/';
   const response = await fetch(
-    `http://localhost:3001/api/v1/chat/completions/${spanId}`,
+    new URL(`/api/v1/chat/completions/${spanId}`, base_url),
     {
       cache: 'force-cache',
       ...context,

@@ -1,3 +1,3 @@
-# Catstronauts - server
+# Divi GraphQL
 
-The starting point of the `server` code for Odyssey Lift-off I course.
+> This is the GraphQL API for the divine-agent project.

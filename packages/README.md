@@ -2,14 +2,14 @@
 
 > Js packages shared across the apps.
 
-## eslint-config
+## ui
 
-> Shared eslint configuration for the project.
+> Shared shadcn ui for the project.
 
 ## typescript-config
 
 > Shared typescript configuration for the project.
 
-## [tailwind-config](https://github.com/vercel/turborepo/tree/main/examples/with-tailwind)
+## graphql-client
 
-> Shared tailwind configuration for the project.
+> Shared GraphQL client codes for the project.

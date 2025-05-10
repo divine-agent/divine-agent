@@ -1,5 +1,3 @@
-# divine-agent
-
 <p align="center">
   <a href="https://divine-agent.com/"><img width="128" height="128" src="https://raw.githubusercontent.com/Kaikaikaifang/divine-agent/main/docs/images/thinking-angel.png" alt='Divine Agent'></a>
 </p>

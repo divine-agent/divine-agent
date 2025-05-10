@@ -10,7 +10,9 @@
 </a>
 </p>
 
-<div align="center">中文 / [English](../README.md)</div>
+<p align="center">
+中文 / <a href="./docs/README.md">English</a>
+</p>
 
 神明代理人 (Divine Agent) 是一个智能体可观测工具，提供追踪、评估和用量统计功能。
 

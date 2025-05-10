@@ -2,4 +2,32 @@
 title: 'Evaluation'
 description: 'Evaluate your agents in one line'
 ---
-![Pirate](/images/pirate-example.png)
+import PirateEval from '/snippets/evaluation/pirate-eval.mdx';
+import PirateCustomEval from '/snippets/evaluation/pirate-custom-eval.mdx';
+
+![Pirate](/images/pirate-eval-example.png)
+
+## Behavior Evaluation
+
+> Automate evaluation of instruction adherence and task completion for your [traced](./trace) Pirate agent.
+
+<PirateEval />
+
+## Custom Configuration
+
+| Property        | Type   | Default             | Description         |
+|-----------------|--------|---------------------|---------------------|
+| `model`         | str    | gpt-4o              | Model name used for evaluation |
+| `temperature`   | float  | 0.5                 | Temperature parameter for evaluation |
+| `n_rounds`      | int    | 5                   | Number of evaluation rounds |
+| `max_concurrency` | int  | 10                  | Maximum number of concurrent requests |
+| `api_key`       | str    | OPENAI_API_KEY      | API key for evaluation |
+| `base_url`      | str    | OPENAI_BASE_URL     | Service URL for evaluation |
+
+By default, `api_key` and `base_url` will use values from environment variables, and other options are configured as shown in the table above. You can customize the settings as follows:
+
+<PirateCustomEval />
+
+## Notes
+
+<Warning>The current evaluation functionality depends on OpenAI's [structured output](https://platform.openai.com/docs/guides/structured-outputs). Please ensure that your chosen [model](https://platform.openai.com/docs/models) supports this feature. We strongly recommend using `gpt-4o` or newer models to ensure evaluation effectiveness and compatibility.</Warning>

@@ -2,55 +2,34 @@
 title: '追踪'
 description: '5 分钟内开启智能体追踪'
 ---
+
+import PirateExample from '/snippets/pirate-example.mdx';
+
 ![Pirate](/images/pirate-example.png)
 
-## Install
-
-需要 Python 版本 3.11+
-
-```shell
-pip install divi
-```
-
-## Steps
-
-1. 从 [Web](https://www.divine-agent.com/dashboard/api-keys) 获取 API Key.
-2. 创建 `.env` 文件并添加以下行:
-  ```env
-  DIVI_API_KEY=your_api_key
-  ```
-3. 运行以下代码:
-  ```python Pirate Example {1,10-13,15} [expandable]
-  from divi import obs_openai, observable
-  from dotenv import load_dotenv
-  from openai import OpenAI
-
-  load_dotenv()
-
-
-  class Pirate:
-      def __init__(self):
-          self.client = obs_openai(
-              OpenAI(),
-              name="Pirate",
-          )
-
-      @observable(name="Talk with pirate")
-      def talk(self, message: str):
-          """Talk like a pirate."""
-          res = self.client.chat.completions.create(
-              model="gpt-4o",
-              messages=[
-                  {"role": "developer", "content": "Talk like a pirate."},
-                  {
-                      "role": "user",
-                      "content": message,
-                  },
-              ],
-          )
-          return res.choices[0].message.content
-
-
-  pirate = Pirate()
-  pirate.talk("How do I check if a Python object is an instance of a class?")
-  ```
+<Steps>
+    <Step title="创建账户">
+        在 [Divine Agent](https://www.divine-agent.com/signup?source=docs) 上创建一个账户。
+    </Step>
+    <Step title="安装 Divi">
+        安装 Divine Agent Python 包:
+        ```shell
+        pip install divi
+        ```
+    </Step>
+    <Step title="获取 API Key">
+      从 [Web](https://www.divine-agent.com/dashboard/api-keys) 获取 API Key。
+    </Step>
+    <Step title="设置环境">
+        创建一个 `.env` 文件并添加以下行:
+        ```env
+        DIVI_API_KEY=your_api_key
+        OPENAI_BASE_URL=https://api.openai.com/v1
+        OPENAI_API_KEY=your_llm_api_key
+        ```
+    </Step>
+    <Step title="追踪 Pirate Agent">
+        运行以下代码:
+        <PirateExample />
+    </Step>
+</Steps>

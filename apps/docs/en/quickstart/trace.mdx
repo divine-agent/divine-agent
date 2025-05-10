@@ -2,55 +2,34 @@
 title: 'Trace'
 description: 'Start observe your agents in under 5 minutes'
 ---
+
+import PirateExample from '/snippets/pirate-example.mdx';
+
 ![Pirate](/images/pirate-example.png)
 
-## Install
-
-Requires Python 3.11+
-
-```shell
-pip install divi
-```
-
-## Steps
-
-1. Get API Key from [Web](https://www.divine-agent.com/dashboard/api-keys).
-2. Create a `.env` file and add the following line:
-  ```env
-  DIVI_API_KEY=your_api_key
-  ```
-3. Run the following code:
-  ```python Pirate Example {1,10-13,15} [expandable]
-  from divi import obs_openai, observable
-  from dotenv import load_dotenv
-  from openai import OpenAI
-
-  load_dotenv()
-
-
-  class Pirate:
-      def __init__(self):
-          self.client = obs_openai(
-              OpenAI(),
-              name="Pirate",
-          )
-
-      @observable(name="Talk with pirate")
-      def talk(self, message: str):
-          """Talk like a pirate."""
-          res = self.client.chat.completions.create(
-              model="gpt-4o",
-              messages=[
-                  {"role": "developer", "content": "Talk like a pirate."},
-                  {
-                      "role": "user",
-                      "content": message,
-                  },
-              ],
-          )
-          return res.choices[0].message.content
-
-
-  pirate = Pirate()
-  pirate.talk("How do I check if a Python object is an instance of a class?")
-  ```
+<Steps>
+    <Step title="Create an Account">
+        Create an account on [Divine Agent](https://www.divine-agent.com/signup?source=docs).
+    </Step>
+    <Step title="Install Divi">
+        Install the Divine Agent Python package:
+        ```shell
+        pip install divi
+        ```
+    </Step>
+    <Step title="Get API Key">
+      Get API Key from [Web](https://www.divine-agent.com/dashboard/api-keys).
+    </Step>
+    <Step title="Set up Environment">
+        Create a `.env` file and add the following line:
+        ```env
+        DIVI_API_KEY=your_api_key
+        OPENAI_BASE_URL=https://api.openai.com/v1
+        OPENAI_API_KEY=your_llm_api_key
+        ```
+    </Step>
+    <Step title="Trace Pirate Agent">
+        Run the following code:
+        <PirateExample />
+    </Step>
+</Steps>

@@ -1,0 +1,34 @@
+```python Pirate Example {1,10-13,15} [expandable]
+from divi import obs_openai, observable
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+
+
+class Pirate:
+    def __init__(self):
+        self.client = obs_openai(
+            OpenAI(),
+            name="Pirate",
+        )
+
+    @observable(name="Talk with pirate")
+    def talk(self, message: str):
+        """Talk like a pirate."""
+        res = self.client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "developer", "content": "Talk like a pirate."},
+                {
+                    "role": "user",
+                    "content": message,
+                },
+            ],
+        )
+        return res.choices[0].message.content
+
+
+pirate = Pirate()
+pirate.talk("How do I check if a Python object is an instance of a class?")
+```

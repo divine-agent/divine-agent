@@ -1,0 +1,33 @@
+---
+title: '评估'
+description: '一行代码完成智能体评估'
+---
+import PirateEval from '/snippets/evaluation/pirate-eval.mdx';
+import PirateCustomEval from '/snippets/evaluation/pirate-custom-eval.mdx';
+
+![Pirate](/images/pirate-eval-example.png)
+
+## 行为评估
+
+> 自动化评估[跟踪](./trace)的海盗 (Pirate) 智能体的指令遵从性和任务完成度。
+
+<PirateEval />
+
+## 自定义设置
+
+| Property        | Type   | Default             | Description         |
+|-----------------|--------|:-------------------:|---------------------|
+| `model`         | str    | gpt-4o              | 用于评估的模型名称     |
+| `temperature`   | float  | 0.5                 | 评估过程中的温度参数    |
+| `n_rounds`      | int    | 5                   | 评估的轮数            |
+| `max_concurrency` | int  | 10                  | 最大并发请求数         |
+| `api_key`       | str    | OPENAI_API_KEY      | 用于评估的 API 密钥    |
+| `base_url`      | str    | OPENAI_BASE_URL     | 评估所用的服务商 URL   |
+
+默认情况下，`api_key` 与 `base_url` 会使用环境变量中的值，其他选项配置如上表所示。您可以通过以下方式自定义设置：
+
+<PirateCustomEval />
+
+## 注意事项
+
+<Warning>当前评估功能依赖于 OpenAI 的[结构化输出](https://platform.openai.com/docs/guides/structured-outputs)，请确保您所选择的[模型](https://platform.openai.com/docs/models)支持该功能，我们强烈建议使用 `gpt-4o` 或更新版本的模型以确保评估效果和兼容性。</Warning>

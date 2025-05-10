@@ -15,7 +15,11 @@
         "groups": [
           {
             "group": "Get Started",
-            "pages": ["en/introduction", "en/quickstart/trace"]
+            "pages": [
+              "en/introduction",
+              "en/quickstart/trace",
+              "en/quickstart/evaluation"
+            ]
           }
         ]
       },
@@ -24,7 +28,11 @@
         "groups": [
           {
             "group": "快速开始",
-            "pages": ["zh/introduction", "zh/quickstart/trace"]
+            "pages": [
+              "zh/introduction",
+              "zh/quickstart/trace",
+              "zh/quickstart/evaluation"
+            ]
           }
         ]
       }

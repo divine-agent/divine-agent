@@ -1,6 +1,21 @@
 # divine-agent
 
-**Agent Platform for Observability**
+[![PyPI version]()](https://pypi.org/project/divi/)
+<p align="center">
+  <a href="https://divine-agent.com/"><img width="350" height="208" src="https://raw.githubusercontent.com/Kaikaikaifang/divine-agent/main/docs/images/thinking-angel.png" alt='Divine Agent'></a>
+</p>
+
+<p align="center"><strong>Divine Agent</strong> <em>– Fully open-source agent observability. Simple. Clear.</em></p>
+
+<p align="center">
+<a href="https://pypi.org/project/divi/">
+    <img src="https://img.shields.io/pypi/v/divi.svg" alt="Package version">
+</a>
+</p>
+
+divine-agent is an observability tool for LLM-based agents, offering tracing, evaluation, and usage statistics.
+
+---
 
 > [!IMPORTANT]
 > **divine-agent is currently experimental** and may undergo significant changes at any time. This project is in active development, which means APIs and features might change without prior notice.

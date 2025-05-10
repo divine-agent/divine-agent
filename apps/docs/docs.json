@@ -15,11 +15,7 @@
         "groups": [
           {
             "group": "Get Started",
-            "pages": ["en/introduction"]
-          },
-          {
-            "group": "Tutorials",
-            "pages": ["en/tutorials/self-refine"]
+            "pages": ["en/introduction", "en/quickstart/trace"]
           }
         ]
       },
@@ -28,11 +24,7 @@
         "groups": [
           {
             "group": "快速开始",
-            "pages": ["zh/introduction"]
-          },
-          {
-            "group": "使用案例",
-            "pages": ["zh/tutorials/self-refine"]
+            "pages": ["zh/introduction", "zh/quickstart/trace"]
           }
         ]
       }

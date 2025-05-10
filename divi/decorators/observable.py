@@ -15,6 +15,7 @@ from typing import (
 
 from divi.decorators.observe import observe
 from divi.evaluation.evaluate import evaluate_scores
+from divi.evaluation.evaluator import EvaluatorConfig
 from divi.evaluation.scores import Score
 from divi.session import SessionExtra
 from divi.signals.span import Kind, Span
@@ -43,6 +44,7 @@ def observable(
     *,
     name: Optional[str] = None,
     scores: Optional[list[Score]] = None,
+    eval: Optional[EvaluatorConfig] = None,
     metadata: Optional[Mapping[str, Any]] = None,
 ) -> Callable[[Callable[P, R]], WithSessionExtra[P, R]]: ...
 
@@ -56,6 +58,7 @@ def observable(
     name = kwargs.pop("name", None)
     metadata = kwargs.pop("metadata", None)
     scores: list[Score] = kwargs.pop("scores", None)
+    eval: EvaluatorConfig = kwargs.pop("eval", None)
 
     def decorator(func):
         @functools.wraps(func)
@@ -78,7 +81,9 @@ def observable(
 
             # 3. evaluate the scores if they are provided
             messages = kwargs.get("messages", [])
-            evaluate_scores(messages, outputs=result, scores=scores)
+            evaluate_scores(
+                messages, outputs=result, scores=scores, config=eval
+            )
 
             return result
 

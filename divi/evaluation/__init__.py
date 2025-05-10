@@ -1,4 +1,4 @@
-from .evaluator import Evaluator
+from .evaluator import Evaluator, EvaluatorConfig
 from .scores import Score
 
-__all__ = ["Evaluator", "Score"]
+__all__ = ["Evaluator", "Score", "EvaluatorConfig"]

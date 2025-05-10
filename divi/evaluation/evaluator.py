@@ -13,8 +13,9 @@ from divi.evaluation.scores import Score
 class EvaluatorConfig:
     def __init__(
         self,
-        model: str = "gpt-4.1-nano",
+        model: str = "gpt-4o",
         temperature: float = 0.5,
+        n_rounds: int = 5,
         max_concurrency: int = 10,
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
@@ -23,6 +24,7 @@ class EvaluatorConfig:
         self.api_key = api_key
         self.base_url = base_url
         self.temperature = temperature
+        self.n_rounds = n_rounds
         self.max_concurrency = max_concurrency
 
 
@@ -123,7 +125,11 @@ class Evaluator:
         return aggregated_results
 
     def evaluate_sync(
-        self, target: str, conversation: str, scores: list[Score], n_rounds: int
+        self,
+        target: str,
+        conversation: str,
+        scores: list[Score],
+        n_rounds: Optional[int] = None,
     ) -> List[EvaluationScore]:
         with concurrent.futures.ThreadPoolExecutor(
             max_workers=self.config.max_concurrency
@@ -132,7 +138,7 @@ class Evaluator:
                 executor.submit(
                     self._sync_evaluate_once, target, conversation, score
                 )
-                for _ in range(n_rounds)
+                for _ in range(n_rounds if n_rounds else self.config.n_rounds)
                 for score in scores
             ]
             evaluations = [
@@ -143,7 +149,11 @@ class Evaluator:
         )
 
     async def evaluate_async(
-        self, target: str, conversation: str, scores: list[Score], n_rounds: int
+        self,
+        target: str,
+        conversation: str,
+        scores: list[Score],
+        n_rounds: Optional[int] = None,
     ) -> List[EvaluationScore]:
         semaphore = asyncio.Semaphore(self.config.max_concurrency)
 
@@ -153,7 +163,11 @@ class Evaluator:
                     target, conversation, score
                 )
 
-        tasks = [sem_task(score) for _ in range(n_rounds) for score in scores]
+        tasks = [
+            sem_task(score)
+            for _ in range(n_rounds if n_rounds else self.config.n_rounds)
+            for score in scores
+        ]
         evaluations = await asyncio.gather(*tasks)
         return self._aggregate_results(
             [e for e in evaluations if e is not None]
@@ -164,7 +178,7 @@ class Evaluator:
         target: str,
         conversation: str,
         scores: list[Score],
-        n_rounds: int = 5,
+        n_rounds: Optional[int] = None,
         mode: Literal["sync", "async"] = "sync",
     ) -> List[EvaluationScore]:
         if mode == "async":

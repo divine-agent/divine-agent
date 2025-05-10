@@ -27,7 +27,7 @@ Requires Python 3.11+
 pip install divi
 ```
 
-## Usage
+## Trace
 
 1. Get API Key from [Web](https://www.divine-agent.com/dashboard/api-keys).
 2. Create a `.env` file and add the following line:
@@ -36,7 +36,7 @@ pip install divi
   ```
 3. Run the following code:
   ```python
-  from divi import Score, obs_openai, observable
+  from divi import obs_openai, observable
   from dotenv import load_dotenv
   from openai import OpenAI
 
@@ -48,7 +48,6 @@ pip install divi
           self.client = obs_openai(
               OpenAI(),
               name="Pirate",
-              scores=[Score.instruction_adherence],
           )
 
       @observable(name="Talk with pirate")

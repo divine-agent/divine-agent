@@ -10,7 +10,7 @@
 </a>
 </p>
 
-<p align="center">[中文](./docs/README_ZH.md) / English</p>
+<div align="center">[中文](./docs/README_ZH.md) / English</div>
 
 divine-agent is an observability tool for LLM-based agents, offering tracing, evaluation, and usage statistics.
 

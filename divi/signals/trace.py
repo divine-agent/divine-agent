@@ -1,3 +1,4 @@
+import atexit
 from datetime import UTC, datetime
 from typing import Optional
 from uuid import uuid4
@@ -63,6 +64,8 @@ class Trace:
         """Start the trace by recording the current time in nanoseconds."""
         self.start_time = datetime.now(UTC).isoformat()
         self.upsert_trace()
+        # Register the end method to be called on exit
+        atexit.register(self.end)
 
     def end(self):
         """End the trace by recording the end time in nanoseconds."""
@@ -70,6 +73,8 @@ class Trace:
             raise ValueError("Span must be started before ending.")
         self.end_time = datetime.now(UTC).isoformat()
         self.upsert_trace()
+        # Unregister the end method to prevent multiple calls
+        atexit.unregister(self.end)
 
     def upsert_trace(self):
         """Upsert trace with datapark."""

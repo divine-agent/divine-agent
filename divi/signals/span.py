@@ -1,3 +1,4 @@
+import atexit
 import os
 import time
 from enum import Enum
@@ -62,6 +63,8 @@ class Span:
         """Start the span by recording the current time in nanoseconds."""
         self.start_time_unix_nano = time.time_ns()
         self.upsert_span()
+        # Register the end method to be called at exit
+        atexit.register(self.end)
 
     def end(self):
         """End the span by recording the end time in nanoseconds."""
@@ -69,6 +72,8 @@ class Span:
             raise ValueError("Span must be started before ending.")
         self.end_time_unix_nano = time.time_ns()
         self.upsert_span()
+        # Unregister the end method
+        atexit.unregister(self.end)
 
     def _add_node(self, trace_id: UUID4, parent_id: Optional[bytes] = None):
         """Add node for obs tree."""

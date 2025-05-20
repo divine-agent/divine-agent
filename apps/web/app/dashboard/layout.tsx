@@ -1,5 +1,3 @@
-import { AppSidebar } from './components/app-sidebar';
-import { SiteHeader } from './components/site-header';
 import { getCurrentUser } from '@/lib/server/auth';
 import { deleteSessionTokenCookie } from '@/lib/server/cookies';
 import {
@@ -9,6 +7,8 @@ import {
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { CSSProperties, ReactNode } from 'react';
+import { AppSidebar } from './components/app-sidebar';
+import { SiteHeader } from './components/site-header';
 
 /**
  * Sign out
@@ -29,7 +29,8 @@ export default async function DashboardLayout({
   modal?: ReactNode;
 }) {
   const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get('sidebar_state')?.value === 'true';
+  // defaultOpen is true if the cookie 'sidebar_state' is not set or is set to 'true'
+  const defaultOpen = cookieStore.get('sidebar_state')?.value !== 'false';
   const user = await getCurrentUser();
   if (!user) {
     return null;

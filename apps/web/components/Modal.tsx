@@ -18,6 +18,7 @@ import {
   DrawerTitle,
 } from '@workspace/ui/components/drawer';
 import { useMediaQuery } from '@workspace/ui/hooks/use-media-query';
+import { useIsMobile } from '@workspace/ui/hooks/use-mobile';
 import { Expand } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import type * as React from 'react';
@@ -88,15 +89,20 @@ export function ResponsiveDrawer({
       setTimeout(router.back, 200);
     }
   };
+  const isMobile = useIsMobile();
+  if (isMobile === undefined) {
+    return null;
+  }
+  const _direction = isMobile ? 'bottom' : 'right';
 
   return (
     <Drawer
       defaultOpen={false}
       open={open}
       onOpenChange={handleOpenChange}
-      direction="right"
+      direction={_direction}
     >
-      <DrawerContent>
+      <DrawerContent className={isMobile ? 'h-[75vh]' : 'h-screen'}>
         <DrawerHeader>
           <DrawerTitle className="flex items-center justify-between">
             <Button variant="ghost" size="icon" asChild>

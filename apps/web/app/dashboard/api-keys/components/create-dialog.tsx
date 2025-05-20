@@ -35,7 +35,7 @@ export function CreateDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm">
+        <Button size="sm" className="h-7">
           <IconPlus />
           Create API Key
         </Button>

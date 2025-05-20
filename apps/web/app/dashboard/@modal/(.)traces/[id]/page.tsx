@@ -1,5 +1,5 @@
-import { ResponsiveDrawer } from '@/components/Modal';
 import { TraceBoard } from '@/app/dashboard/traces/(children)/[id]/components/trace-board';
+import { ResponsiveDrawer } from '@/components/Modal';
 import { getTraceChartData } from '@/lib/server/span';
 
 interface TraceModalPageProps {

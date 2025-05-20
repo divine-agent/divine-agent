@@ -54,24 +54,6 @@ func CreateChatCompletion(c *fiber.Ctx) error {
 	// store usage in clickhouse
 	conn := *database.CH
 	ctx = context.Background()
-	err = conn.Exec(ctx, `
-		CREATE TABLE IF NOT EXISTS usages (
-			span_id String,
-			trace_id UUID,
-			user_id UUID,
-			model String,
-			input_tokens UInt64,
-			output_tokens UInt64,
-			total_tokens UInt64,
-			created DateTime DEFAULT now()
-		) ENGINE = MergeTree()
-		PARTITION BY toYYYYMM(created)
-		ORDER BY (user_id, created, model)
-		PRIMARY KEY (user_id, created, model)
-	`)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create table", "data": nil})
-	}
 
 	// Insert data into the table
 	usage := model.Usage{

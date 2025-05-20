@@ -227,28 +227,6 @@ func CreateSpans(c *fiber.Ctx) error {
 	}
 
 	ctx := context.Background()
-	err = conn.Exec(ctx, `
-		CREATE TABLE IF NOT EXISTS spans (
-		    span_id FixedString(8),
-		    trace_id UUID,
-		    parent_span_id FixedString(8),
-		    name VARCHAR(255),
-		    kind Enum8('SPAN_KIND_FUNCTION'=0, 'SPAN_KIND_LLM'=1, 'SPAN_KIND_EVALUATION'=2),
-		    start_time DateTime64(9),
-		    end_time Nullable(DateTime64(9)),
-		    duration Nullable(Float64),
-		    metadata Map(String, String),
-			update_time DateTime DEFAULT now()
-	    ) ENGINE = ReplacingMergeTree(update_time)
-		PARTITION BY toYYYYMM(start_time)
-		ORDER BY (trace_id, span_id, start_time)
-		PRIMARY KEY (trace_id, span_id);
-	`)
-	if err != nil {
-		fmt.Println(err)
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create table", "data": nil})
-	}
-
 	batch, err := conn.PrepareBatch(ctx, "INSERT INTO spans")
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to prepare batch", "data": nil})

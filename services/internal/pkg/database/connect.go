@@ -54,7 +54,7 @@ func ConnectClickhouse() error {
 		return err
 	}
 	CH = &conn
-	return conn.Ping(context.Background())
+	return CreateCHTables()
 }
 
 func ConnectMongoDB() error {

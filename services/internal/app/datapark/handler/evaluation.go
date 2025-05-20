@@ -54,23 +54,6 @@ func CreateScores(c *fiber.Ctx) error {
 	// store scores in clickhouse
 	conn := *database.CH
 	ctx = context.Background()
-	err = conn.Exec(ctx, `
-		CREATE TABLE IF NOT EXISTS scores (
-			span_id FixedString(8),
-			trace_id UUID,
-			user_id UUID,
-			name LowCardinality(String),
-			score Float32,
-			representative_reasoning String,
-			created DateTime DEFAULT now()
-		) ENGINE = MergeTree()
-		PARTITION BY toYYYYMM(created)
-		ORDER BY (trace_id, span_id, name)
-		PRIMARY KEY (trace_id, span_id, name)
-	`)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create scores table", "data": nil})
-	}
 
 	batch, err := conn.PrepareBatch(ctx, "INSERT INTO scores")
 	if err != nil {

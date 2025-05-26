@@ -19,6 +19,7 @@ class EvaluatorConfig:
         max_concurrency: int = 10,
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
+        language: str = "zh",
     ):
         self.model = model
         self.api_key = api_key
@@ -26,6 +27,7 @@ class EvaluatorConfig:
         self.temperature = temperature
         self.n_rounds = n_rounds
         self.max_concurrency = max_concurrency
+        self.language = language
 
 
 class EvaluationResult(BaseModel):
@@ -52,17 +54,22 @@ class Evaluator:
         )
 
     @staticmethod
-    def generate_prompt(target: str, conversation: str, score: Score) -> str:
+    def generate_prompt(
+        target: str, conversation: str, score: Score, language: str
+    ) -> str:
         return PROMPT_TEMPLATE.format(
             requirements=PRESET_PROMPT[score.value],
             target=target,
             conversation=conversation,
+            language=language,
         )
 
     def _sync_evaluate_once(
         self, target: str, conversation: str, score: Score
     ) -> Optional[EvaluationResult]:
-        prompt = self.generate_prompt(target, conversation, score)
+        prompt = self.generate_prompt(
+            target, conversation, score, self.config.language
+        )
         response = self.sync_client.beta.chat.completions.parse(
             model=self.config.model,
             messages=[{"role": "user", "content": prompt}],
@@ -77,7 +84,9 @@ class Evaluator:
     async def _async_evaluate_once(
         self, target: str, conversation: str, score: Score
     ) -> Optional[EvaluationResult]:
-        prompt = self.generate_prompt(target, conversation, score)
+        prompt = self.generate_prompt(
+            target, conversation, score, self.config.language
+        )
         response = await self.async_client.beta.chat.completions.parse(
             model=self.config.model,
             messages=[{"role": "user", "content": prompt}],

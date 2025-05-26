@@ -8,7 +8,7 @@ PROMPT_TEMPLATE = (
     "Strictly output your answer in the following JSON format:\n"
     "{{\n"
     '  "judgment": bool,        # true if the response meets all requirements\n'
-    '  "reasoning": "string"    # concise explanation, hitting only the key points\n'
+    '  "reasoning": "string"    # concise explanation, in {language}, hitting only the key points\n'
     "}}\n"
     "Do not output anything else."
 )

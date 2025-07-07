@@ -23,53 +23,68 @@ divine-agent is an observability tool for LLM-based agents, offering tracing, ev
 >
 > We do not recommend using divine-agent in production environments until a stable release is available.
 
-## Install
+## Core Concepts
 
-Requires Python 3.11+
+1. Tracing
+2. Evaluation
+
+Explore the [examples](exmples) directory to see the SDK in action, and read our [documentation](https://docs.divine-agent.com/) for more details.
+
+## Get started
+
+1. Create an account on [Divine Agent](https://www.divine-agent.com/signup?source=docs).
+
+2. Install Divine Agent SDK
 
 ```shell
 pip install divi
 ```
 
-## Trace
+3. Get API Key from [Web](https://www.divine-agent.com/dashboard/api-keys).
 
-1. Get API Key from [Web](https://www.divine-agent.com/dashboard/api-keys).
-2. Create a `.env` file and add the following line:
-  ```env
-  DIVI_API_KEY=your_api_key
-  ```
-3. Run the following code:
-  ```python
-  from divi import obs_openai, observable
-  from dotenv import load_dotenv
-  from openai import OpenAI
+4. Create a `.env` file and add the following line
 
-  load_dotenv()
+```env
+DIVI_API_KEY=your_api_key
+OPENAI_BASE_URL=https://api.openai.com/v1
+OPENAI_API_KEY=your_llm_api_key
+```
 
+5. Run the following code:
 
-  class Pirate:
-      def __init__(self):
-          self.client = obs_openai(
-              OpenAI(),
-              name="Pirate",
-          )
+```python
+from divi import obs_openai, observable
+from divi.evaluation import Score
+from dotenv import load_dotenv
+from openai import OpenAI
 
-      @observable(name="Talk with pirate")
-      def talk(self, message: str):
-          """Talk like a pirate."""
-          res = self.client.chat.completions.create(
-              model="gpt-4o",
-              messages=[
-                  {"role": "developer", "content": "Talk like a pirate."},
-                  {
-                      "role": "user",
-                      "content": message,
-                  },
-              ],
-          )
-          return res.choices[0].message.content
+load_dotenv()
 
 
-  pirate = Pirate()
-  pirate.talk("How do I check if a Python object is an instance of a class?")
-  ```
+class Pirate:
+    def __init__(self):
+        self.client = obs_openai(
+            OpenAI(),
+            name="Pirate",
+            scores=[Score.instruction_adherence, Score.task_completion],
+        )
+
+    @observable(name="Talk with pirate")
+    def talk(self, message: str):
+        """Talk like a pirate."""
+        res = self.client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "developer", "content": "Talk like a pirate."},
+                {
+                    "role": "user",
+                    "content": message,
+                },
+            ],
+        )
+        return res.choices[0].message.content
+
+
+pirate = Pirate()
+pirate.talk("How do I check if a Python object is an instance of a class?")
+```

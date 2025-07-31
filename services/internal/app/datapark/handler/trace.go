@@ -171,7 +171,6 @@ func GetSpans(c *fiber.Ctx) error {
 			fmt.Println(err)
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to scan spans", "data": nil})
 		}
-
 		// convert ID to hex string
 		span.ID = hex.EncodeToString(ID)
 		// if parentID is not nil, convert to hex string

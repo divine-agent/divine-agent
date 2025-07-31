@@ -1,5 +1,5 @@
-import { TraceBoard } from './components/trace-board';
-import { getTraceChartData } from '@/lib/server/span';
+import { TraceBoard } from "./components/trace-board";
+import { getTraceChartData } from "@/lib/server/span";
 
 interface TracePageProps {
   params: Promise<{ id: string }>;
@@ -8,6 +8,7 @@ interface TracePageProps {
 export default async function TracePage(props: TracePageProps) {
   const { id } = await props.params;
   const spans = await getTraceChartData(id);
+  console.log(spans);
 
   return <TraceBoard spans={spans} />;
 }

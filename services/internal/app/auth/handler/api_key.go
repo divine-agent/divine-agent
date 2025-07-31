@@ -20,7 +20,7 @@ func CreateAPIKey(c *fiber.Ctx) error {
 		ID        uuid.UUID `json:"id"`
 		APIKey    string    `json:"api_key"`
 		Name      *string   `json:"name,omitempty"`
-		CraetedAt time.Time `json:"created_at"`
+		CreatedAt time.Time `json:"created_at"`
 	}
 
 	db := database.DB
@@ -50,7 +50,7 @@ func CreateAPIKey(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failed to create api key", "data": nil})
 	}
 
-	newAPIKey := NewAPIKey{ID: apiKey.ID, APIKey: key, Name: apiKey.Name, CraetedAt: apiKey.CreatedAt}
+	newAPIKey := NewAPIKey{ID: apiKey.ID, APIKey: key, Name: apiKey.Name, CreatedAt: apiKey.CreatedAt}
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "message": "Created api key", "data": newAPIKey})
 }
 
@@ -58,7 +58,6 @@ func CreateAPIKey(c *fiber.Ctx) error {
 func GetAPIKeys(c *fiber.Ctx) error {
 	db := database.DB
 	var apiKeys []model.APIKey
-
 	token := c.Locals("user").(*jwt.Token)
 	userID, err := auth.ParseUserId(token)
 	if err != nil {

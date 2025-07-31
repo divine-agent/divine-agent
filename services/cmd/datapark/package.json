@@ -2,6 +2,6 @@
   "name": "@service/datapark",
   "scripts": {
     "build": "go build -o bin/datapark datapark.go",
-    "dev": "go run datapark.go"
+    "dev": "air"
   }
 }

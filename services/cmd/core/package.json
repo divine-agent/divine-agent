@@ -2,6 +2,6 @@
   "name": "@service/core",
   "scripts": {
     "build": "go build -o bin/core core.go",
-    "dev": "go run core.go"
+    "dev": "air"
   }
 }

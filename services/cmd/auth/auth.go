@@ -28,7 +28,9 @@ func main() {
 	})
 	// app.Use(cors.New())
 
-	database.ConnectDB()
+	if err := database.ConnectDB(); err != nil {
+		log.Fatalf("Failed to connect to postgres: %v", err)
+	}
 
 	router.SetupRoutes(app)
 	if err := app.Listen(fmt.Sprintf(":%d", *port)); err != nil {

@@ -2,6 +2,6 @@
   "name": "@service/auth",
   "scripts": {
     "build": "go build -o bin/auth auth.go",
-    "dev": "go run auth.go"
+    "dev": "air"
   }
 }

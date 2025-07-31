@@ -1,16 +1,16 @@
-import 'server-only';
-import { query } from '@/hooks/apolloClient';
-import type { Chat, ExtendedSpan } from '@/lib/types/span';
-import { GetSpansDocument } from '@workspace/graphql-client/src/datapark/traces.generated';
+import "server-only";
+import { query } from "@/hooks/apolloClient";
+import type { Chat, ExtendedSpan } from "@/lib/types/span";
+import { GetSpansDocument } from "@workspace/graphql-client/src/datapark/traces.generated";
 import {
   Kind,
   type Score,
   type Span,
-} from '@workspace/graphql-client/src/types.generated';
-import { cache } from 'react';
-import { getAuthContext } from './auth';
-import { getScores } from './evaluation';
-import { getChat } from './openai';
+} from "@workspace/graphql-client/src/types.generated";
+import { cache } from "react";
+import { getAuthContext } from "./auth";
+import { getScores } from "./evaluation";
+import { getChat } from "./openai";
 
 /**
  * getSpans action with graphql query
@@ -51,7 +51,7 @@ export const getTraceChartData = cache(
       .map((s) => s.id);
     const chats = await Promise.all(llmSpanIds.map((id) => getChat(id)));
     const chatsMap = new Map<string, Chat>(
-      chats.map((chat) => [chat.span_id, chat])
+      chats.map((chat) => [chat.span_id, chat]),
     );
     const scoresMap = new Map<string, Score[]>();
     // group scores by span_id
@@ -80,7 +80,7 @@ export const getTraceChartData = cache(
           span.kind === Kind.SpanKindEvaluation ? scoresMap.get(span.id) : [],
       };
     });
-  }
+  },
 );
 
 /**

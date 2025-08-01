@@ -1,0 +1,8 @@
+#:schema https://raw.githubusercontent.com/air-verse/air/0a3f56961f682c08c2d012dbf828188b4e12e854/air.schema.json
+root = "../../"
+tmp_dir = "cmd/auth/tmp"
+
+[build]
+bin = "./bin/auth"
+cmd = "go build -o bin/auth auth.go"
+include_dir = ["cmd/auth", "internal/app/auth", "internal/pkg", "pb"]

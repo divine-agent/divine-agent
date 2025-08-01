@@ -13,7 +13,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
 
   divi-mongo:
-    image: mongodb/mongodb-community-server:7.0.17-ubi8
+    image: mongodb/mongodb-community-server:7.0.17-ubi9
     container_name: divi-mongo
     restart: always
     ports:
